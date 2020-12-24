@@ -1,0 +1,104 @@
+a5200DS
+--------------------------------------------------------------------------------
+a5200DS is an Atari VCS 5200 console emulator.
+To use this emulator, you must use compatibles rom with a52/bin format. 
+You also need the 5200.bin rom bios to use it. A quick search on atariage website 
+will help you about that ;-)
+Do not ask me about such files, I don't have them. A search with Google will certainly 
+help you. 
+
+Features :
+----------
+ Most things you should expect from an emulator.
+
+Missing :
+---------
+ All that is not yet emulated ;)
+ Need to improve speed
+ Hangs a lot of time if you do not choose the correct 16 bit cartridghe type
+ 
+Check updates on my web site : 
+http://www.portabledev.com
+
+--------------------------------------------------------------------------------
+History :
+--------------------------------------------------------------------------------
+V1.7 : 24-Dec-2020 by wavemotion-dave
+  * Ressurected from the ashes... Improved cart detection. Better analog support.
+    Patched working controls for QBERT, FROGGER and Wizard of Wor
+    Better screen handling started
+    Now using Altirra-3.20-test4 replacement BIOS if 5200.rom isn't around.
+
+V1.6 : 28/06/2011
+  * Add Analog managment with icon on screen, just click on it to activate/desactivate
+    -> this will fix pb with lot's of game like breakout, missile command, and so on
+    
+V1.5 : 26/06/2011
+  * Fix bug in GTIA/POKEY for enabling pot management, analog jostick works now
+  * Compiled with new devkitpro (r33), win 1 fps since previous version
+    
+V1.4 : 13/06/2011
+  * Add automatic chip detection for 16k roms (but you can change it)
+  * Button L to display/hide FPS
+  * Add R & L to change Rom
+  * Really fix flickering pb, alphalerp is back and screen is smoother
+  * Better sound (not so much ...)
+  
+V1.3 : 12/06/2011
+  * Fix pb with iEvo (hangs on menu)
+  
+V1.2 : 11/06/2011
+  * Fix pb with B button (now you can use bombs in HERO)
+  * Remove argc/argv management (for Another World test with his ievo) 
+  * Fix flickering pb (remove alphalerp for now) 
+  
+V1.1 : 23/05/2011
+  * Quick fix about bios problem
+  * change screen height to 256
+  * Add more easy understanding message when no game in current diretory (Thx 
+     Another World for the tip)
+  * Fix name in makefile (was 7800 and not 5200)
+   
+V1.0 : 22/05/2011
+  * Initial release 
+  * Compiled with last version of Devkitpro/libnds, so DSi compatible \o/
+  
+--------------------------------------------------------------------------------
+How tu use a5200DS :
+--------------------------------------------------------------------------------
+YOU NEED PERHAPS TO PATCH THE NDS FILE WITH THE DLDI PATCH BEFORE USING IT. 
+Unzip a5200DS.nds from the a5200DS.zip archive in a directory of your flash / (micro) SD 
+/ MMC card.
+Put the a26/bin files where you want on your flashcard. 
+
+That's all, a5200DS can be use now :) !
+
+When the emulator starts, click on the cartridge slot to choose a file. you are use Up/Down 
+to select a file, then use A to load it.
+
+Controls :
+ * Direction pad : the joystick ...
+ * A      : Fire button 1
+ * B      : Shift button
+ * X      : * button
+ * Y      : # button
+ * R      : button 0
+ * L      : show fps
+ * R & L  : change rom
+ * START  : START button
+ * SELECT : Pause button
+ 
+ Use stylus on buttons for other actions on bottom screen.
+ 
+--------------------------------------------------------------------------------
+Credits:
+--------------------------------------------------------------------------------
+Thanks Wintermute for devkitpro and libnds (http://www.devkitpro.org).
+Atari800 team for source code (http://atari800.sourceforge.net/)
+zx81 (http://zx81.zx81.free.fr/serendipity_fr/) for GP2X-Atari version (that helped
+  me a lot to understand Atari 5200).
+--------------------------------------------------------------------------------
+Alekmaul
+alekmaul@portabledev.com
+http://www.portabledev.com
+--------------------------------------------------------------------------------
