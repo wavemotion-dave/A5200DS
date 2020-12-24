@@ -936,26 +936,21 @@ ITCM_CODE void dsMainLoop(void) {
         
         if ( (keys_pressed & KEY_R) && (keys_pressed & (KEY_L))) 
         {
-          irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
-          // Find files in current directory and show it 
-          a52FindFiles();
-          romSel=dsWaitForRom();
-          if (romSel) { etatEmu=A5200_PLAYINIT; dsLoadGame(a5200romlist[ucFicAct].filename); }
-          else { irqEnable(IRQ_TIMER2); }
-          fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
-          dsShowAnalog(myCart.use_analog);
+            irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
+            // Find files in current directory and show it 
+            a52FindFiles();
+            romSel=dsWaitForRom();
+            if (romSel) { etatEmu=A5200_PLAYINIT; dsLoadGame(a5200romlist[ucFicAct].filename); }
+            else { irqEnable(IRQ_TIMER2); }
+            fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
+            dsShowAnalog(myCart.use_analog);
         }
-        else {
-          if (keys_pressed & KEY_R) key_code = AKEY_5200_0 + key_code;
-          if (keys_pressed & (KEY_L)) 
-          {
-            if (!key_l) {
-              key_l=1;
-              showFps=!showFps;
-              dsPrintValue(0,0,0, "   "); 
-            }
-          }
-          else key_l = 0;
+        else 
+        {
+//          if (keys_pressed & KEY_R) key_code = AKEY_5200_0 + key_code;
+//          if (keys_pressed & (KEY_L)){if (!key_l) {key_l=1;showFps=!showFps;dsPrintValue(0,0,0, "   ");}} else key_l = 0;
+            if (keys_pressed & KEY_R) myCart.offset_y++;
+            if (keys_pressed & KEY_L) myCart.offset_y--;
         }
 
         break;
