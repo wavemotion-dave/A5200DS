@@ -347,6 +347,8 @@ void dsLoadGame(char *filename) {
     {	
       // Initialize the virtual console emulation 
       dsShowScreenEmu();
+        
+      INPUT_Initialise();
 
       // Init palette
       for(index = 0; index < 256; index++) {

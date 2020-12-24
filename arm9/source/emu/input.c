@@ -95,7 +95,13 @@ static UBYTE TRIG_input[4];
 //static int max_scanline_counter;
 //static int scanline_counter;
 
-void INPUT_Initialise(void) {
+void INPUT_Initialise(void) 
+{    
+    for (int i = 0; i < 2; i++) 
+    {
+        PCPOT_input[2 * i] = joy_5200_center;  
+        PCPOT_input[2 * i+1] = joy_5200_center;  
+    }    
 }
 
 void INPUT_Frame(void) {

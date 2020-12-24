@@ -67,7 +67,7 @@ struct cart_t cart_table[] =
     {"14bd9a0423eafc3090333af916cfbce6",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Frisky Tom (USA) (Proto).a52
     {"2c89c9444f99fd7ac83f88278e6772c6",    CART_5200_8,        CTRL_FROG,  DIGITAL,    2,  6,  220,    256,    230,    32,14},  // Frogger (1983) (Parker Bros).a52
     {"d8636222c993ca71ca0904c8d89c4411",    CART_5200_EE_16,    CTRL_FROG,  DIGITAL,    2,  6,  220,    256,    192,    32, 0},  // Frogger II - Threeedeep! (USA).a52
-    {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Galaxian (1982) (Atari).a52
+    {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  6,  220,    256,    192,    32, 0},  // Galaxian (1982) (Atari).a52
     {"85fe2492e2945015000272a9fefc06e3",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Gorf (1982) (CBS).a52
     {"dc271e475b4766e80151f1da5b764e52",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Gremlins (USA).a52
     {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Gyruss (USA).a52

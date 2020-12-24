@@ -9,7 +9,7 @@ endif
 
 include $(DEVKITARM)/ds_rules
 
-export TARGET		:=	$(shell basename $(CURDIR))
+export TARGET		:=	A5200DS
 export TOPDIR		:=	$(CURDIR)
 
 ICON 		:= -b $(CURDIR)/logo.bmp "A5200DS $(VERSION);AlekMaul;http://www.portabledev.com"
