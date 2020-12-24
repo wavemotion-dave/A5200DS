@@ -43,7 +43,15 @@ int main(int argc, char **argv) {
   etatEmu = A5200_MENUINIT;
 
   // 
-  if (!load_os("5200.rom")) {
+  if (!load_os("5200.rom")) 
+  {
+      //load rom file via args if a rom path is supplied
+      if(argc > 1) 
+      {
+        dsShowScreenMain();
+        dsLoadGame(argv[1]);
+        etatEmu = A5200_PLAYINIT;
+      }
     // Main loop of emulation
     dsMainLoop();
   }
