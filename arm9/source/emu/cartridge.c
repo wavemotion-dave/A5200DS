@@ -129,14 +129,15 @@ struct cart_t cart_table[] =
     {"66057fd4b37be2a45bd8c8e6aa12498d",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    250,    32,20},  // Popeye5200_ArcadeFinal.a52
     {"d64a175672b6dba0c0b244c949799e64",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Caverns of Mars (Conv).a52
     {"a0d407ab5f0c63e1e17604682894d1a9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Jumpman Jr (Conv).a52
-    {"2be3529c33fdf6b76fa7528ba43cdd7f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Pitfall (classics fix).a52
+    {"2be3529c33fdf6b76fa7528ba43cdd7f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,20},  // Pitfall (classics fix).a52
     {"950aa1075eaf4ee2b2c2cfcf8f6c25b4",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    300,    240,    42,30},  // Satans Hollow (Conv).a52
     {"03d0d59c5382b0a34a158e74e9bfce58",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Kid Grid.a52
     {"c3fc21b6fa55c0473b8347d0e2d2bee0",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Pooyan.a52
-    {"80e0ad043da9a7564fec75c1346dbc6e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // RainbowWalker5200.a52
+    {"80e0ad043da9a7564fec75c1346dbc6e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // RainbowWalker.a52
     {"467e72c97db63eb59011dd062c965ec9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Scramble.a52
     {"59699274930349b4fe0ee94b21ce3c16",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Tapper.a52
     {"3649bfd2008161b9825f386dbaff88da",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Up and Down.a52
+    {"3afec1ad3a43b1a37ce546840afdcfc9",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,     2,   6, 220,    256,    192,    32, 0},  // Missile Command Plus.a52    
     {"c4931be078e2b16dc45e9537ebce836b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,30},  // Laser Gates.a52
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   256,    192,    32, 0},  // End of list
 };

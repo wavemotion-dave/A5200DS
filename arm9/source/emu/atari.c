@@ -113,7 +113,7 @@
 int machine_type = MACHINE_5200;
 //int ram_size = 64;
 int ram_size = 16;
-int tv_mode = TV_PAL;
+int tv_mode = TV_NTSC;
 int disable_basic = TRUE;
 int enable_sio_patch = TRUE;
 
