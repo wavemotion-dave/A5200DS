@@ -121,7 +121,7 @@ int verbose = FALSE;
 
 //unsigned int nframes = 0;
 //int refresh_rate = 1;
-int sprite_collisions_in_skipped_frames = FALSE;
+int sprite_collisions_in_skipped_frames = TRUE;
 
 int percent_atari_speed = 100;
 #ifdef BENCHMARK

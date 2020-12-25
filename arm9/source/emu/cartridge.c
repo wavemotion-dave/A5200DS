@@ -44,12 +44,12 @@
 
 struct cart_t cart_table[] = 
 {
-    {"45f8841269313736489180c8ec3e9588",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Activision Decathlon, The (USA).a52
+    {"45f8841269313736489180c8ec3e9588",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,18},  // Activision Decathlon, The (USA).a52
     {"4b1aecab0e2f9c90e514cb0a506e3a5f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,14},  // Adventure II-a.a52
     {"e2f6085028eb8cf24ad7b50ca4ef640f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,14},  // Adventure II-b.a52
     {"bae7c1e5eb04e19ef8d0d0b5ce134332",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Astro Chase (USA).a52
-    {"f5cd178cbea0ae7d8cf65b30cfd04225",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Ballblazer (USA).a52
-    {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Beamrider (USA).a52
+    {"f5cd178cbea0ae7d8cf65b30cfd04225",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,16},  // Ballblazer (USA).a52
+    {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,18},  // Beamrider (USA).a52
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,25},  // BerZerk (USA).a52
     {"5d5a75ac53230915701bc918249f1055",    CART_5200_40,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Bounty Bob Strikes Back! (USA).a52
     {"a074a1ff0a16d1e034ee314b85fa41e9",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    230,    32,15},  // Buck Rogers - Planet of Zoom (USA).a52
@@ -57,37 +57,37 @@ struct cart_t cart_table[] =
     {"4965b4c8acca64c4fac39a7c0763f611",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Castle Blast (USA) (Unl).a52
     {"8f4c07a9e0ef2ded720b403810220aaf",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Castle Crisis (USA) (Unl).a52
     {"261702e8d9acbf45d44bb61fd8fa3e17",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,14},  // Centipede (USA).a52
-    {"3ff7707e25359c9bcb2326a5d8539852",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Choplifter! (USA).a52
+    {"3ff7707e25359c9bcb2326a5d8539852",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    220,    32,10},  // Choplifter! (USA).a52
     {"5720423ebd7575941a1586466ba9beaf",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Congo Bongo (USA).a52
     {"1a64edff521608f9f4fa9d7bdb355087",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Countermeasure (USA).a52
     {"7c27d225a13e178610babf331a0759c0",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,23},  // David Crane's Pitfall II - Lost Caverns (USA).a52
-    {"27d5f32b0d46d3d80773a2b505f95046",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Defender (1982) (Atari).a52
+    {"27d5f32b0d46d3d80773a2b505f95046",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,18},  // Defender (1982) (Atari).a52
     {"3abd0c057474bad46e45f3d4e96eecee",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  6,  220,    340,    256,    34,22},  // Dig Dug (1983) (Atari).a52
-    {"159ccaa564fc2472afd1f06665ec6d19",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Dreadnaught Factor, The (USA).a52
+    {"159ccaa564fc2472afd1f06665ec6d19",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,14},  // Dreadnaught Factor, The (USA).a52
     {"14bd9a0423eafc3090333af916cfbce6",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Frisky Tom (USA) (Proto).a52
     {"2c89c9444f99fd7ac83f88278e6772c6",    CART_5200_8,        CTRL_FROG,  DIGITAL,    2,  6,  220,    256,    230,    32,14},  // Frogger (1983) (Parker Bros).a52
-    {"d8636222c993ca71ca0904c8d89c4411",    CART_5200_EE_16,    CTRL_FROG,  DIGITAL,    2,  6,  220,    256,    192,    32, 0},  // Frogger II - Threeedeep! (USA).a52
-    {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  6,  220,    256,    192,    32, 0},  // Galaxian (1982) (Atari).a52
-    {"85fe2492e2945015000272a9fefc06e3",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Gorf (1982) (CBS).a52
+    {"d8636222c993ca71ca0904c8d89c4411",    CART_5200_EE_16,    CTRL_FROG,  DIGITAL,    2,  6,  220,    256,    230,    32,14},  // Frogger II - Threeedeep! (USA).a52
+    {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  6,  220,    256,    236,    32,16},  // Galaxian (1982) (Atari).a52
+    {"85fe2492e2945015000272a9fefc06e3",    CART_5200_8,        CTRL_JOY,   ANALOG,     2,  30, 185,    256,    240,    32,16},  // Gorf (1982) (CBS).a52
     {"dc271e475b4766e80151f1da5b764e52",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Gremlins (USA).a52
     {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Gyruss (USA).a52
     {"f8f0e0a6dc2ffee41b2a2dd736cba4cd",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,16},  // H.E.R.O. (USA).a52
     {"936db7c08e6b4b902c585a529cb15fc5",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // James Bond 007 (USA).a52
     {"25cfdef5bf9b126166d5394ae74a32e7",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,22},  // Joust (USA).a52
-    {"bc748804f35728e98847da6cdaf241a7",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Jr. Pac-Man (USA) (Proto).a52
+    {"bc748804f35728e98847da6cdaf241a7",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,22},  // Jr. Pac-Man (USA) (Proto).a52
     {"834067fdce5d09b86741e41e7e491d6c",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,20},  // Jungle Hunt (USA).a52
-    {"92fd2f43bc0adf2f704666b5244fadf1",    CART_5200_4,        CTRL_JOY,   ANALOG,     2,  30, 185,    256,    192,    32, 0},  // Kaboom! (USA).a52
-    {"796d2c22f8205fb0ce8f1ee67c8eb2ca",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Kangaroo (USA).a52
-    {"f25a084754ea4d37c2fb1dc8ca6dc51b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Keystone Kapers (USA).a52
-    {"3b03e3cda8e8aa3beed4c9617010b010",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Koffi - Yellow Kopter (USA) (Unl).a52
-    {"b99f405de8e7700619bcd18524ba0e0e",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  6,  220,    256,    192,    32, 0},  // K-Razy Shoot-Out (USA).a52
+    {"92fd2f43bc0adf2f704666b5244fadf1",    CART_5200_4,        CTRL_JOY,   ANALOG,     2,  30, 185,    256,    256,    32,22},  // Kaboom! (USA).a52
+    {"796d2c22f8205fb0ce8f1ee67c8eb2ca",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,16},  // Kangaroo (USA).a52
+    {"f25a084754ea4d37c2fb1dc8ca6dc51b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,23},  // Keystone Kapers (USA).a52
+    {"3b03e3cda8e8aa3beed4c9617010b010",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,14},  // Koffi - Yellow Kopter (USA) (Unl).a52
+    {"b99f405de8e7700619bcd18524ba0e0e",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  6,  220,    256,    256,    32,22},  // K-Razy Shoot-Out (USA).a52
     {"46264c86edf30666e28553bd08369b83",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Last Starfighter, The (USA) (Proto).a52
     {"ff785ce12ad6f4ca67f662598025c367",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,12},  // Megamania (1983) (Activision).a52
     {"1cd67468d123219201702eadaffd0275",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Meteorites (USA).a52
     {"84d88bcdeffee1ab880a5575c6aca45e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,18},  // Millipede (USA) (Proto).a52
     {"d859bff796625e980db1840f15dec4b5",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,24},  // Miner 2049er Starring Bounty Bob (USA).a52
     {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,     2,  30, 185,    256,    256,    32,22},  // Missile Command (USA).a52
-    {"694897cc0d98fcf2f59eef788881f67d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Montezuma's Revenge featuring Panama Joe (USA).a52
+    {"694897cc0d98fcf2f59eef788881f67d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  6,  220,    256,    220,    32,10},  // Montezuma's Revenge featuring Panama Joe (USA).a52
     {"296e5a3a9efd4f89531e9cf0259c903d",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,22},  // Moon Patrol (USA).a52
     {"618e3eb7ae2810768e1aefed1bfdcec4",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Mountain King (USA).a52
     {"d1873645fee21e84b25dc5e939d93e9b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Mr. Do!'s Castle (USA).a52
@@ -107,18 +107,18 @@ struct cart_t cart_table[] =
     {"7e683e571cbe7c77f76a1648f906b932",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // RealSports Tennis (USA).a52
     {"0dc44c5bf0829649b7fec37cb0a8186b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Rescue on Fractalus! (USA).a52
     {"ddf7834a420f1eaae20a7a6255f80a99",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Road Runner (USA) (Proto).a52
-    {"5dba5b478b7da9fd2c617e41fb5ccd31",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Robotron 2084 (USA).a52
-    {"be75afc33f5da12974900317d824f9b9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Sinistar.a52
-    {"6e24e3519458c5cb95a7fd7711131f8d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Space Dungeon (USA).a52
-    {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Space Invaders (USA).a52
+    {"5dba5b478b7da9fd2c617e41fb5ccd31",    CART_5200_NS_16,    CTRL_ROBO,  DIGITAL,    2,  30, 185,    256,    240,    32,18},  // Robotron 2084 (USA).a52
+    {"be75afc33f5da12974900317d824f9b9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    220,    32,10},  // Sinistar.a52
+    {"6e24e3519458c5cb95a7fd7711131f8d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,18},  // Space Dungeon (USA).a52
+    {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,16},  // Space Invaders (USA).a52
     {"802a11dfcba6229cc2f93f0f3aaeb3aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Space Shuttle - A Journey Into Space (USA).a52
     {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,     2,  30, 185,    256,    192,    32, 0},  // Star Raiders (USA).a52
     {"c959b65be720a03b5479650a3af5a511",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Star Trek - Strategic Operations Simulator (USA).a52
     {"00beaa8405c7fb90d86be5bb1b01ea66",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,     2,  30, 185,    256,    192,    32, 0},  // Star Wars - The Arcade Game (USA).a52
-    {"865570ff9052c1704f673e6222192336",    CART_5200_4,        CTRL_JOY,   ANALOG,     3,  30, 185,    256,    192,    32, 0},  // Super Breakout (USA).a52
+    {"865570ff9052c1704f673e6222192336",    CART_5200_4,        CTRL_JOY,   ANALOG,     3,  30, 185,    280,    256,    36,18},  // Super Breakout (USA).a52
     {"dfcd77aec94b532728c3d1fef1da9d85",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Super Cobra (USA).a52
-    {"556a66d6737f0f793821e702547bc051",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Vanguard (USA).a52
-    {"560b68b7f83077444a57ebe9f932905a",    CART_5200_NS_16,    CTRL_SWAP,  DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Wizard of Wor (USA).a52
+    {"556a66d6737f0f793821e702547bc051",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,24},  // Vanguard (USA).a52
+    {"560b68b7f83077444a57ebe9f932905a",    CART_5200_NS_16,    CTRL_SWAP,  DIGITAL,    2,  30, 185,    256,    240,    32,14},  // Wizard of Wor (USA).a52
     {"9fee054e7d4ba2392f4ba0cb73fc99a5",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  6,  220,    256,    220,    32,10},  // Zaxxon (USA).a52
     {"77beee345b4647563e20fd896231bd47",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Zenji (USA).a52
     {"dc45af8b0996cb6a94188b0be3be2e17",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Zone Ranger (USA).a52
@@ -162,7 +162,7 @@ int cart_kb[CART_LAST_SUPPORTED + 1] = {
         0,//16, /* CART_OSS2_16 */
     16, /* CART_5200_NS_16 */
         0,//128,/* CART_ATRAX_128 */
-        0,//40, /* CART_BBSB_40 */
+        0, //40, /* CART_BBSB_40 */
     8,  /* CART_5200_8 */
     4,  /* CART_5200_4 */
         0,//8,  /* CART_RIGHT_8 */
@@ -195,6 +195,7 @@ int CART_IsFor5200(int type)
     case CART_5200_32:
     case CART_5200_EE_16:
     case CART_5200_40:
+    case CART_BBSB_40:
     case CART_5200_NS_16:
     case CART_5200_8:
     case CART_5200_4:
@@ -746,29 +747,23 @@ void CART_Remove(void) {
     CART_Start();
 }
 
-void CART_Start(void) {
-    if (machine_type == MACHINE_5200) {
+void CART_Start(void) 
+{
+    if (machine_type == MACHINE_5200) 
+    {
         SetROM(0x4ff6, 0x4ff9);     /* disable Bounty Bob bank switching */
         SetROM(0x5ff6, 0x5ff9);
-        switch (myCart.type) {
+        switch (myCart.type) 
+        {
         case CART_5200_32:
-#ifdef NOCASH
-      nocashMessage("patch CART_5200_32");
-#endif      
             CopyROM(0x4000, 0xbfff, cart_image);
             break;
         case CART_5200_EE_16:
-#ifdef NOCASH
-      nocashMessage("patch CART_5200_EE_16");
-#endif      
             CopyROM(0x4000, 0x5fff, cart_image);
             CopyROM(0x6000, 0x9fff, cart_image);
             CopyROM(0xa000, 0xbfff, cart_image + 0x2000);
             break;
         case CART_5200_40:
-#ifdef NOCASH
-      nocashMessage("patch CART_5200_40");
-#endif      
             CopyROM(0x4000, 0x4fff, cart_image);
             CopyROM(0x5000, 0x5fff, cart_image + 0x4000);
             CopyROM(0x8000, 0x9fff, cart_image + 0x8000);
@@ -784,200 +779,21 @@ void CART_Start(void) {
 #endif
             break;
         case CART_5200_NS_16:
-#ifdef NOCASH
-      nocashMessage("patch CART_5200_NS_16");
-#endif      
             CopyROM(0x8000, 0xbfff, cart_image);
             break;
         case CART_5200_8:
-#ifdef NOCASH
-      nocashMessage("patch CART_5200_8");
-#endif      
             CopyROM(0x8000, 0x9fff, cart_image);
             CopyROM(0xa000, 0xbfff, cart_image);
             break;
         case CART_5200_4:
-#ifdef NOCASH
-      nocashMessage("patch CART_5200_4");
-#endif      
             CopyROM(0x8000, 0x8fff, cart_image);
             CopyROM(0x9000, 0x9fff, cart_image);
             CopyROM(0xa000, 0xafff, cart_image);
             CopyROM(0xb000, 0xbfff, cart_image);
             break;
         default:
-#ifdef NOCASH
-      nocashMessage("patch default");
-#endif      
             /* clear cartridge area so the 5200 will crash */
             dFillMem(0x4000, 0, 0x8000);
-            break;
-        }
-    }
-    else {
-        switch (myCart.type) {
-        case CART_STD_8:
-        case CART_PHOENIX_8:
-            Cart809F_Disable();
-            CartA0BF_Enable();
-            CopyROM(0xa000, 0xbfff, cart_image);
-            break;
-        case CART_STD_16:
-        case CART_BLIZZARD_16:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0xbfff, cart_image);
-            break;
-        case CART_OSS_16:
-            Cart809F_Disable();
-            CartA0BF_Enable();
-            CopyROM(0xa000, 0xafff, cart_image);
-            CopyROM(0xb000, 0xbfff, cart_image + 0x3000);
-            bank = 0;
-            break;
-        case CART_DB_32:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0x9fff, cart_image);
-            CopyROM(0xa000, 0xbfff, cart_image + 0x6000);
-            bank = 0;
-            break;
-        case CART_WILL_64:
-        case CART_WILL_32:
-        case CART_EXP_64:
-        case CART_DIAMOND_64:
-        case CART_SDX_64:
-            Cart809F_Disable();
-            CartA0BF_Enable();
-            CopyROM(0xa000, 0xbfff, cart_image);
-            bank = 0;
-            break;
-        case CART_XEGS_32:
-        case CART_SWXEGS_32:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0x9fff, cart_image);
-            CopyROM(0xa000, 0xbfff, cart_image + 0x6000);
-            bank = 0;
-            break;
-        case CART_XEGS_64:
-        case CART_SWXEGS_64:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0x9fff, cart_image);
-            CopyROM(0xa000, 0xbfff, cart_image + 0xe000);
-            bank = 0;
-            break;
-        case CART_XEGS_128:
-        case CART_SWXEGS_128:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0x9fff, cart_image);
-            CopyROM(0xa000, 0xbfff, cart_image + 0x1e000);
-            bank = 0;
-            break;
-        case CART_XEGS_256:
-        case CART_SWXEGS_256:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0x9fff, cart_image);
-            CopyROM(0xa000, 0xbfff, cart_image + 0x3e000);
-            bank = 0;
-            break;
-        case CART_XEGS_512:
-        case CART_SWXEGS_512:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0x9fff, cart_image);
-            CopyROM(0xa000, 0xbfff, cart_image + 0x7e000);
-            bank = 0;
-            break;
-        case CART_XEGS_1024:
-        case CART_SWXEGS_1024:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0x9fff, cart_image);
-            CopyROM(0xa000, 0xbfff, cart_image + 0xfe000);
-            bank = 0;
-            break;
-        case CART_OSS2_16:
-            Cart809F_Disable();
-            CartA0BF_Enable();
-            CopyROM(0xa000, 0xafff, cart_image + 0x1000);
-            CopyROM(0xb000, 0xbfff, cart_image);
-            bank = 0;
-            break;
-        case CART_ATRAX_128:
-            Cart809F_Disable();
-            CartA0BF_Enable();
-            CopyROM(0xa000, 0xbfff, cart_image);
-            bank = 0;
-            break;
-        case CART_BBSB_40:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0x8fff, cart_image);
-            CopyROM(0x9000, 0x9fff, cart_image + 0x4000);
-            CopyROM(0xa000, 0xbfff, cart_image + 0x8000);
-#ifndef PAGED_ATTRIB
-            SetHARDWARE(0x8ff6, 0x8ff9);
-            SetHARDWARE(0x9ff6, 0x9ff9);
-#else
-            readmap[0x8f] = BountyBob1_GetByte;
-            readmap[0x9f] = BountyBob2_GetByte;
-            writemap[0x8f] = BountyBob1_PutByte;
-            writemap[0x9f] = BountyBob2_PutByte;
-#endif
-            break;
-        case CART_RIGHT_8:
-            if (machine_type == MACHINE_OSA || machine_type == MACHINE_OSB) {
-                Cart809F_Enable();
-                CopyROM(0x8000, 0x9fff, cart_image);
-                if ((!disable_basic || loading_basic) && have_basic) {
-                    CartA0BF_Enable();
-                    CopyROM(0xa000, 0xbfff, atari_basic);
-                    break;
-                }
-                CartA0BF_Disable();
-                break;
-            }
-            /* there's no right slot in XL/XE */
-            Cart809F_Disable();
-            CartA0BF_Disable();
-            break;
-        case CART_MEGA_16:
-        case CART_MEGA_32:
-        case CART_MEGA_64:
-        case CART_MEGA_128:
-        case CART_MEGA_256:
-        case CART_MEGA_512:
-        case CART_MEGA_1024:
-            Cart809F_Enable();
-            CartA0BF_Enable();
-            CopyROM(0x8000, 0xbfff, cart_image);
-            bank = 0;
-            break;
-        case CART_ATMAX_128:
-            Cart809F_Disable();
-            CartA0BF_Enable();
-            CopyROM(0xa000, 0xbfff, cart_image);
-            bank = 0;
-            break;
-        case CART_ATMAX_1024:
-            Cart809F_Disable();
-            CartA0BF_Enable();
-            CopyROM(0xa000, 0xbfff, cart_image + 0xfe000);
-            bank = 0x7f;
-            break;
-        default:
-            Cart809F_Disable();
-            if ((machine_type == MACHINE_OSA || machine_type == MACHINE_OSB)
-             && (!disable_basic || loading_basic) && have_basic) {
-                CartA0BF_Enable();
-                CopyROM(0xa000, 0xbfff, atari_basic);
-                break;
-            }
-            CartA0BF_Disable();
             break;
         }
     }

@@ -49,7 +49,7 @@ signed char *psound_buffer;
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
-#define DEBUG_DUMP
+//#define DEBUG_DUMP
 
 static void DumpDebugData(void)
 {
@@ -192,14 +192,21 @@ unsigned int crc32 (unsigned int crc, const unsigned char *buf, unsigned int len
 void vblankIntr() 
 {
   static int sIndex = 0;
-  
+#if 0
   static const u16 jitter4[] = {
     0x60, 0x40,		// 0.375, 0.250 
     0x20, 0xc0,		// 0.125, 0.750
     0xe0, 0x40,		// 0.875, 0.250
     0xa0, 0xc0,		// 0.625, 0.750
   };
-
+#else
+  static const u16 jitter4[] = {
+    0x40, 0x40,		// 0.375, 0.250 
+    0x20, 0xc0,		// 0.125, 0.750
+    0x60, 0x40,		// 0.875, 0.250
+    0xa0, 0xc0,		// 0.625, 0.750
+  };
+#endif  
   REG_BG2PA = xdxBG ; REG_BG2PB = 0; REG_BG2PC =0; REG_BG2PD = ydyBG; 
   REG_BG3PA = xdxBG;  REG_BG3PB = 0; REG_BG3PC =0; REG_BG3PD = ydyBG; 
   
@@ -207,10 +214,10 @@ void vblankIntr()
   REG_BG2Y = cyBG+jitter4[sIndex++]; 
   REG_BG3X = cxBG+jitter4[sIndex++]; 
   REG_BG3Y = cyBG+jitter4[sIndex++]; 
+  if(sIndex >= 8) sIndex = 0;
   
   debug[0] = myCart.offset_x;
   debug[1] = myCart.offset_y;
-	if(sIndex >= 8) sIndex = 0;
 }
 
 void dsInitScreenMain(void) {
@@ -794,7 +801,7 @@ int full_speed = 0;
 
 ITCM_CODE void dsMainLoop(void) {
   char fpsbuf[32];
-  unsigned int keys_pressed,keys_touch=0, romSel,key_l=0;
+  unsigned int keys_pressed,keys_touch=0, romSel;
   int iTx,iTy, shiftctrl;
   bool showFps=false;
   
@@ -847,7 +854,9 @@ ITCM_CODE void dsMainLoop(void) {
         TIMER0_DATA=0;
         TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
 
-        //swiIntrWait(0, IRQ_VBLANK);
+        // Execute one frame
+        Atari800_Frame(1);
+        
         // -------------------------------------------------------------
         // Stuff to do once/second such as FPS display and Debug Data
         // -------------------------------------------------------------
@@ -862,9 +871,6 @@ ITCM_CODE void dsMainLoop(void) {
             gTotalAtariFrames = 0;
         }
         
-        // Execute one frame
-        Atari800_Frame(0);
-
         // Read keys
         keys_pressed=keysCurrent();
         key_consol = CONSOL_NONE; //|= (CONSOL_OPTION | CONSOL_SELECT | CONSOL_START); /* OPTION/START/SELECT key OFF */
@@ -946,7 +952,7 @@ ITCM_CODE void dsMainLoop(void) {
           if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick0 = STICK_LL;
           if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_LR;
         }
-        if (myCart.control == CTRL_SWAP)
+        else if (myCart.control == CTRL_SWAP)
         {
           trig1 = (keys_pressed & KEY_A) ? 0 : 1;
           if (keys_pressed & KEY_UP) stick1 = STICK_FORWARD;
@@ -957,6 +963,25 @@ ITCM_CODE void dsMainLoop(void) {
           if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_RIGHT)) stick1 = STICK_UR;
           if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick1 = STICK_LL;
           if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick1 = STICK_LR;          
+        }
+        else if (myCart.control == CTRL_ROBO)
+        {
+          if (keys_pressed & KEY_UP) stick0 = STICK_FORWARD;
+          if (keys_pressed & KEY_LEFT) stick0 = STICK_LEFT;
+          if (keys_pressed & KEY_RIGHT) stick0 = STICK_RIGHT;
+          if (keys_pressed & KEY_DOWN) stick0 = STICK_BACK;
+          if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_LEFT)) stick0 = STICK_UL; 
+          if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_UR;
+          if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick0 = STICK_LL;
+          if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_LR;
+          if (keys_pressed & KEY_X) stick1 = STICK_FORWARD;
+          if (keys_pressed & KEY_Y) stick1 = STICK_LEFT;
+          if (keys_pressed & KEY_A) stick1 = STICK_RIGHT;
+          if (keys_pressed & KEY_B) stick1 = STICK_BACK;
+          if ((keys_pressed & KEY_X) && (keys_pressed & KEY_Y)) stick1 = STICK_UL; 
+          if ((keys_pressed & KEY_X) && (keys_pressed & KEY_A)) stick1 = STICK_UR;
+          if ((keys_pressed & KEY_B) && (keys_pressed & KEY_Y)) stick1 = STICK_LL;
+          if ((keys_pressed & KEY_B) && (keys_pressed & KEY_A)) stick1 = STICK_LR;          
         }
         else if (myCart.control == CTRL_FROG)
         {
@@ -975,30 +1000,24 @@ ITCM_CODE void dsMainLoop(void) {
           trig0=0;
         }
 
-        if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
-        if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
-          
-        if (keys_pressed & KEY_X) key_code = AKEY_5200_ASTERISK;
-        if (keys_pressed & KEY_Y) key_code = AKEY_5200_HASH;
-        //if (keys_pressed & KEY_Y) full_speed = 1;
-        
-        if ( (keys_pressed & KEY_R) && (keys_pressed & (KEY_L))) 
+        static int last_keys = 99;
+        if (keys_pressed != last_keys)
         {
-            irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
-            // Find files in current directory and show it 
-            a52FindFiles();
-            romSel=dsWaitForRom();
-            if (romSel) { etatEmu=A5200_PLAYINIT; dsLoadGame(a5200romlist[ucFicAct].filename); }
-            else { irqEnable(IRQ_TIMER2); }
-            fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
-            dsShowAnalog(myCart.use_analog);
-        }
-        else 
-        {
-//          if (keys_pressed & KEY_R) key_code = AKEY_5200_0 + key_code;
-//          if (keys_pressed & (KEY_L)){if (!key_l) {key_l=1;showFps=!showFps;dsPrintValue(0,0,0, "   ");}} else key_l = 0;
-            if (keys_pressed & KEY_R) myCart.offset_y++;
-            if (keys_pressed & KEY_L) myCart.offset_y--;
+          last_keys = keys_pressed;
+          if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
+          if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
+          if (myCart.control != CTRL_ROBO)          
+          {
+            if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
+            if (keys_pressed & KEY_Y) {full_speed = 1-full_speed; if (full_speed) dsPrintValue(30,0,0, "FS"); else dsPrintValue(30,0,0, "  ");}
+          }
+          else 
+          {
+            if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK;
+            if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH;
+            //if (keys_pressed & KEY_R) myCart.offset_y++;
+            //if (keys_pressed & KEY_L) myCart.offset_y--;
+          }
         }
 
         break;

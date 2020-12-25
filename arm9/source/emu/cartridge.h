@@ -71,6 +71,7 @@ extern struct cart_t myCart;
 #define CTRL_SWAP       2
 #define CTRL_FROG       3
 #define CTRL_QBERT      4
+#define CTRL_ROBO       5
 
 #define DIGITAL         0
 #define ANALOG          1

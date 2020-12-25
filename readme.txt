@@ -23,6 +23,11 @@ http://www.portabledev.com
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V1.8 : 25-Dec-2020 by wavemotion-dave
+  * Improved collision detection by removing some of the speedup hacks of the past.
+  * More games run more correctly - better screen usage and improved control support.
+  * Robotron 2084 now works with ABXY buttons as shooting buttons.
+
 V1.7 : 24-Dec-2020 by wavemotion-dave
   * Ressurected from the ashes... Improved cart detection. Better analog support.
     Patched working controls for QBERT, FROGGER and Wizard of Wor
@@ -64,14 +69,12 @@ V1.0 : 22/05/2011
   * Compiled with last version of Devkitpro/libnds, so DSi compatible \o/
   
 --------------------------------------------------------------------------------
-How tu use a5200DS :
+How to use a5200DS :
 --------------------------------------------------------------------------------
-YOU NEED PERHAPS TO PATCH THE NDS FILE WITH THE DLDI PATCH BEFORE USING IT. 
-Unzip a5200DS.nds from the a5200DS.zip archive in a directory of your flash / (micro) SD 
-/ MMC card.
-Put the a26/bin files where you want on your flashcard. 
 
-That's all, a5200DS can be use now :) !
+Put the a52/bin files where you want on your card. 
+
+That's all, a5200DS can be used now :) !
 
 When the emulator starts, click on the cartridge slot to choose a file. you are use Up/Down 
 to select a file, then use A to load it.
@@ -79,12 +82,11 @@ to select a file, then use A to load it.
 Controls :
  * Direction pad : the joystick ...
  * A      : Fire button 1
- * B      : Shift button
- * X      : * button
- * Y      : # button
- * R      : button 0
- * L      : show fps
- * R & L  : change rom
+ * B      : Shift button (Fire button 2)
+ * X      : FPS Display Toggle
+ * Y      : Full Speed Toggle
+ * R      : * button (often starts game)
+ * L      : # button (often changes game selection)
  * START  : START button
  * SELECT : Pause button
  

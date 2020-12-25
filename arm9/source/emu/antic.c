@@ -212,9 +212,7 @@ void video_putbyte(UBYTE *ptr, UBYTE val) {
 #define WRITE_VIDEO_LONG_UNALIGNED(ptr, val)  UNALIGNED_PUT_LONG((ptr), (val), atari_screen_write_long_stat)
 #endif
 
-//ALEK 
-//#ifdef WORDS_UNALIGNED_OK
-#if 1
+#ifdef WORDS_UNALIGNED_OK
 #define IS_ZERO_ULONG(x) (! UNALIGNED_GET_LONG(x, pm_scanline_read_long_stat))
 #define DO_GTIA_BYTE(p, l, x) { \
 		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) (p),     (l)[(x) >> 4]); \
@@ -618,9 +616,7 @@ UWORD cl_lookup[128];
    the platform doesn't allow unaligned long access.
    Artifacting also uses unaligned long access if it's supported. */
 
-//ALEK
-#if 1
-//#ifdef WORDS_UNALIGNED_OK
+#ifdef WORDS_UNALIGNED_OK
 
 #define INIT_BACKGROUND_6 ULONG background = cl_lookup[C_PF2] | (((ULONG) cl_lookup[C_PF2]) << 16);
 #define INIT_BACKGROUND_8 ULONG background = lookup_gtia9[0];
@@ -1538,9 +1534,7 @@ static void draw_antic_2_gtia9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr
 
 static void draw_antic_2_gtia10(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
-//ALEK 
-//#ifdef WORDS_UNALIGNED_OK
-#if 1
+#ifdef WORDS_UNALIGNED_OK
 	ULONG lookup_gtia10[16];
 #else
 UWORD lookup_gtia10[16];
@@ -1552,9 +1546,7 @@ UWORD lookup_gtia10[16];
 		return;
 	}
 
-//ALEK 
-//#ifdef WORDS_UNALIGNED_OK
-#if 1
+#ifdef WORDS_UNALIGNED_OK
 	lookup_gtia10[0] = cl_lookup[C_PM0] | (cl_lookup[C_PM0] << 16);
 	lookup_gtia10[1] = cl_lookup[C_PM1] | (cl_lookup[C_PM1] << 16);
 	lookup_gtia10[2] = cl_lookup[C_PM2] | (cl_lookup[C_PM2] << 16);
@@ -2271,9 +2263,7 @@ static void draw_antic_f_gtia9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr
 
 static void draw_antic_f_gtia10(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
-//ALEK 
-//#ifdef WORDS_UNALIGNED_OK
-#if 1
+#ifdef WORDS_UNALIGNED_OK
 	ULONG lookup_gtia10[16];
 #else
 UWORD lookup_gtia10[16];
@@ -2284,8 +2274,7 @@ UWORD lookup_gtia10[16];
 		return;
 	}
 //ALEK 
-//#ifdef WORDS_UNALIGNED_OK
-#if 1
+#ifdef WORDS_UNALIGNED_OK
 	lookup_gtia10[0] = cl_lookup[C_PM0] | (cl_lookup[C_PM0] << 16);
 	lookup_gtia10[1] = cl_lookup[C_PM1] | (cl_lookup[C_PM1] << 16);
 	lookup_gtia10[2] = cl_lookup[C_PM2] | (cl_lookup[C_PM2] << 16);
