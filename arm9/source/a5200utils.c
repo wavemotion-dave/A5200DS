@@ -1010,11 +1010,11 @@ ITCM_CODE void dsMainLoop(void) {
           {
             if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
             if (keys_pressed & KEY_Y) {full_speed = 1-full_speed; if (full_speed) dsPrintValue(30,0,0, "FS"); else dsPrintValue(30,0,0, "  ");}
+            if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK;
+            if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH;
           }
           else 
           {
-            if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK;
-            if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH;
             //if (keys_pressed & KEY_R) myCart.offset_y++;
             //if (keys_pressed & KEY_L) myCart.offset_y--;
           }

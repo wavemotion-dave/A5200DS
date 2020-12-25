@@ -672,7 +672,7 @@ int CART_Insert(const char *filename) {
         
         char md5[33];
         hash_Compute(cart_image, len, (byte*)md5);
-        dsPrintValue(0,23,0,md5);
+        //dsPrintValue(0,23,0,md5);
         
         int idx=0;
         while (cart_table[idx].type != CART_NONE)
