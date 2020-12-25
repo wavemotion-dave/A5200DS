@@ -804,6 +804,7 @@ ITCM_CODE void dsMainLoop(void) {
   unsigned int keys_pressed,keys_touch=0, romSel;
   int iTx,iTy, shiftctrl;
   bool showFps=false;
+  int hold_touch = 0;
   
   myCart.use_analog = 0;
   
@@ -864,6 +865,11 @@ ITCM_CODE void dsMainLoop(void) {
             gTotalAtariFrames = 0;
         }
         
+        if (hold_touch > 0)
+        {
+           hold_touch--;
+           continue;
+        }
         // Read keys
         keys_pressed=keysCurrent();
         key_consol = CONSOL_NONE; //|= (CONSOL_OPTION | CONSOL_SELECT | CONSOL_START); /* OPTION/START/SELECT key OFF */
@@ -892,14 +898,17 @@ ITCM_CODE void dsMainLoop(void) {
             else if ((iTx>27) && (iTx<50) && (iTy>111) && (iTy<122))  { // 28,112  -> 49,121   pause
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_PAUSE + key_code;
+              hold_touch = 5;
             }
             else if ((iTx>16) && (iTx<39) && (iTy>122) && (iTy<133))  { // 17,123  -> 38,132   reset
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_RESET + key_code;
+              hold_touch = 5;
             }
             else if ((iTx>4) && (iTx<27) && (iTy>111) && (iTy<122))  { // 5,112  -> 26,121   start
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_START + key_code;
+              hold_touch = 5;
             }
             else if ((iTx>9) && (iTx<44) && (iTy>135) && (iTy<181)) {     // 10,136 -> 43,180 numeric pad
               char padKey[] = {AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_ASTERISK,AKEY_5200_0,AKEY_5200_HASH};
@@ -910,6 +919,7 @@ ITCM_CODE void dsMainLoop(void) {
               }
               else
                 key_code = padKey[iTx];
+              hold_touch = 5;
             }
             else if ((iTx>71) && (iTx<183) && (iTy>7) && (iTy<43)) {     // 72,8 -> 182,42 cartridge slot
               irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
