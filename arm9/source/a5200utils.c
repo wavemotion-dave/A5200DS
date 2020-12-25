@@ -46,6 +46,47 @@ unsigned char *filebuffer;
 signed char sound_buffer[SNDLENGTH];
 signed char *psound_buffer;
 
+
+#define MAX_DEBUG 5
+int debug[MAX_DEBUG]={0};
+#define DEBUG_DUMP
+
+static void DumpDebugData(void)
+{
+#ifdef DEBUG_DUMP
+    char dbgbuf[32];
+    for (int i=0; i<MAX_DEBUG; i++)
+    {
+        int idx=0;
+        int val = debug[i];
+        if (val < 0)
+        {
+            dbgbuf[idx++] = '-';
+            val = val * -1;
+        }
+        else
+        {
+            dbgbuf[idx++] = '0' + (int)val/10000000;
+        }
+        val = val % 10000000;
+        dbgbuf[idx++] = '0' + (int)val/1000000;
+        val = val % 1000000;
+        dbgbuf[idx++] = '0' + (int)val/100000;
+        val = val % 100000;
+        dbgbuf[idx++] = '0' + (int)val/10000;
+        val = val % 10000;
+        dbgbuf[idx++] = '0' + (int)val/1000;
+        val= val % 1000;
+        dbgbuf[idx++] = '0' + (int)val/100;
+        val = val % 100;
+        dbgbuf[idx++] = '0' + (int)val/10;
+        dbgbuf[idx++] = '0' + (int)val%10;
+        dbgbuf[idx++] = 0;
+        dsPrintValue(0,3+i,0, dbgbuf);
+    }
+#endif
+}
+
 // Color fading effect
 void FadeToColor(unsigned char ucSens, unsigned short ucBG, unsigned char ucScr, unsigned char valEnd, unsigned char uWait) {
   unsigned short ucFade;
@@ -166,6 +207,9 @@ void vblankIntr()
   REG_BG2Y = cyBG+jitter4[sIndex++]; 
   REG_BG3X = cxBG+jitter4[sIndex++]; 
   REG_BG3Y = cyBG+jitter4[sIndex++]; 
+  
+  debug[0] = myCart.offset_x;
+  debug[1] = myCart.offset_y;
 	if(sIndex >= 8) sIndex = 0;
 }
 
@@ -690,26 +734,29 @@ unsigned int dsWaitOnMenu(unsigned int actState) {
   return uState;
 }
 
-void dsPrintValue(int x, int y, unsigned int isSelect, char *pchStr) {
+void dsPrintValue(int x, int y, unsigned int isSelect, char *pchStr)
+{
   u16 *pusEcran,*pusMap;
   u16 usCharac;
-  char szTexte[128],*pTrTxt=szTexte;
-  
-  strcpy(szTexte,pchStr);
-  strupr(szTexte);
+  char *pTrTxt=pchStr;
+  char ch;
+
   pusEcran=(u16*) (bgGetMapPtr(bg1b))+x+(y<<5);
   pusMap=(u16*) (bgGetMapPtr(bg0b)+(2*isSelect+24)*32);
-  //keybBAS_map[29]
-  while((*pTrTxt)!='\0' ) {
+
+  while((*pTrTxt)!='\0' )
+  {
+    ch = *pTrTxt;
+    if (ch >= 'a' && ch <= 'z') ch -= 32; // Faster than strcpy/strtoupper
     usCharac=0x0000;
-    if ((*pTrTxt) == '|')
+    if ((ch) == '|')
       usCharac=*(pusMap);
-    else if (((*pTrTxt)<' ') || ((*pTrTxt)>'_'))
+    else if (((ch)<' ') || ((ch)>'_'))
       usCharac=*(pusMap);
-    else if((*pTrTxt)<'@')
-      usCharac=*(pusMap+(*pTrTxt)-' ');
+    else if((ch)<'@')
+      usCharac=*(pusMap+(ch)-' ');
     else
-      usCharac=*(pusMap+32+(*pTrTxt)-'@');
+      usCharac=*(pusMap+32+(ch)-'@');
     *pusEcran++=usCharac;
     pTrTxt++;
   }
@@ -811,6 +858,7 @@ ITCM_CODE void dsMainLoop(void) {
             TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;
         
             if (showFps) { siprintf(fpsbuf,"%03d",gTotalAtariFrames); dsPrintValue(0,0,0, fpsbuf); } // Show FPS
+            DumpDebugData();
             gTotalAtariFrames = 0;
         }
         
