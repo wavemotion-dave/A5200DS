@@ -823,13 +823,6 @@ ITCM_CODE void dsMainLoop(void) {
         break;
         
       case A5200_MENUSHOW:
-        //load rom file via args if a rom path is supplied
-        /*if (argc > 1) {
-          dsShowScreenMain();
-          dsLoadGame(argv[1]);
-          etatEmu = A5200_PLAYINIT;
-        }
-        else */
           etatEmu =  dsWaitOnMenu(A5200_MENUSHOW);
           Atari800_Initialise();
         break;
@@ -881,7 +874,7 @@ ITCM_CODE void dsMainLoop(void) {
                   
         if (keys_pressed & KEY_B) { shiftctrl ^= AKEY_SHFT; key_shift = 1; }
         key_code = shiftctrl ? 0x40 : 0x00;
-                  
+        
         // if touch screen pressed
         if (keys_pressed & KEY_TOUCH) {
           if (!keys_touch) {
@@ -1000,18 +993,19 @@ ITCM_CODE void dsMainLoop(void) {
           trig0=0;
         }
 
+        if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
+        if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
+        if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK;
+        if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH;
+        
         static int last_keys = 99;
         if (keys_pressed != last_keys)
         {
           last_keys = keys_pressed;
-          if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
-          if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
           if (myCart.control != CTRL_ROBO)          
           {
             if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
             if (keys_pressed & KEY_Y) {full_speed = 1-full_speed; if (full_speed) dsPrintValue(30,0,0, "FS"); else dsPrintValue(30,0,0, "  ");}
-            if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK;
-            if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH;
           }
           else 
           {
