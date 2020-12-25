@@ -121,7 +121,7 @@ struct cart_t cart_table[] =
     {"560b68b7f83077444a57ebe9f932905a",    CART_5200_NS_16,    CTRL_SWAP,  DIGITAL,    2,  30, 185,    256,    240,    32,14},  // Wizard of Wor (USA).a52
     {"9fee054e7d4ba2392f4ba0cb73fc99a5",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  6,  220,    256,    220,    32,10},  // Zaxxon (USA).a52
     {"77beee345b4647563e20fd896231bd47",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Zenji (USA).a52
-    {"dc45af8b0996cb6a94188b0be3be2e17",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    192,    32, 0},  // Zone Ranger (USA).a52
+    {"dc45af8b0996cb6a94188b0be3be2e17",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,22},  // Zone Ranger (USA).a52
     {"1db260d6769bed6bf4731744213097b8",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Caverns Of Mars 2 (Conversion) fixed.a52
     {"c4a14a88a4257970223b1ef9bf95da5b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Phobos (Caverns of Mars 3).a52
     {"1d1eab4067fc0aaf2b2b880fb8f72e40",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // DK5200_Arcade.a52
