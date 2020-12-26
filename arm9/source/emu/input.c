@@ -90,17 +90,18 @@ int mouse_joy_inertia = 10;
 #endif
 
 static UBYTE STICK[4], OLDSTICK[4];
-static UBYTE TRIG_input[4];
+static UBYTE TRIG_input[4] = {0,0,0,0};
 
 //static int max_scanline_counter;
 //static int scanline_counter;
 
 void INPUT_Initialise(void) 
 {    
-    for (int i = 0; i < 2; i++) 
+    for (int i = 0; i < 4; i++) 
     {
         PCPOT_input[2 * i] = joy_5200_center;  
         PCPOT_input[2 * i+1] = joy_5200_center;  
+        TRIG_input[i] = 1;
     }    
 }
 
@@ -181,7 +182,7 @@ void INPUT_Frame(void) {
 	STICK[3] = (i >> 4) & 0x0f;*/
 
 	//ALEK for (i = 0; i < 4; i++) {
-  for (i = 0; i < 2; i++) {
+  for (i = 0; i < 4; i++) {
 		//if (joy_block_opposite_directions) {
 			if ((STICK[i] & 0x0c) == 0) {	/* right and left simultaneously */
 				if (last_stick[i] & 0x04)	/* if wasn't left before, move left */
@@ -220,7 +221,7 @@ void INPUT_Frame(void) {
 	}
 	else {
 */  
-	for (i = 0; i < 2; i++) {
+	for (i = 0; i < 4; i++) {
       if ((STICK[i] & (STICK_CENTRE ^ STICK_LEFT)) == 0) {	
         if (myCart.use_analog) {
           if (PCPOT_input[2 * i] >joy_5200_min) PCPOT_input[2 * i] -= myCart.analog_speed;

@@ -49,8 +49,11 @@ void Atari_Initialise(void) {
   Sound_Initialise();
 #endif
 
-	trig0 = 1;
-	stick0 = 15;
+	trig0 = 1;  // Not pressed
+    trig1 = 1;  // Not pressed
+	stick0 = STICK_CENTRE;
+    stick1 = STICK_CENTRE;
+    
 	key_consol = CONSOL_NONE;
 }
 
