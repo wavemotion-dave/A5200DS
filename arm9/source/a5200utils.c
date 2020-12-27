@@ -49,7 +49,7 @@ signed char *psound_buffer;
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
-#define DEBUG_DUMP
+//#define DEBUG_DUMP
 
 static void DumpDebugData(void)
 {

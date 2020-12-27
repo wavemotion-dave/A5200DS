@@ -63,7 +63,8 @@ int break_ypos = 999;
 
 #define WRITE_VIDEO_LONG_UNALIGNED(ptr, val)  UNALIGNED_PUT_LONG((ptr), (val), atari_screen_write_long_stat)
 
-#define IS_ZERO_ULONG(x) (!((const UBYTE *)(x))[0] && !((const UBYTE *)(x))[1] && !((const UBYTE *)(x))[2] && !((const UBYTE *)(x))[3])
+#define IS_ZERO_ULONG(x) (((ULONG)x & 3) ? (!((const UBYTE *)(x))[0] && !((const UBYTE *)(x))[1] && !((const UBYTE *)(x))[2] && !((const UBYTE *)(x))[3]) : (! UNALIGNED_GET_LONG(x, pm_scanline_read_long_stat)))
+
 #define DO_GTIA_BYTE(p, l, x) { \
         if (((ULONG)p & 0x03) == 0) { \
 		  UNALIGNED_PUT_LONG((ULONG *) (p),     (l)[(x) >> 4], pm_scanline_read_long_stat); \
@@ -425,7 +426,7 @@ UWORD cl_lookup[128];
    of background are drawn at once - with two longs or four words, if
    the platform doesn't allow unaligned long access.
    Artifacting also uses unaligned long access if it's supported. */
-extern int debug[];
+
 #define INIT_BACKGROUND_6 ULONG background = cl_lookup[C_PF2] | (((ULONG) cl_lookup[C_PF2]) << 16);
 #define INIT_BACKGROUND_8 ULONG background = lookup_gtia9[0];
 #define DRAW_BACKGROUND(colreg) {\
@@ -433,10 +434,8 @@ extern int debug[];
 		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) ptr,       background); \
 		WRITE_VIDEO_LONG_UNALIGNED(((ULONG *) ptr) + 1, background); \
 		ptr += 4; \
-        debug[0]++; \
 	} else \
         { \
-         debug[1]++; \
          WRITE_VIDEO(ptr++, cl_lookup[colreg]); \
          WRITE_VIDEO(ptr++, cl_lookup[colreg]); \
          WRITE_VIDEO(ptr++, cl_lookup[colreg]); \
@@ -446,7 +445,7 @@ extern int debug[];
 
 #define DRAW_ARTIF {\
     if (((ULONG)ptr & 0x03) == 0) { \
-		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) ptr, art_curtable[(UBYTE) (screendata_tally >> 10)]); \
+		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) ptr,       art_curtable[(UBYTE) (screendata_tally >> 10)]); \
 		WRITE_VIDEO_LONG_UNALIGNED(((ULONG *) ptr) + 1, art_curtable[(UBYTE) (screendata_tally >> 6)]); \
 		ptr += 4; \
 	} \
