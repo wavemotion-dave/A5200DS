@@ -239,7 +239,7 @@ void dsShowScreenEmu(void) {
   bg1 = bgInit(2, BgType_Bmp8, BgSize_B8_512x512, 0,0);
 
   REG_BLDCNT = BLEND_ALPHA | BLEND_SRC_BG2 | BLEND_DST_BG3;
-  REG_BLDALPHA = (15 << 8) | 15; // 50% / 50% 
+  REG_BLDALPHA = (12 << 8) | 9; // 75% / 60% 
 
   //bufVideo = BG_GFX;   
   REG_BG2PB = 0;
