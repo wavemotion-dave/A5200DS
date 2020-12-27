@@ -23,6 +23,13 @@ http://www.portabledev.com
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V1.9 : 27-Dec-2020 by wavemotion-dave
+  * New virtual keypad layout. 
+  * Improved Analog vs Digital auto-selection. 
+  * Improved speed in ANTIC and CPU cores. 
+  * Corrected NTSC color palett.
+  * More games run properly - Montezuma's Revenge is playable.
+  
 V1.8 : 25-Dec-2020 by wavemotion-dave
   * Improved collision detection by removing some of the speedup hacks of the past.
   * More games run more correctly - better screen usage and improved control support.
