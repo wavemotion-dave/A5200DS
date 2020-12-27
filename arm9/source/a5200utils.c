@@ -44,6 +44,9 @@ unsigned char *filebuffer;
 signed char sound_buffer[SNDLENGTH];
 signed char *psound_buffer;
 
+int alpha_1 = 8;
+int alpha_2 = 8;
+
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
@@ -213,9 +216,10 @@ void vblankIntr()
   REG_BG3X = cxBG+jitter4[sIndex++]; 
   REG_BG3Y = cyBG+jitter4[sIndex++]; 
   if(sIndex >= 8) sIndex = 0;
-  
-  //debug[0] = myCart.offset_x;
-  //debug[1] = myCart.offset_y;
+    
+// REG_BLDALPHA = (alpha_1 << 8) | alpha_2; // 75% / 60% 
+ //debug[0] = alpha_1;
+ //debug[1] = alpha_2;
 }
 
 void dsInitScreenMain(void) {
@@ -970,6 +974,7 @@ void dsMainLoop(void) {
         if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
         if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK;
         if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH;
+            
         
         static int last_keys = 99;
         if (keys_pressed != last_keys)
@@ -979,11 +984,8 @@ void dsMainLoop(void) {
           {
             if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
             if (keys_pressed & KEY_Y) {full_speed = 1-full_speed; if (full_speed) dsPrintValue(30,0,0, "FS"); else dsPrintValue(30,0,0, "  ");}
-          }
-          else 
-          {
-            //if (keys_pressed & KEY_R) myCart.offset_y++;
-            //if (keys_pressed & KEY_L) myCart.offset_y--;
+            //if (keys_pressed & KEY_R) alpha_1 = (alpha_1+1) & 0xF;
+            //if (keys_pressed & KEY_L) alpha_2= (alpha_2+1) & 0xF;
           }
         }
 

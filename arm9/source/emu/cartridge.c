@@ -98,7 +98,7 @@ static const struct cart_t cart_table[] =
     {"a0d407ab5f0c63e1e17604682894d1a9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16},  // Jumpman Jr (Conv).a52
     {"27140302a715694401319568a83971a1",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16},  // Jumpman Jr (XL Conversion).a52
     {"834067fdce5d09b86741e41e7e491d6c",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,20},  // Jungle Hunt (USA).a52    
-    {"92fd2f43bc0adf2f704666b5244fadf1",    CART_5200_4,        CTRL_JOY,   ANALOG,     4,   6, 220,    256,    256,    32,22},  // Kaboom! (USA).a52
+    {"92fd2f43bc0adf2f704666b5244fadf1",    CART_5200_4,        CTRL_JOY,   ANALOG,     4,   6, 220,    256,    250,    32,22},  // Kaboom! (USA).a52
     {"796d2c22f8205fb0ce8f1ee67c8eb2ca",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16},  // Kangaroo (USA).a52
     {"f25a084754ea4d37c2fb1dc8ca6dc51b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,23},  // Keystone Kapers (USA).a52
     {"3b03e3cda8e8aa3beed4c9617010b010",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,22},  // Koffi - Yellow Kopter (USA) (Unl).a52
@@ -114,7 +114,7 @@ static const struct cart_t cart_table[] =
     {"d859bff796625e980db1840f15dec4b5",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24},  // Miner 2049er Starring Bounty Bob (USA).a52
     {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,     2,   6, 220,    256,    256,    32,22},  // Missile Command (USA).a52
     {"694897cc0d98fcf2f59eef788881f67d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,20},  // Montezuma's Revenge featuring Panama Joe (USA).a52
-    {"296e5a3a9efd4f89531e9cf0259c903d",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22},  // Moon Patrol (USA).a52
+    {"296e5a3a9efd4f89531e9cf0259c903d",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24},  // Moon Patrol (USA).a52
     {"618e3eb7ae2810768e1aefed1bfdcec4",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Mountain King (USA).a52
     {"23296829e0e1316541aa6b5540b9ba2e",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Mountain King (1984) (Sunrise Software) [h1] (Two Port).a52
     {"d1873645fee21e84b25dc5e939d93e9b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Mr. Do!'s Castle (USA).a52
@@ -140,7 +140,7 @@ static const struct cart_t cart_table[] =
     {"0dc44c5bf0829649b7fec37cb0a8186b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Rescue on Fractalus! (USA).a52
     {"ddf7834a420f1eaae20a7a6255f80a99",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Road Runner (USA) (Proto).a52
     {"5dba5b478b7da9fd2c617e41fb5ccd31",    CART_5200_NS_16,    CTRL_ROBO,  DIGITAL,    2,   6, 220,    256,    240,    32,18},  // Robotron 2084 (USA).a52
-    {"950aa1075eaf4ee2b2c2cfcf8f6c25b4",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    300,    240,    42,30},  // Satans Hollow (Conv).a52
+    {"950aa1075eaf4ee2b2c2cfcf8f6c25b4",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    230,    32,16},  // Satans Hollow (Conv).a52
     {"467e72c97db63eb59011dd062c965ec9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10},  // Scramble.a52
     {"be75afc33f5da12974900317d824f9b9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10},  // Sinistar.a52
     {"6e24e3519458c5cb95a7fd7711131f8d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,18},  // Space Dungeon (USA).a52
