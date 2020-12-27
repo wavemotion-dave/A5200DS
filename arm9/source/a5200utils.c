@@ -49,7 +49,7 @@ signed char *psound_buffer;
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
-//#define DEBUG_DUMP
+#define DEBUG_DUMP
 
 static void DumpDebugData(void)
 {
@@ -216,8 +216,8 @@ void vblankIntr()
   REG_BG3Y = cyBG+jitter4[sIndex++]; 
   if(sIndex >= 8) sIndex = 0;
   
-  debug[0] = myCart.offset_x;
-  debug[1] = myCart.offset_y;
+  //debug[0] = myCart.offset_x;
+  //debug[1] = myCart.offset_y;
 }
 
 void dsInitScreenMain(void) {
@@ -786,7 +786,7 @@ extern u32 stick0;
 extern u32 stick1;
 int full_speed = 0;
 
-ITCM_CODE void dsMainLoop(void) {
+void dsMainLoop(void) {
   char fpsbuf[32];
   unsigned int keys_pressed,keys_touch=0, romSel;
   int iTx,iTy, shiftctrl;

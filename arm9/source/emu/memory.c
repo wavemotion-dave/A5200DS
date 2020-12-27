@@ -32,7 +32,6 @@
 #include "cpu.h"
 #include "cartridge.h"
 #include "gtia.h"
-//#include "log.h"
 #include "memory.h"
 #include "pbi.h"
 #include "pia.h"

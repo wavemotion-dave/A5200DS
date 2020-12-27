@@ -202,106 +202,57 @@ void CART_PutByte(UWORD addr, UBYTE byte)
 }
 
 /* special support of Bounty Bob on Atari5200 */
-void CART_BountyBob1(UWORD addr)
+inline UBYTE CART_BountyBob1(UWORD addr)
 {
-    if (machine_type == MACHINE_5200) {
-        if (addr >= 0x4ff6 && addr <= 0x4ff9) {
-            addr -= 0x4ff6;
-            CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
-        }
-    } else {
-        if (addr >= 0x8ff6 && addr <= 0x8ff9) {
-            addr -= 0x8ff6;
-            CopyROM(0x8000, 0x8fff, cart_image + addr * 0x1000);
-        }
+    if (addr >= 0x4ff6 && addr <= 0x4ff9) {
+        addr -= 0x4ff6;
+        CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
+        return 0;
     }
+    else return dGetByte(addr);
 }
 
-void CART_BountyBob2(UWORD addr)
+inline UBYTE CART_BountyBob2(UWORD addr)
 {
-    if (machine_type == MACHINE_5200) {
-        if (addr >= 0x5ff6 && addr <= 0x5ff9) {
-            addr -= 0x5ff6;
-            CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
-        }
+    if (addr >= 0x5ff6 && addr <= 0x5ff9) {
+        addr -= 0x5ff6;
+        CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
+        return 0;
     }
-    else {
-        if (addr >= 0x9ff6 && addr <= 0x9ff9) {
-            addr -= 0x9ff6;
-            CopyROM(0x9000, 0x9fff, cart_image + 0x4000 + addr * 0x1000);
-        }
-    }
+    else return dGetByte(addr);
 }
 
 #ifdef PAGED_ATTRIB
 UBYTE BountyBob1_GetByte(UWORD addr)
 {
-    if (machine_type == MACHINE_5200) {
-        if (addr >= 0x4ff6 && addr <= 0x4ff9) {
-            CART_BountyBob1(addr);
-            return 0;
-        }
-    } else {
-        if (addr >= 0x8ff6 && addr <= 0x8ff9) {
-            CART_BountyBob1(addr);
-            return 0;
-        }
+    if ((addr & 0xFFF0) == 0x4FF0) {
+        return CART_BountyBob1(addr);
     }
     return dGetByte(addr);
 }
 
 UBYTE BountyBob2_GetByte(UWORD addr)
 {
-    if (machine_type == MACHINE_5200) {
-        if (addr >= 0x5ff6 && addr <= 0x5ff9) {
-            CART_BountyBob2(addr);
-            return 0;
-        }
-    } else {
-        if (addr >= 0x9ff6 && addr <= 0x9ff9) {
-            CART_BountyBob2(addr);
-            return 0;
-        }
+    if ((addr & 0xFFF0) == 0x5FF0) {
+        return CART_BountyBob2(addr);
     }
     return dGetByte(addr);
 }
 
 void BountyBob1_PutByte(UWORD addr, UBYTE value)
 {
-    if (machine_type == MACHINE_5200) {
-        if (addr >= 0x4ff6 && addr <= 0x4ff9) {
-            CART_BountyBob1(addr);
-        }
-    } else {
-        if (addr >= 0x8ff6 && addr <= 0x8ff9) {
-            CART_BountyBob1(addr);
-        }
+    if ((addr & 0xFFF0) == 0x4FF0) {
+        CART_BountyBob1(addr);
     }
 }
 
 void BountyBob2_PutByte(UWORD addr, UBYTE value)
 {
-    if (machine_type == MACHINE_5200) {
-        if (addr >= 0x5ff6 && addr <= 0x5ff9) {
-            CART_BountyBob2(addr);
-        }
-    } else {
-        if (addr >= 0x9ff6 && addr <= 0x9ff9) {
-            CART_BountyBob2(addr);
-        }
+    if ((addr & 0xFFF0) == 0x5FF0) {
+        CART_BountyBob2(addr);
     }
 }
 #endif
-
-int CART_Checksum(const UBYTE *image, int nbytes)
-{
-    int checksum = 0;
-    while (nbytes > 0) {
-        checksum += *image++;
-        nbytes--;
-    }
-    return checksum;
-}
 
 int CART_Insert(const char *filename) {
     FILE *fp;

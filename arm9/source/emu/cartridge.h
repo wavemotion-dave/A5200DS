@@ -80,7 +80,6 @@ extern struct cart_t myCart;
 extern int cart_kb[CART_LAST_SUPPORTED + 1];
 
 int CART_IsFor5200(int type);
-int CART_Checksum(const UBYTE *image, int nbytes);
 
 #define CART_CANT_OPEN		-1	/* Can't open cartridge image file */
 #define CART_BAD_FORMAT		-2	/* Unknown cartridge format */
@@ -92,8 +91,8 @@ void CART_Remove(void);
 void CART_Start(void);
 UBYTE CART_GetByte(UWORD addr);
 void CART_PutByte(UWORD addr, UBYTE byte);
-void CART_BountyBob1(UWORD addr);
-void CART_BountyBob2(UWORD addr);
+UBYTE CART_BountyBob1(UWORD addr);
+UBYTE CART_BountyBob2(UWORD addr);
 #ifdef PAGED_ATTRIB
 UBYTE BountyBob1_GetByte(UWORD addr);
 UBYTE BountyBob2_GetByte(UWORD addr);

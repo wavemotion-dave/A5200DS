@@ -58,10 +58,6 @@ UWORD ANTIC_GetDLWord(UWORD *paddr);
 /* always call ANTIC_UpdateArtifacting after changing global_artif_mode */
 void ANTIC_UpdateArtifacting(void);
 
-/* Video memory access */
-void video_memset(UBYTE *ptr, UBYTE val, ULONG size);
-void video_putbyte(UBYTE *ptr, UBYTE val);
-
 #ifdef NEW_CYCLE_EXACT
 #define NOT_DRAWING -999
 #define DRAWING_SCREEN (cur_screen_pos!=NOT_DRAWING)

@@ -60,12 +60,10 @@ void PIA_Initialise(void) {
 	PORT_input[0] = 0xff;
 	PORT_input[1] = 0xff;
 }
+const UBYTE *antic_xe_ptr = NULL;
 
 void PIA_Reset(void) {
 	PORTA = 0xff;
-	if (machine_type == MACHINE_XLXE) {
-		MEMORY_HandlePORTB(0xff, (UBYTE) (PORTB | PORTB_mask));
-	}
 	PORTB = 0xff;
 }
 
@@ -90,13 +88,7 @@ UBYTE PIA_GetByte(UWORD addr) {
         return ~PORTB_mask;
       }
       else {
-        /* port state */
-        if (machine_type == MACHINE_XLXE) {
-          return PORTB | PORTB_mask;
-        }
-        else {
           return PORT_input[1] & (PORTB | PORTB_mask);
-        }
       }
   }
 	/* for stupid compilers */
@@ -135,28 +127,14 @@ void PIA_PutByte(UWORD addr, UBYTE byte) {
 #endif
 		break;
 	case _PORTB:
-		if (machine_type == MACHINE_XLXE) {
-			if ((PBCTL & 0x04) == 0) {
-				/* direction register */
-				MEMORY_HandlePORTB((UBYTE) (PORTB | ~byte), (UBYTE) (PORTB | PORTB_mask));
-				PORTB_mask = ~byte;
-			}
-			else {
-				/* output register */
-				MEMORY_HandlePORTB((UBYTE) (byte | PORTB_mask), (UBYTE) (PORTB | PORTB_mask));
-				PORTB = byte;
-			}
-		}
-		else {
-			if ((PBCTL & 0x04) == 0) {
-				/* direction register */
-				PORTB_mask = ~byte;
-			}
-			else {
-				/* output register */
-				PORTB = byte;
-			}
-		}
+        if ((PBCTL & 0x04) == 0) {
+            /* direction register */
+            PORTB_mask = ~byte;
+        }
+        else {
+            /* output register */
+            PORTB = byte;
+        }
 		break;
 	}
 }
@@ -196,9 +174,6 @@ void PIAStateRead(void) {
 	ReadINT( &xe_bank, 1 );
 	ReadINT( &selftest_enabled, 1 );
 	ReadINT( &Ram256, 1 );
-
-	if (Ram256 == 1 && machine_type == MACHINE_XLXE && ram_size == RAM_320_COMPY_SHOP)
-		ram_size = RAM_320_RAMBO;
 
 	ReadINT( &cartA0BF_enabled, 1 );
 

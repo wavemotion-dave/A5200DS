@@ -32,205 +32,50 @@
 
 #define NO_YPOS_BREAK_FLICKER
 
-
 #include "antic.h"
 #include "atari.h"
 #include "cpu.h"
 #include "gtia.h"
 #include "screen.h"
-
 #include "memory.h"
 #include "pokeysnd.h"
 #include "util.h"
-#if !defined(BASIC) && !defined(CURSES_BASIC)
 #include "input.h"
 #include "screen.h"
-#endif
-#ifndef BASIC
 #include "statesav.h"
-#endif
-#ifdef NEW_CYCLE_EXACT
-#include "cycle_map.h"
-#endif
+
 
 #define LCHOP 3			/* do not build lefmost 0..3 characters in wide mode */
 #define RCHOP 3			/* do not build rightmost 0..3 characters in wide mode */
 
 int break_ypos = 999;
-#ifdef NEW_CYCLE_EXACT
-void draw_partial_scanline(int l,int r);
-void update_scanline(void);
-void update_scanline_prior(UBYTE byte);
-void update_scanline_chbase(void);
-void update_scanline_invert(void);
-void update_scanline_blank(void);
-const int *cpu2antic_ptr;
-const int *antic2cpu_ptr;
-int delayed_wsync = 0;
-int dmactl_changed = 0;
-UBYTE DELAYED_DMACTL;
-int draw_antic_ptr_changed = 0;
-UBYTE need_load;
-int dmactl_bug_chdata;
-#ifndef NO_GTIA11_DELAY
-/* the position in the ring buffer where the last change before */
-/* the previous line occured to PRIOR */
-int prevline_prior_pos = 0;
-/* the position in the ring buffer where the last change before */
-/* the current line occured to PRIOR */
-int curline_prior_pos = 0;
-/* the current position in the ring buffer where the most recent */
-/* change to PRIOR occured */
-int prior_curpos = 0;
-/* ring buffer to hold the previous values of PRIOR */
-UBYTE prior_val_buf[PRIOR_BUF_SIZE];
-/* can be negative, leave as signed ints */
-/* ring buffer to hold the positions where PRIOR changed */
-int prior_pos_buf[PRIOR_BUF_SIZE];
-#endif /* NO_GTIA11_DELAY */
-#endif /* NEW_CYCLE_EXACT */
 
-/* Video memory access is hidden behind these macros. It allows to track dirty video memory
-   to improve video system performance */
-#ifdef DIRTYRECT
-
-static UWORD *scratchUWordPtr;
-static UWORD scratchUWord;
-static ULONG *scratchULongPtr;
-static ULONG scratchULong;
-static UBYTE *scratchUBytePtr;
-static UBYTE scratchUByte;
-
-#ifdef NODIRTYCOMPARE
-
-#define WRITE_VIDEO(ptr, val) \
-	do { \
-		scratchUWordPtr = (ptr); \
-		screen_dirty[((ULONG) scratchUWordPtr - (ULONG) atari_screen) >> 3] = 1; \
-		*scratchUWordPtr = (val); \
-	} while (0);
-#define WRITE_VIDEO_LONG(ptr, val) \
-	do { \
-		scratchULongPtr = (ptr); \
-		screen_dirty[((ULONG) scratchULongPtr - (ULONG) atari_screen) >> 3] = 1; \
-		*scratchULongPtr = (val); \
-	} while (0)
-#define WRITE_VIDEO_BYTE(ptr, val) \
-	do { \
-		scratchUBytePtr = (ptr); \
-		screen_dirty[((ULONG) scratchUBytePtr - (ULONG) atari_screen) >> 3] = 1; \
-		*scratchUBytePtr = (val); \
-	} while (0)
-#define FILL_VIDEO(ptr, val, size) \
-	do { \
-		scratchUBytePtr = (UBYTE*) (ptr); \
-		scratchULong = (ULONG) (size); \
-		memset(screen_dirty + (((ULONG) scratchUBytePtr - (ULONG) atari_screen) >> 3), 1, scratchULong >> 3); \
-		memset(scratchUBytePtr, (val), scratchULong); \
-	} while (0)
-
-#else /* NODIRTYCOMPARE */
-
-#define WRITE_VIDEO(ptr, val) \
-	do { \
-		scratchUWordPtr = (ptr); \
-		scratchUWord = (val); \
-		if (*scratchUWordPtr != scratchUWord) { \
-			screen_dirty[((ULONG) scratchUWordPtr - (ULONG) atari_screen) >> 3] = 1; \
-			*scratchUWordPtr = scratchUWord; \
-		} \
-	} while (0)
-#define WRITE_VIDEO_LONG(ptr, val) \
-	do { \
-		scratchULongPtr = (ptr); \
-		scratchULong = (val); \
-		if (*scratchULongPtr != scratchULong) { \
-			screen_dirty[((ULONG) scratchULongPtr - (ULONG) atari_screen) >> 3] = 1; \
-			*scratchULongPtr = scratchULong; \
-		} \
-	} while (0)
-#define WRITE_VIDEO_BYTE(ptr, val) \
-	do { \
-		scratchUBytePtr = (ptr); \
-		scratchUByte = (val); \
-		if (*scratchUBytePtr != scratchUByte) { \
-			screen_dirty[((ULONG) scratchUBytePtr - (ULONG) atari_screen) >> 3] = 1; \
-			*scratchUBytePtr = scratchUByte; \
-		} \
-	} while (0)
-static UBYTE *scratchFillLimit;
-#define FILL_VIDEO(ptr, val, size) \
-	do { \
-		scratchUBytePtr = (UBYTE *) (ptr); \
-		scratchUByte = (UBYTE) (val); \
-		scratchFillLimit = scratchUBytePtr + (size); \
-		for (; scratchUBytePtr < scratchFillLimit; scratchUBytePtr++) { \
-			if (*scratchUBytePtr != scratchUByte) { \
-				screen_dirty[((ULONG) scratchUBytePtr - (ULONG) atari_screen) >> 3] = 1; \
-				*scratchUBytePtr = scratchUByte; \
-			} \
-		} \
-	} while (0)
-
-#endif /* NODIRTYCOMPARE */
-
-void entire_screen_dirty(void)
-{
-	memset(screen_dirty, 1, ATARI_WIDTH * ATARI_HEIGHT / 8);
-}
-
-#else /* DIRTYRECT */
-
-#define WRITE_VIDEO(ptr, val) (*(ptr) = val)
-#define WRITE_VIDEO_LONG(ptr, val) (*(ptr) = val)
-#define WRITE_VIDEO_BYTE(ptr, val) (*(ptr) = val)
-#define FILL_VIDEO(ptr, val, size) memset(ptr, val, size)
-
-void entire_screen_dirty(void) {}
-
-#endif /* DIRTYRECT */
+#define WRITE_VIDEO(ptr, val)       (*(ptr) = val)
+#define WRITE_VIDEO_LONG(ptr, val)  (*(ptr) = val)
+#define WRITE_VIDEO_BYTE(ptr, val)  (*(ptr) = val)
+#define FILL_VIDEO(ptr, val, size)  memset(ptr, val, size)
 
 #define READ_VIDEO_LONG(ptr) (*(ptr))
-
-void video_memset(UBYTE *ptr, UBYTE val, ULONG size) {
-	FILL_VIDEO(ptr, val, size);
-}
-
-void video_putbyte(UBYTE *ptr, UBYTE val) {
-	WRITE_VIDEO_BYTE(ptr, val);
-}
-
 
 /* Memory access helpers----------------------------------------------------- */
 /* Some optimizations result in unaligned 32-bit accesses. These macros have
    been introduced for machines that don't allow unaligned memory accesses. */
 
-#ifdef DIRTYRECT
-/* STAT_UNALIGNED_WORDS doesn't work with DIRTYRECT */
-#define WRITE_VIDEO_LONG_UNALIGNED  WRITE_VIDEO_LONG
-#else
 #define WRITE_VIDEO_LONG_UNALIGNED(ptr, val)  UNALIGNED_PUT_LONG((ptr), (val), atari_screen_write_long_stat)
-#endif
 
-#ifdef WORDS_UNALIGNED_OK
-#define IS_ZERO_ULONG(x) (! UNALIGNED_GET_LONG(x, pm_scanline_read_long_stat))
-#define DO_GTIA_BYTE(p, l, x) { \
-		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) (p),     (l)[(x) >> 4]); \
-		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) (p) + 1, (l)[(x) & 0xf]); \
-	}
-  
-#else /* WORDS_UNALIGNED_OK */
 #define IS_ZERO_ULONG(x) (!((const UBYTE *)(x))[0] && !((const UBYTE *)(x))[1] && !((const UBYTE *)(x))[2] && !((const UBYTE *)(x))[3])
 #define DO_GTIA_BYTE(p, l, x) { \
-		/*UNALIGNED_PUT_LONG((ULONG *) (p),     (l)[(x) >> 4], pm_scanline_read_long_stat); \
-		UNALIGNED_PUT_LONG((ULONG *) (p) + 1, (l)[(x) & 0xf], pm_scanline_read_long_stat);*/ \
-    WRITE_VIDEO((UWORD *) (p),     (UWORD) ((l)[(x) >> 4])); \
-		WRITE_VIDEO((UWORD *) (p) + 1, (UWORD) ((l)[(x) >> 4])); \
-		WRITE_VIDEO((UWORD *) (p) + 2, (UWORD) ((l)[(x) & 0xf])); \
-		WRITE_VIDEO((UWORD *) (p) + 3, (UWORD) ((l)[(x) & 0xf]));  \
-	}
-#endif /* WORDS_UNALIGNED_OK */
-    
+        if (((ULONG)p & 0x03) == 0) { \
+		  UNALIGNED_PUT_LONG((ULONG *) (p),     (l)[(x) >> 4], pm_scanline_read_long_stat); \
+		  UNALIGNED_PUT_LONG((ULONG *) (p) + 1, (l)[(x) & 0xf], pm_scanline_read_long_stat); \
+        } else { \
+          WRITE_VIDEO((UWORD *) (p),     (UWORD) ((l)[(x) >> 4])); \
+          WRITE_VIDEO((UWORD *) (p) + 1, (UWORD) ((l)[(x) >> 4])); \
+          WRITE_VIDEO((UWORD *) (p) + 2, (UWORD) ((l)[(x) & 0xf])); \
+          WRITE_VIDEO((UWORD *) (p) + 3, (UWORD) ((l)[(x) & 0xf]));  \
+        } \
+    }
+
 /* ANTIC Registers --------------------------------------------------------- */
 
 UBYTE DMACTL;
@@ -259,19 +104,6 @@ UBYTE ANTIC_memory[52];
 
 UWORD *scrn_ptr;
 
-/* Separate access to XE extended memory ----------------------------------- */
-/* It's available in 130 XE and 320 KB Compy Shop.
-   Note: during ANTIC access to extended memory in Compy Shop Self Test
-   is disabled. It is unknown if this is true for real 130 XE. If not,
-   then some extra code has to be added to:
-   - check if selftest_enabled is set
-   - check if the address is in range 0x5000..0x57ff
-   - if both conditions are true, then access memory instead of antic_xe_ptr */
-
-/* Pointer to 16 KB seen by ANTIC in 0x4000-0x7fff.
-   If it's the same what the CPU sees (and what's in memory[0x4000..0x7fff],
-   then NULL. */
-const UBYTE *antic_xe_ptr = NULL;
 
 /* ANTIC Timing --------------------------------------------------------------
 
@@ -421,18 +253,8 @@ These are all cases:
 
 unsigned int screenline_cpu_clock = 0;
 
-#ifdef NEW_CYCLE_EXACT
-#define UPDATE_DMACTL if (dmactl_changed) { \
-		dmactl_changed = 0; \
-		ANTIC_PutByte(_DMACTL, DELAYED_DMACTL); \
-	} \
-	if (draw_antic_ptr_changed) { \
-		draw_antic_ptr_changed = 0; \
-		draw_antic_ptr = saved_draw_antic_ptr; \
-	}
-#else
 #define UPDATE_DMACTL
-#endif /* NEW_CYCLE_EXACT */
+
 #define GOEOL_CYCLE_EXACT  GO(antic2cpu_ptr[LINE_C]); \
 	xpos = cpu2antic_ptr[xpos]; \
 	xpos -= LINE_C; \
@@ -465,8 +287,6 @@ static UBYTE PENV;
 UBYTE PENH_input = 0x00;
 UBYTE PENV_input = 0xff;
 
-#ifndef BASIC
-
 /* Internal ANTIC registers ------------------------------------------------ */
 
 static UWORD screenaddr;		/* Screen Pointer */
@@ -476,10 +296,6 @@ static UBYTE dctr;				/* Delta Counter */
 static UBYTE lastline;			/* dctr limit */
 static UBYTE need_dl;			/* boolean: fetch DL next line */
 static UBYTE vscrol_off;		/* boolean: displaying line ending VSC */
-
-#endif
-
-#if !defined(BASIC) && !defined(CURSES_BASIC)
 
 /* Pre-computed values for improved performance ---------------------------- */
 
@@ -503,15 +319,9 @@ static int extra_cycles[6];
 /* border parameters for current display width */
 static int left_border_chars;
 static int right_border_start;
-#ifdef NEW_CYCLE_EXACT
-static int left_border_start = LCHOP * 4;
-static int right_border_end = (48 - RCHOP) * 4;
-#define LBORDER_START left_border_start
-#define RBORDER_END right_border_end
-#else
+
 #define LBORDER_START (LCHOP * 4)
 #define RBORDER_END ((48 - RCHOP) * 4)
-#endif /* NEW_CYCLE_EXACT */
 
 /* set with CHBASE *and* CHACTL - bits 0..2 set if flip on */
 static UWORD chbase_20;			/* CHBASE for 20 character mode */
@@ -615,73 +425,57 @@ UWORD cl_lookup[128];
    of background are drawn at once - with two longs or four words, if
    the platform doesn't allow unaligned long access.
    Artifacting also uses unaligned long access if it's supported. */
-
-#ifdef WORDS_UNALIGNED_OK
-
+extern int debug[];
 #define INIT_BACKGROUND_6 ULONG background = cl_lookup[C_PF2] | (((ULONG) cl_lookup[C_PF2]) << 16);
 #define INIT_BACKGROUND_8 ULONG background = lookup_gtia9[0];
-#define DRAW_BACKGROUND(colreg) { \
-		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) ptr, background); \
+#define DRAW_BACKGROUND(colreg) {\
+    if (((ULONG)ptr & 0x03) == 0) { \
+		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) ptr,       background); \
 		WRITE_VIDEO_LONG_UNALIGNED(((ULONG *) ptr) + 1, background); \
 		ptr += 4; \
+        debug[0]++; \
+	} else \
+        { \
+         debug[1]++; \
+         WRITE_VIDEO(ptr++, cl_lookup[colreg]); \
+         WRITE_VIDEO(ptr++, cl_lookup[colreg]); \
+         WRITE_VIDEO(ptr++, cl_lookup[colreg]); \
+         WRITE_VIDEO(ptr++, cl_lookup[colreg]); \
+        } \
 	}
-#define DRAW_ARTIF { \
+
+#define DRAW_ARTIF {\
+    if (((ULONG)ptr & 0x03) == 0) { \
 		WRITE_VIDEO_LONG_UNALIGNED((ULONG *) ptr, art_curtable[(UBYTE) (screendata_tally >> 10)]); \
 		WRITE_VIDEO_LONG_UNALIGNED(((ULONG *) ptr) + 1, art_curtable[(UBYTE) (screendata_tally >> 6)]); \
 		ptr += 4; \
-	}
-
-//#if 0
-#else
-
-#define INIT_BACKGROUND_6
-#define INIT_BACKGROUND_8
-#define DRAW_BACKGROUND(colreg) {\
-		WRITE_VIDEO(ptr,     cl_lookup[colreg]); \
-		WRITE_VIDEO(ptr + 1, cl_lookup[colreg]); \
-		WRITE_VIDEO(ptr + 2, cl_lookup[colreg]); \
-		WRITE_VIDEO(ptr + 3, cl_lookup[colreg]); \
-		ptr += 4;\
-	}
-#define DRAW_ARTIF {\
+	} \
 		WRITE_VIDEO(ptr++, ((UWORD *) art_curtable)[(screendata_tally & 0x03fc00) >> 9]); \
 		WRITE_VIDEO(ptr++, ((UWORD *) art_curtable)[((screendata_tally & 0x03fc00) >> 9) + 1]); \
 		WRITE_VIDEO(ptr++, ((UWORD *) art_curtable)[(screendata_tally & 0x003fc0) >> 5]); \
 		WRITE_VIDEO(ptr++, ((UWORD *) art_curtable)[((screendata_tally & 0x003fc0) >> 5) + 1]); \
 	}
 
-#endif /* WORDS_UNALIGNED_OK */
 
 /* Hi-res modes optimizations
    Now hi-res modes are drawn with words, not bytes. Endianess defaults
    to little-endian. WORDS_BIGENDIAN should be defined when compiling on
    a big-endian machine. */
 
-#ifdef WORDS_BIGENDIAN
-#define BYTE0_MASK		0xff00
-#define BYTE1_MASK		0x00ff
-#define HIRES_MASK_01	0xfff0
-#define HIRES_MASK_10	0xf0ff
-#define HIRES_LUM_01	0x000f
-#define HIRES_LUM_10	0x0f00
-#else
 #define BYTE0_MASK		0x00ff
 #define BYTE1_MASK		0xff00
 #define HIRES_MASK_01	0xf0ff
 #define HIRES_MASK_10	0xfff0
 #define HIRES_LUM_01	0x0f00
 #define HIRES_LUM_10	0x000f
-#endif
 
 static UWORD hires_lookup_n[128];
 static UWORD hires_lookup_m[128];
 #define hires_norm(x)	hires_lookup_n[(x) >> 1]
 #define hires_mask(x)	hires_lookup_m[(x) >> 1]
 
-#ifndef USE_COLOUR_TRANSLATION_TABLE
 UWORD hires_lookup_l[128];	/* accessed in gtia.c */
 #define hires_lum(x)	hires_lookup_l[(x) >> 1]
-#endif
 
 /* Player/Missile Graphics ------------------------------------------------- */
 
@@ -815,10 +609,7 @@ static void pmg_dma(void) {
 		if (player_gra_enabled) {
 			const UBYTE *base;
 			if (singleline) {
-				if (antic_xe_ptr != NULL && pmbase_s < 0x8000 && pmbase_s >= 0x4000)
-					base = antic_xe_ptr + pmbase_s - 0x4000 + ypos;
-				else
-					base = memory + pmbase_s + ypos;
+    			base = memory + pmbase_s + ypos;
 				if (ypos & 1) {
 					GRAFP0 = base[0x400];
 					GRAFP1 = base[0x500];
@@ -837,10 +628,7 @@ static void pmg_dma(void) {
 				}
 			}
 			else {
-				if (antic_xe_ptr != NULL && pmbase_d < 0x8000 && pmbase_d >= 0x4000)
-					base = antic_xe_ptr + (pmbase_d - 0x4000) + (ypos >> 1);
-				else
-					base = memory + pmbase_d + (ypos >> 1);
+				base = memory + pmbase_d + (ypos >> 1);
 				if (ypos & 1) {
 					GRAFP0 = base[0x200];
 					GRAFP1 = base[0x280];
@@ -864,10 +652,7 @@ static void pmg_dma(void) {
 	if (missile_dma_enabled) {
 		if (missile_gra_enabled) {
 			UBYTE data;
-			if (antic_xe_ptr != NULL && pmbase_s < 0x8000 && pmbase_s >= 0x4000)
-				data = antic_xe_ptr[singleline ? pmbase_s + ypos + 0x300 - 0x4000 : pmbase_d + (ypos >> 1) + 0x180 - 0x4000];
-			else
-				data = dGetByte(singleline ? pmbase_s + ypos + 0x300 : pmbase_d + (ypos >> 1) + 0x180);
+			data = dGetByte(singleline ? pmbase_s + ypos + 0x300 : pmbase_d + (ypos >> 1) + 0x180);
 			/* in odd lines load all missiles, in even only those, for which VDELAY bit is zero */
 			GRAFM = ypos & 1 ? data : ((GRAFM ^ data) & hold_missiles_tab[VDELAY & 0xf]) ^ data;
 		}
@@ -936,12 +721,9 @@ static void setup_art_colours(void)
 	}
 }
 
-#endif /* !defined(BASIC) && !defined(CURSES_BASIC) */
-
 /* Initialization ---------------------------------------------------------- */
 
 void ANTIC_Initialise(void) {
-#if !defined(BASIC) && !defined(CURSES_BASIC)
 	ANTIC_UpdateArtifacting();
 
 	playfield_lookup[0x00] = L_BAK;
@@ -951,32 +733,16 @@ void ANTIC_Initialise(void) {
 	playfield_lookup[0x100] = L_PF3;
 	blank_lookup[0x80] = blank_lookup[0xa0] = blank_lookup[0xc0] = blank_lookup[0xe0] = 0x00;
 	hires_mask(0x00) = 0xffff;
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-	hires_mask(0x40) = BYTE0_MASK;
-	hires_mask(0x80) = BYTE1_MASK;
-	hires_mask(0xc0) = 0;
-#else
 	hires_mask(0x40) = HIRES_MASK_01;
 	hires_mask(0x80) = HIRES_MASK_10;
 	hires_mask(0xc0) = 0xf0f0;
 	hires_lum(0x00) = hires_lum(0x40) = hires_lum(0x80) = hires_lum(0xc0) = 0;
-#endif
+
 	init_pm_lookup();
 	mode_e_an_lookup[0] = 0;
 	mode_e_an_lookup[1] = mode_e_an_lookup[4] = mode_e_an_lookup[0x10] = mode_e_an_lookup[0x40] = 0;
 	mode_e_an_lookup[2] = mode_e_an_lookup[8] = mode_e_an_lookup[0x20] = mode_e_an_lookup[0x80] = 1;
 	mode_e_an_lookup[3] = mode_e_an_lookup[12] = mode_e_an_lookup[0x30] = mode_e_an_lookup[0xc0] = 2;
-#ifdef NEW_CYCLE_EXACT
-	create_cycle_map();
-	cpu2antic_ptr = &cpu2antic[0];
-	antic2cpu_ptr = &antic2cpu[0];
-#endif /* NEW_CYCLE_EXACT */
-
-#endif /* !defined(BASIC) && !defined(CURSES_BASIC) */
-
-#ifdef DIRTYRECT
-		screen_dirty = (UBYTE *) Util_malloc(ATARI_HEIGHT * ATARI_WIDTH / 8);
-#endif
 }
 
 void ANTIC_Reset(void) {
@@ -984,8 +750,6 @@ void ANTIC_Reset(void) {
 	NMIST = 0x1f;
 	ANTIC_PutByte(_DMACTL, 0);
 }
-
-#if !defined(BASIC) && !defined(CURSES_BASIC)
 
 /* Border ------------------------------------------------------------------ */
 
@@ -1058,11 +822,7 @@ static void do_border_gtia11(void)
 	UWORD *ptr = &scrn_ptr[LBORDER_START];
 	const UBYTE *pm_scanline_ptr = &pm_scanline[LBORDER_START];
 	ULONG background = lookup_gtia11[0];
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-	cl_lookup[C_PF3] = colour_translation_table[COLPF3 & 0xf0];
-#else
 	cl_lookup[C_PF3] &= 0xf0f0;
-#endif
 	cl_lookup[C_BAK] = (UWORD) background;
 	/* left border */
 	for (kk = left_border_chars; kk; kk--)
@@ -1110,11 +870,7 @@ static void draw_antic_0_gtia11(void)
 	if (pm_dirty) {
 		const UBYTE *pm_scanline_ptr = &pm_scanline[LBORDER_START];
 		ULONG background = lookup_gtia11[0];
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-		cl_lookup[C_PF3] = colour_translation_table[COLPF3 & 0xf0];
-#else
 		cl_lookup[C_PF3] &= 0xf0f0;
-#endif
 		cl_lookup[C_BAK] = (UWORD) background;
 		do
 			DO_BORDER
@@ -1145,11 +901,7 @@ static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
 		pm_reg = pm_scanline[i];
 		if (pm_reg) {
 			if (pm_reg == L_PF3) {
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-				WRITE_VIDEO(ptr, colour_translation_table[pixel | COLPF3]);
-#else
 				WRITE_VIDEO(ptr, pixel | (pixel << 8) | cl_lookup[C_PF3]);
-#endif
 			}
 			else {
 				WRITE_VIDEO(ptr, COLOUR(pm_reg));
@@ -1159,11 +911,7 @@ static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
 		pm_reg = pm_scanline[i];
 		if (pm_reg) {
 			if (pm_reg == L_PF3) {
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-				WRITE_VIDEO(ptr + 1, colour_translation_table[pixel | COLPF3]);
-#else
 				WRITE_VIDEO(ptr + 1, pixel | (pixel << 8) | cl_lookup[C_PF3]);
-#endif
 			}
 			else {
 				WRITE_VIDEO(ptr + 1, COLOUR(pm_reg));
@@ -1229,11 +977,7 @@ static void draw_an_gtia11(const ULONG *t_pm_scanline_ptr)
 		pm_reg = pm_scanline[i];
 		if (pm_reg) {
 			if (pm_reg == L_PF3) {
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-				WRITE_VIDEO(ptr, colour_translation_table[pixel ? pixel | COLPF3 : COLPF3 & 0xf0]);
-#else
 				WRITE_VIDEO(ptr, pixel ? pixel | (pixel << 8) | cl_lookup[C_PF3] : cl_lookup[C_PF3] & 0xf0f0);
-#endif
 			}
 			else {
 				WRITE_VIDEO(ptr, COLOUR(pm_reg));
@@ -1243,11 +987,7 @@ static void draw_an_gtia11(const ULONG *t_pm_scanline_ptr)
 		pm_reg = pm_scanline[i];
 		if (pm_reg) {
 			if (pm_reg == L_PF3) {
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-				WRITE_VIDEO(ptr + 1, colour_translation_table[pixel ? pixel | COLPF3 : COLPF3 & 0xf0]);
-#else
 				WRITE_VIDEO(ptr + 1, pixel ? pixel | (pixel << 8) | cl_lookup[C_PF3] : cl_lookup[C_PF3] & 0xf0f0);
-#endif
 			}
 			else {
 				WRITE_VIDEO(ptr + 1, COLOUR(pm_reg));
@@ -1289,30 +1029,6 @@ static void draw_an_gtia11(const ULONG *t_pm_scanline_ptr)
 #define FOUR_LOOP_END(data) } while (--k);
 #endif
 
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-
-#define INIT_HIRES hires_norm(0x00) = cl_lookup[C_PF2];\
-	hires_norm(0x40) = hires_norm(0x10) = hires_norm(0x04) = (cl_lookup[C_PF2] & BYTE0_MASK) | (cl_lookup[C_HI2] & BYTE1_MASK);\
-	hires_norm(0x80) = hires_norm(0x20) = hires_norm(0x08) = (cl_lookup[C_HI2] & BYTE0_MASK) | (cl_lookup[C_PF2] & BYTE1_MASK);\
-	hires_norm(0xc0) = hires_norm(0x30) = hires_norm(0x0c) = cl_lookup[C_HI2];
-
-#define DO_PMG_HIRES(data) {\
-	const UBYTE *c_pm_scanline_ptr = (const UBYTE *) t_pm_scanline_ptr;\
-	int pm_pixel;\
-	int mask;\
-	FOUR_LOOP_BEGIN(data)\
-		pm_pixel = *c_pm_scanline_ptr++;\
-		if (data & 0xc0)\
-			PF2PM |= pm_pixel;\
-		mask = hires_mask(data & 0xc0);\
-		pm_pixel = pm_lookup_ptr[pm_pixel] | L_PF2;\
-		WRITE_VIDEO(ptr++, (COLOUR(pm_pixel) & mask) | (COLOUR(pm_pixel + (L_HI2 - L_PF2)) & ~mask));\
-		data <<= 2;\
-	FOUR_LOOP_END(data)\
-}
-
-#else /* USE_COLOUR_TRANSLATION_TABLE */
-
 #define INIT_HIRES hires_norm(0x00) = cl_lookup[C_PF2];\
 	hires_norm(0x40) = hires_norm(0x10) = hires_norm(0x04) = (cl_lookup[C_PF2] & HIRES_MASK_01) | hires_lum(0x40);\
 	hires_norm(0x80) = hires_norm(0x20) = hires_norm(0x08) = (cl_lookup[C_PF2] & HIRES_MASK_10) | hires_lum(0x80);\
@@ -1330,14 +1046,7 @@ static void draw_an_gtia11(const ULONG *t_pm_scanline_ptr)
 	FOUR_LOOP_END(data)\
 }
 
-#endif /* USE_COLOUR_TRANSLATION_TABLE */
-
-
-#ifdef NEW_CYCLE_EXACT
-#define ADD_FONT_CYCLES
-#else
 #define ADD_FONT_CYCLES xpos += font_cycles[md]
-#endif
 
 #ifdef PAGED_MEM
 
@@ -1353,10 +1062,7 @@ static void draw_an_gtia11(const ULONG *t_pm_scanline_ptr)
 #else /* PAGED_MEM */
 
 #define INIT_ANTIC_2	const UBYTE *chptr;\
-	if (antic_xe_ptr != NULL && chbase_20 < 0x8000 && chbase_20 >= 0x4000)\
-		chptr = antic_xe_ptr + ((dctr ^ chbase_20) & 0x3c07);\
-	else\
-		chptr = memory + ((dctr ^ chbase_20) & 0xfc07);\
+	chptr = memory + ((dctr ^ chbase_20) & 0xfc07);\
 	ADD_FONT_CYCLES;\
 	blank_lookup[0x60] = (anticmode == 2 || dctr & 0xe) ? 0xff : 0;\
 	blank_lookup[0x00] = blank_lookup[0x20] = blank_lookup[0x40] = (dctr & 0xe) == 8 ? 0 : 0xff;
@@ -1395,44 +1101,6 @@ static void draw_antic_2(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, cons
 	do_border();
 }
 
-#ifdef NEW_CYCLE_EXACT
-static void draw_antic_2_dmactl_bug(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
-{
-	INIT_BACKGROUND_6
-	INIT_ANTIC_2
-	INIT_HIRES
-
-	CHAR_LOOP_BEGIN
-		/* UBYTE screendata = *ANTIC_memptr++; */
-
-/* In this glitched mode, the output depends on the MSB of the last char */
-/* drawn in the previous line, and invert_mask.  It seems to reveal that */
-/* ANTIC has a latch that is set by the MSB of the char that controls an */
-/* invert gate. */
-/* When this gate was set on the last line and the next line is glitched */
-/* it remains set and the whole line appears inverted */
-/* We'll use this modeline to draw antic f glitched as well, and set */
-/* dmactl_bug_chdata to 0 */
-		int chdata = (dmactl_bug_chdata & invert_mask) ? 0xff : 0;
-		/* GET_CHDATA_ANTIC_2 */
-		if (IS_ZERO_ULONG(t_pm_scanline_ptr)) {
-
-			if (chdata) {
-				WRITE_VIDEO(ptr++, hires_norm(chdata & 0xc0));
-				WRITE_VIDEO(ptr++, hires_norm(chdata & 0x30));
-				WRITE_VIDEO(ptr++, hires_norm(chdata & 0x0c));
-				WRITE_VIDEO(ptr++, hires_norm((chdata & 0x03) << 2));
-			}
-			else
-				DRAW_BACKGROUND(C_PF2)
-		}
-		else
-			DO_PMG_HIRES(chdata)
-		t_pm_scanline_ptr++;
-	CHAR_LOOP_END
-	do_border();
-}
-#endif
 
 static void draw_antic_2_artif(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
@@ -1469,10 +1137,7 @@ static void prepare_an_antic_2(int nchars, const UBYTE *ANTIC_memptr, const ULON
 	int t_chbase = (dctr ^ chbase_20) & 0xfc07;
 #else
 	const UBYTE *chptr;
-	if (antic_xe_ptr != NULL && chbase_20 < 0x8000 && chbase_20 >= 0x4000)
-		chptr = antic_xe_ptr + ((dctr ^ chbase_20) & 0x3c07);
-	else
-		chptr = memory + ((dctr ^ chbase_20) & 0xfc07);
+	chptr = memory + ((dctr ^ chbase_20) & 0xfc07);
 #endif
 
 	CHAR_LOOP_BEGIN
@@ -1513,11 +1178,7 @@ static void draw_antic_2_gtia9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr
 				if (pm_reg) {
 					if (pm_reg == L_PF3) {
 						UBYTE tmp = k > 2 ? chdata >> 4 : chdata & 0xf;
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-						WRITE_VIDEO(ptr, colour_translation_table[tmp | COLPF3]);
-#else
 						WRITE_VIDEO(ptr, tmp | ((UWORD)tmp << 8) | cl_lookup[C_PF3]);
-#endif
 					}
 					else
 					{
@@ -1534,11 +1195,7 @@ static void draw_antic_2_gtia9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr
 
 static void draw_antic_2_gtia10(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
-#ifdef WORDS_UNALIGNED_OK
-	ULONG lookup_gtia10[16];
-#else
-UWORD lookup_gtia10[16];
-#endif
+    UWORD lookup_gtia10[16];
 	INIT_ANTIC_2
 	if ((unsigned long) ptr & 2) { /* HSCROL & 1 */
 		prepare_an_antic_2(nchars, ANTIC_memptr, t_pm_scanline_ptr);
@@ -1546,18 +1203,6 @@ UWORD lookup_gtia10[16];
 		return;
 	}
 
-#ifdef WORDS_UNALIGNED_OK
-	lookup_gtia10[0] = cl_lookup[C_PM0] | (cl_lookup[C_PM0] << 16);
-	lookup_gtia10[1] = cl_lookup[C_PM1] | (cl_lookup[C_PM1] << 16);
-	lookup_gtia10[2] = cl_lookup[C_PM2] | (cl_lookup[C_PM2] << 16);
-	lookup_gtia10[3] = cl_lookup[C_PM3] | (cl_lookup[C_PM3] << 16);
-	lookup_gtia10[12] = lookup_gtia10[4] = cl_lookup[C_PF0] | (cl_lookup[C_PF0] << 16);
-	lookup_gtia10[13] = lookup_gtia10[5] = cl_lookup[C_PF1] | (cl_lookup[C_PF1] << 16);
-	lookup_gtia10[14] = lookup_gtia10[6] = cl_lookup[C_PF2] | (cl_lookup[C_PF2] << 16);
-	lookup_gtia10[15] = lookup_gtia10[7] = cl_lookup[C_PF3] | (cl_lookup[C_PF3] << 16);
-	lookup_gtia10[8] = lookup_gtia10[9] = lookup_gtia10[10] = lookup_gtia10[11] = lookup_gtia9[0];
-//ALEK 
-#else
  	lookup_gtia10[0] = cl_lookup[C_PM0];
  	lookup_gtia10[1] = cl_lookup[C_PM1];
  	lookup_gtia10[2] = cl_lookup[C_PM2];
@@ -1567,7 +1212,7 @@ UWORD lookup_gtia10[16];
  	lookup_gtia10[14] = lookup_gtia10[6] = cl_lookup[C_PF2];
  	lookup_gtia10[15] = lookup_gtia10[7] = cl_lookup[C_PF3];
  	lookup_gtia10[8] = lookup_gtia10[9] = lookup_gtia10[10] = lookup_gtia10[11] = cl_lookup[C_BAK];
-#endif
+
 	ptr++;
 	t_pm_scanline_ptr = (const ULONG *) (((const UBYTE *) t_pm_scanline_ptr) + 1);
 	CHAR_LOOP_BEGIN
@@ -1626,11 +1271,7 @@ static void draw_antic_2_gtia11(int nchars, const UBYTE *ANTIC_memptr, UWORD *pt
 				if (pm_reg) {
 					if (pm_reg == L_PF3) {
 						UBYTE tmp = k > 2 ? chdata & 0xf0 : chdata << 4;
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-						WRITE_VIDEO(ptr, colour_translation_table[tmp ? tmp | COLPF3 : COLPF3 & 0xf0]);
-#else
 						WRITE_VIDEO(ptr, tmp ? tmp | ((UWORD)tmp << 8) | cl_lookup[C_PF3] : cl_lookup[C_PF3] & 0xf0f0);
-#endif
 					}
 					else
 					{
@@ -1652,10 +1293,7 @@ static void draw_antic_4(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, cons
 	UWORD t_chbase = ((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07;
 #else
 	const UBYTE *chptr;
-	if (antic_xe_ptr != NULL && chbase_20 < 0x8000 && chbase_20 >= 0x4000)
-		chptr = antic_xe_ptr + (((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0x3c07);
-	else
-		chptr = memory + (((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07);
+	chptr = memory + (((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07);
 #endif
 
 	ADD_FONT_CYCLES;
@@ -1715,10 +1353,7 @@ static void prepare_an_antic_4(int nchars, const UBYTE *ANTIC_memptr, const ULON
 	UWORD t_chbase = ((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07;
 #else
 	const UBYTE *chptr;
-	if (antic_xe_ptr != NULL && chbase_20 < 0x8000 && chbase_20 >= 0x4000)
-		chptr = antic_xe_ptr + (((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0x3c07);
-	else
-		chptr = memory + (((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07);
+	chptr = memory + (((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07);
 #endif
 
 	ADD_FONT_CYCLES;
@@ -1750,10 +1385,7 @@ static void draw_antic_6(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, cons
 	UWORD t_chbase = (anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20;
 #else
 	const UBYTE *chptr;
-	if (antic_xe_ptr != NULL && chbase_20 < 0x8000 && chbase_20 >= 0x4000)
-		chptr = antic_xe_ptr + (((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20) - 0x4000);
-	else
-		chptr = memory + ((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20);
+	chptr = memory + ((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20);
 #endif
 
 	ADD_FONT_CYCLES;
@@ -1830,10 +1462,7 @@ static void prepare_an_antic_6(int nchars, const UBYTE *ANTIC_memptr, const ULON
 	UWORD t_chbase = (anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20;
 #else
 	const UBYTE *chptr;
-	if (antic_xe_ptr != NULL && chbase_20 < 0x8000 && chbase_20 >= 0x4000)
-		chptr = antic_xe_ptr + (((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20) - 0x4000);
-	else
-		chptr = memory + ((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20);
+	chptr = memory + ((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20);
 #endif
 
 	ADD_FONT_CYCLES;
@@ -2135,11 +1764,7 @@ static void draw_antic_e_gtia9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr
 				if (pm_reg) {
 					if (pm_reg == L_PF3) {
 						UBYTE tmp = k > 2 ? screendata >> 4 : screendata & 0xf;
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-						WRITE_VIDEO(ptr, colour_translation_table[tmp | COLPF3]);
-#else
 						WRITE_VIDEO(ptr, tmp | ((UWORD)tmp << 8) | cl_lookup[C_PF3]);
-#endif
 					}
 					else
 					{
@@ -2243,11 +1868,7 @@ static void draw_antic_f_gtia9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr
 				if (pm_reg) {
 					if (pm_reg == L_PF3) {
 						UBYTE tmp = k > 2 ? screendata >> 4 : screendata & 0xf;
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-						WRITE_VIDEO(ptr, colour_translation_table[tmp | COLPF3]);
-#else
 						WRITE_VIDEO(ptr, tmp | ((UWORD)tmp << 8) | cl_lookup[C_PF3]);
-#endif
 					}
 					else {
 						WRITE_VIDEO(ptr, COLOUR(pm_reg));
@@ -2263,29 +1884,12 @@ static void draw_antic_f_gtia9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr
 
 static void draw_antic_f_gtia10(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
-#ifdef WORDS_UNALIGNED_OK
-	ULONG lookup_gtia10[16];
-#else
-UWORD lookup_gtia10[16];
-#endif
+    UWORD lookup_gtia10[16];
 	if ((unsigned long) ptr & 2) { /* HSCROL & 1 */
 		prepare_an_antic_f(nchars, ANTIC_memptr, t_pm_scanline_ptr);
 		draw_an_gtia10(t_pm_scanline_ptr);
 		return;
 	}
-//ALEK 
-#ifdef WORDS_UNALIGNED_OK
-	lookup_gtia10[0] = cl_lookup[C_PM0] | (cl_lookup[C_PM0] << 16);
-	lookup_gtia10[1] = cl_lookup[C_PM1] | (cl_lookup[C_PM1] << 16);
-	lookup_gtia10[2] = cl_lookup[C_PM2] | (cl_lookup[C_PM2] << 16);
-	lookup_gtia10[3] = cl_lookup[C_PM3] | (cl_lookup[C_PM3] << 16);
-	lookup_gtia10[12] = lookup_gtia10[4] = cl_lookup[C_PF0] | (cl_lookup[C_PF0] << 16);
-	lookup_gtia10[13] = lookup_gtia10[5] = cl_lookup[C_PF1] | (cl_lookup[C_PF1] << 16);
-	lookup_gtia10[14] = lookup_gtia10[6] = cl_lookup[C_PF2] | (cl_lookup[C_PF2] << 16);
-	lookup_gtia10[15] = lookup_gtia10[7] = cl_lookup[C_PF3] | (cl_lookup[C_PF3] << 16);
-	lookup_gtia10[8] = lookup_gtia10[9] = lookup_gtia10[10] = lookup_gtia10[11] = lookup_gtia9[0];
-//ALEK 
-#else
 	lookup_gtia10[0] = cl_lookup[C_PM0];
 	lookup_gtia10[1] = cl_lookup[C_PM1];
 	lookup_gtia10[2] = cl_lookup[C_PM2];
@@ -2295,7 +1899,6 @@ UWORD lookup_gtia10[16];
 	lookup_gtia10[14] = lookup_gtia10[6] = cl_lookup[C_PF2];
 	lookup_gtia10[15] = lookup_gtia10[7] = cl_lookup[C_PF3];
 	lookup_gtia10[8] = lookup_gtia10[9] = lookup_gtia10[10] = lookup_gtia10[11] = cl_lookup[C_BAK];
-#endif
 	ptr++;
 	t_pm_scanline_ptr = (const ULONG *) (((const UBYTE *) t_pm_scanline_ptr) + 1);
 	CHAR_LOOP_BEGIN
@@ -2346,11 +1949,7 @@ static void draw_antic_f_gtia11(int nchars, const UBYTE *ANTIC_memptr, UWORD *pt
 				if (pm_reg) {
 					if (pm_reg == L_PF3) {
 						UBYTE tmp = k > 2 ? screendata & 0xf0 : screendata << 4;
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-						WRITE_VIDEO(ptr, colour_translation_table[tmp ? tmp | COLPF3 : COLPF3 & 0xf0]);
-#else
 						WRITE_VIDEO(ptr, tmp ? tmp | ((UWORD)tmp << 8) | cl_lookup[C_PF3] : cl_lookup[C_PF3] & 0xf0f0);
-#endif
 					}
 					else
 					{
@@ -2429,19 +2028,8 @@ static draw_antic_function draw_antic_table[4][16] = {
 
 /* pointer to current GTIA/ANTIC mode routine */
 static draw_antic_function draw_antic_ptr = draw_antic_8;
-#ifdef NEW_CYCLE_EXACT
-static draw_antic_function saved_draw_antic_ptr;
-#endif
 /* pointer to current GTIA mode blank drawing routine */
 static void (*draw_antic_0_ptr)(void) = draw_antic_0;
-
-#ifdef NEW_CYCLE_EXACT
-/* wrapper for antic_0, for dmactl bugs */
-static void draw_antic_0_dmactl_bug(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
-{
-	draw_antic_0_ptr();
-}
-#endif
 
 /* Artifacting ------------------------------------------------------------ */
 
@@ -2545,18 +2133,13 @@ void ANTIC_UpdateArtifacting(void)
 	}
 }
 
-#endif /* !defined(BASIC) && !defined(CURSES_BASIC) */
-
 /* Display List ------------------------------------------------------------ */
 
-UBYTE ANTIC_GetDLByte(UWORD *paddr)
+inline UBYTE ANTIC_GetDLByte(UWORD *paddr)
 {
 	int addr = *paddr;
 	UBYTE result;
-	if (antic_xe_ptr != NULL && addr < 0x8000 && addr >= 0x4000)
-		result = antic_xe_ptr[addr - 0x4000];
-	else
-		result = GetByte((UWORD) addr);
+	result = GetByte((UWORD) addr);
 	addr++;
 	if ((addr & 0x3FF) == 0)
 		addr -= 0x400;
@@ -2564,17 +2147,13 @@ UBYTE ANTIC_GetDLByte(UWORD *paddr)
 	return result;
 }
 
-UWORD ANTIC_GetDLWord(UWORD *paddr)
+inline UWORD ANTIC_GetDLWord(UWORD *paddr)
 {
 	UBYTE lsb = ANTIC_GetDLByte(paddr);
-#if !defined(BASIC) && !defined(CURSES_BASIC)
 	if (player_flickering && ((VDELAY & 0x80) == 0 || ypos & 1))
 		GRAFP3 = lsb;
-#endif
 	return (ANTIC_GetDLByte(paddr) << 8) + lsb;
 }
-
-#if !defined(BASIC) && !defined(CURSES_BASIC)
 
 /* Real ANTIC doesn't fetch beginning bytes in HSC
    nor screen+47 in wide playfield. This function does. */
@@ -2596,12 +2175,7 @@ static void ANTIC_load(void)
 	UWORD new_screenaddr = screenaddr + chars_read[md];
 	if ((screenaddr ^ new_screenaddr) & 0xf000) {
 		int bytes = (-screenaddr) & 0xfff;
-		if (antic_xe_ptr != NULL && screenaddr < 0x8000 && screenaddr >= 0x4000) {
-			memcpy(ANTIC_memory + ANTIC_margin, antic_xe_ptr + (screenaddr - 0x4000), bytes);
-			if (new_screenaddr & 0xfff)
-				memcpy(ANTIC_memory + ANTIC_margin + bytes, antic_xe_ptr + (screenaddr + bytes - 0x5000), new_screenaddr & 0xfff);
-		}
-		else if ((screenaddr & 0xf000) == 0xd000) {
+		if ((screenaddr & 0xf000) == 0xd000) {
 			CopyFromMem(screenaddr, ANTIC_memory + ANTIC_margin, bytes);
 			if (new_screenaddr & 0xfff)
 				CopyFromMem((UWORD) (screenaddr + bytes - 0x1000), ANTIC_memory + ANTIC_margin + bytes, new_screenaddr & 0xfff);
@@ -2614,9 +2188,7 @@ static void ANTIC_load(void)
 		screenaddr = new_screenaddr - 0x1000;
 	}
 	else {
-		if (antic_xe_ptr != NULL && screenaddr < 0x8000 && screenaddr >= 0x4000)
-			memcpy(ANTIC_memory + ANTIC_margin, antic_xe_ptr + (screenaddr - 0x4000), chars_read[md]);
-		else if ((screenaddr & 0xf000) == 0xd000)
+        if ((screenaddr & 0xf000) == 0xd000)
 			CopyFromMem(screenaddr, ANTIC_memory + ANTIC_margin, chars_read[md]);
 		else
 			dCopyFromMem(screenaddr, ANTIC_memory + ANTIC_margin, chars_read[md]);
@@ -2636,8 +2208,8 @@ static int scanlines_to_curses_display = 0;
 #endif
 
 /* This function emulates one frame drawing screen at atari_screen */
-void ANTIC_Frame(int draw_display) {
-//void ANTIC_Frame(void) {
+ITCM_CODE void ANTIC_Frame(int draw_display) 
+{
 	static const UBYTE mode_type[32] = {
 		NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL1, NORMAL1,
 		NORMAL2, NORMAL2, NORMAL1, NORMAL1, NORMAL1, NORMAL0, NORMAL0, NORMAL0,
@@ -2648,23 +2220,10 @@ void ANTIC_Frame(int draw_display) {
 		{ 0, 0, 7, 9, 7, 15, 7, 15, 7, 3, 3, 1, 0, 1, 0, 0 };
 	UBYTE vscrol_flag = FALSE;
 	UBYTE no_jvb = TRUE;
-#ifndef NEW_CYCLE_EXACT
 	UBYTE need_load;
-#endif
 
-#ifdef NEW_CYCLE_EXACT
-	int cpu2antic_index;
-#endif /* NEW_CYCLE_EXACT */
 #ifndef NO_GTIA11_DELAY
-#ifdef NEW_CYCLE_EXACT
-	int stop = FALSE;
-/* can be negative, leave as signed ints */
-	int old_curline_prior_pos;
-	int last_pos;
-	int change_pos;
-#else
 	int delayed_gtia11 = 250;
-#endif /* NEW_CYCLE_EXACT */
 #endif /* NO_GTIA11_DELAY */
 
 	ypos = 0;
@@ -2673,34 +2232,11 @@ void ANTIC_Frame(int draw_display) {
 		OVERSCREEN_LINE;
 	} while (ypos < 8);
 
-#ifdef ALEKSCR_DIRECT
-  scrn_ptr = bgGetGfxPtr(bg0); //(UWORD *) (0x06000000);
-#else
-	scrn_ptr = (UWORD *) atari_screen;
-#endif
-
-#ifdef NEW_CYCLE_EXACT
-	cur_screen_pos = NOT_DRAWING;
-#endif
+    scrn_ptr = bgGetGfxPtr(bg0); //(UWORD *) (0x06000000);
 	need_dl = TRUE;
 	do {
-/*
-		if ((mouse_mode == MOUSE_PEN || mouse_mode == MOUSE_GUN) && (ypos >> 1 == PENV_input)) {
-			PENH = PENH_input;
-			PENV = PENV_input;
-			if (GRACTL & 4)
-				TRIG_latch[mouse_port] = 0;
-		}
-*/
-
-	  POKEY_Scanline();		/* check and generate IRQ */
+        POKEY_Scanline();		/* check and generate IRQ */
 		pmg_dma();
-
-#ifdef USE_CURSES
-		if (--scanlines_to_curses_display == 0)
-			curses_display_line(anticmode, ANTIC_memory + ANTIC_margin);
-#endif
-
 		need_load = FALSE;
 		if (need_dl) {
 			if (DMACTL & 0x20) {
@@ -2776,65 +2312,11 @@ void ANTIC_Frame(int draw_display) {
 				break;
 			}
 		}
-#ifdef NEW_CYCLE_EXACT
-		cpu2antic_index = 0;
-		if (anticmode < 2 || (DMACTL & 3) == 0 ||
-			(anticmode >= 8 && !need_load)) {
-			cpu2antic_index = 0;
-		}
-		else {
-/* TODO: use a cleaner lookup table here */
-			if (!(IR & 0x10) && ((DMACTL & 3) == 1))
-				cpu2antic_index = 1;
-			else if ((!(IR &0x10) && ((DMACTL & 3) == 2)) ||
-				((IR & 0x10) && ((DMACTL & 3) == 1))) {
-				cpu2antic_index = 2;
-			}
-			else
-				cpu2antic_index = 10;
-			if (IR & 0x10) {
-				cpu2antic_index += (HSCROL >> 1);
-			}
-			if (anticmode >=2 && anticmode <=7 && !need_load)
-				cpu2antic_index += 17;
-			if (anticmode ==6 || anticmode ==7)
-				cpu2antic_index += 17 * 2;
-		 	else if (anticmode==8 || anticmode == 9)
-				cpu2antic_index += 17 * 6;
-			else if (anticmode >=0xa && anticmode <=0xc)
-				cpu2antic_index += 17 * 5;
-			else if (anticmode >=0x0d)
-				cpu2antic_index += 17 * 4;
-		}
-		cpu2antic_ptr = &cpu2antic[CPU2ANTIC_SIZE * cpu2antic_index];
-		antic2cpu_ptr = &antic2cpu[CPU2ANTIC_SIZE * cpu2antic_index];
-#endif /* NEW_CYCLE_EXACT */
 
 		if ((IR & 0x4f) == 1 && (DMACTL & 0x20)) {
 			dlist = ANTIC_GetDLWord(&dlist);
 			xpos += 2;
 		}
-
-#ifdef NEW_CYCLE_EXACT
-		/* begin drawing here */
-		if (draw_display) {
-			cur_screen_pos = LBORDER_START;
-			xpos = antic2cpu_ptr[xpos]; /* convert antic to cpu(need for WSYNC) */
-			if (dctr == lastline) {
-				if (no_jvb)
-					need_dl = TRUE;
-				if (IR & 0x80) {
-					GO(antic2cpu_ptr[NMIST_C]);
-					NMIST = 0x9f;
-					if (NMIEN & 0x80) {
-						GO(antic2cpu_ptr[NMI_C]);
-						NMI();
-					}
-				}
-			}
-		}
-		else /* force this to be within an else if NEW_CYCLE_EXACT */
-#endif /* NEW_CYCLE_EXACT */
 		if (dctr == lastline) {
 			if (no_jvb)
 				need_dl = TRUE;
@@ -2881,32 +2363,6 @@ void ANTIC_Frame(int draw_display) {
 #define YPOS_BREAK_FLICKER
 #endif /* NO_YPOS_BREAK_FLICKER */
 
-#ifdef NEW_CYCLE_EXACT
-		new_pm_scanline();
-		if (anticmode < 2 || (DMACTL & 3) == 0) {
-			GOEOL_CYCLE_EXACT;
-			draw_partial_scanline(cur_screen_pos, RBORDER_END);
-			UPDATE_DMACTL
-			cur_screen_pos = NOT_DRAWING;
-			YPOS_BREAK_FLICKER
-#ifdef ALEKSCR_DIRECT
-      scrn_ptr += 256;
-#else
-      scrn_ptr += ATARI_WIDTH / 2;
-#endif
-			if (no_jvb) {
-				dctr++;
-				dctr &= 0xf;
-			}
-			continue;
-		}
-
-		GOEOL_CYCLE_EXACT;
-		draw_partial_scanline(cur_screen_pos, RBORDER_END);
-		UPDATE_DMACTL
-		cur_screen_pos = NOT_DRAWING;
-
-#else /* NEW_CYCLE_EXACT not defined */
 		if (need_load && anticmode <= 5 && DMACTL & 3)
 			xpos += before_cycles[md];
 
@@ -2952,9 +2408,7 @@ void ANTIC_Frame(int draw_display) {
 			scrn_ptr + x_min[md],
 			(ULONG *) &pm_scanline[x_min[md]]);
 
-#endif /* NEW_CYCLE_EXACT */
 #ifndef NO_GTIA11_DELAY
-#ifndef NEW_CYCLE_EXACT
 		if (PRIOR >= 0xc0)
 			delayed_gtia11 = ypos + 1;
 		else
@@ -2965,93 +2419,7 @@ void ANTIC_Frame(int draw_display) {
 					WRITE_VIDEO_LONG(ptr, READ_VIDEO_LONG(ptr) | READ_VIDEO_LONG(ptr - ATARI_WIDTH / 4));
 					ptr++;
 				} while (--k);
-			}
-#else /* NEW_CYCLE_EXACT defined */
-/* Basic explaination: */
-/* the ring buffer prior_pos_buf has three pointers: */
-/*     A   B  C              D     E    F      G   */
-/*     ^                     ^                 ^   */
-/* prevline_prior_pos  curline_prior_pos  prior_curpos  */
-/* G would be the most recent change which occured during drawing */
-/* of the current line, D is the most recent */
-/* change before the current line was drawn, and A is the most recent */
-/* change before the previous line was drawn */
-/* curline_prior_pos is saved in old_curline_prior_pos */
-/* then the code will increase either curline_prior_pos or */
-/* prevline_prior_pos depending if the change at B or E occured */
-/* earlier in the scanline ignoring which scanline it was */
-/* eg: */
-/*                              A occurs on some previous scanline */
-/* prev:     B                      C                          D     */
-/* current:                     E                    F           G   */
-/* so from the left end of the screen, the changes occured in the order */
-/* B,E,C,F,D,G */
-/* then the code will read the values in that order, and each time it will */
-/* update prev_prior_val and cur_prior_val to be equal the the PRIOR values */
-/* "in effect" *before* those changes occured.  If those PRIOR values */
-/* should cause a GTIA11_DELAY effect to occur then this is processed */
-/* for that portion of the scanline */
-/* At the end of processing, the buffer would look like: */
-/* the ring buffer prior_pos_buf has three pointers: */
-/*     A   B  C              D     E    F      G   */
-/*                           ^                 ^   */
-/*                    prevline_prior_pos  curline_prior_pos==prior_curpos  */
-
-		stop = FALSE;
-		last_pos = LBORDER_START;
-		old_curline_prior_pos = curline_prior_pos;
-		do {
-
-			UBYTE prev_prior_val;
-			UBYTE cur_prior_val;
-			prev_prior_val = prior_val_buf[prevline_prior_pos];
-			cur_prior_val = prior_val_buf[curline_prior_pos];
-
-			if (prevline_prior_pos == old_curline_prior_pos &&
-				curline_prior_pos == prior_curpos) {
-			/* no more changes */
-				change_pos = RBORDER_END;
-				stop = TRUE;
-			}
-			else if (prevline_prior_pos != old_curline_prior_pos &&
-				curline_prior_pos != prior_curpos) {
-			/* find leftmost change */
-				int pnext = (prevline_prior_pos + 1) % PRIOR_BUF_SIZE;
-				int cnext = (curline_prior_pos + 1) % PRIOR_BUF_SIZE;
-				if (prior_pos_buf[pnext] < prior_pos_buf[cnext]) {
-					change_pos = prior_pos_buf[pnext];
-					prevline_prior_pos = pnext;
-				}
-				else {
-					change_pos = prior_pos_buf[cnext];
-					curline_prior_pos = cnext;
-				}
-			}
-			else if (prevline_prior_pos != old_curline_prior_pos) {
-				/* only have prevline change */
-				prevline_prior_pos = (prevline_prior_pos + 1) % PRIOR_BUF_SIZE;
-				change_pos = prior_pos_buf[prevline_prior_pos];
-			}
-			else {
-				/* must only have curline change */
-				curline_prior_pos = (curline_prior_pos + 1) % PRIOR_BUF_SIZE;
-				change_pos = prior_pos_buf[curline_prior_pos];
-			}
-
-			if (prev_prior_val >= 0xc0 && cur_prior_val < 0xc0 &&
-				change_pos > LBORDER_START &&
-				change_pos > last_pos && last_pos < RBORDER_END) {
-				int adj_change_pos = (change_pos > RBORDER_END) ? RBORDER_END : change_pos;
-				UWORD *ptr = (scrn_ptr + last_pos);
-				int k = adj_change_pos - last_pos;
-				do {
-					WRITE_VIDEO(ptr, *ptr | *(ptr - ATARI_WIDTH / 2));
-					ptr++;
-				} while (--k);
-			}
-			last_pos = (change_pos > last_pos) ? change_pos: last_pos;
-		} while (!stop);
-#endif /* NEW_CYCLE_EXACT */
+			}        
 #endif /* NO_GTIA11_DELAY */
 #ifndef NEW_CYCLE_EXACT
 		GOEOL;
@@ -3087,317 +2455,9 @@ void ANTIC_Frame(int draw_display) {
 	ypos = 0; /* just for monitor.c */
 }
 
-#ifdef NEW_CYCLE_EXACT
-
-/* update the scanline from the last changed position to the current
-position, when a change was made to a display register during drawing */
-void update_scanline(void)
-{
-	int antic_xpos = cpu2antic_ptr[xpos];
-	int newpos = antic_xpos * 2 - 37;
-	draw_partial_scanline(cur_screen_pos, newpos);
-	cur_screen_pos = newpos;
-}
-
-/* prior needs a different adjustment and could generate small glitches
-between mode changes */
-/* TODO: support glitches between mode changes (tiny areas that are neither
-the new mode nor the old mode, which occur between mode changes */
-void update_scanline_prior(UBYTE byte)
-{
-	int antic_xpos = cpu2antic_ptr[xpos];
-	int prior_mode_adj = 2;
-	int newpos;
-	newpos = antic_xpos * 2 - 37 + prior_mode_adj;
-	draw_partial_scanline(cur_screen_pos, newpos);
-	cur_screen_pos = newpos;
-}
-
-/* chbase needs a different adjustment */
-void update_scanline_chbase(void)
-{
-	int antic_xpos = cpu2antic_ptr[xpos];
-	int hscrol_adj = (IR & 0x10) ? HSCROL : 0;
-	int hscrollsb_adj = (hscrol_adj & 1);
-	int newpos;
-	int fontfetch_adj;
-	/* antic fetches character font data every 2 or 4 cycles */
-	/* we want to delay the change until the next fetch */
-	/* empirically determinted: */
-	if (anticmode >= 2 && anticmode <= 5) {
-		fontfetch_adj = (((hscrol_adj >>1) - antic_xpos + 0) & 1) * 2 + 9;
-	}
-	else if (anticmode == 6 || anticmode == 7) {
-		fontfetch_adj = (((hscrol_adj >> 1) - antic_xpos + 2) & 3) * 2 + 9;
-	}
-	else {
-		fontfetch_adj = 0;
-	}
-	newpos = antic_xpos * 2 - 37 + hscrollsb_adj + fontfetch_adj;
-	draw_partial_scanline(cur_screen_pos, newpos);
-	cur_screen_pos = newpos;
-}
-
-/* chactl invert needs a different adjustment */
-void update_scanline_invert(void)
-{
-	int antic_xpos = cpu2antic_ptr[xpos];
-	int hscrol_adj = (IR & 0x10) ? HSCROL : 0;
-	int hscrollsb_adj = (hscrol_adj & 1);
-	int newpos;
-
-	/* empirically determined: adjustment of 4 */
-	newpos = antic_xpos * 2 - 37 + hscrollsb_adj + 4;
-	draw_partial_scanline(cur_screen_pos, newpos);
-	cur_screen_pos = newpos;
-}
-
-/* chactl blank needs a different adjustment */
-void update_scanline_blank(void)
-{
-	int antic_xpos = cpu2antic_ptr[xpos];
-	int hscrol_adj = (IR & 0x10) ? HSCROL : 0;
-	int hscrollsb_adj = (hscrol_adj & 1);
-	int newpos;
-
-	/* empirically determined: adjustment of 7 */
-	newpos = antic_xpos * 2 - 37 + hscrollsb_adj + 7;
-	draw_partial_scanline(cur_screen_pos, newpos);
-	cur_screen_pos = newpos;
-}
-
-void set_dmactl_bug(void){
-	need_load = FALSE;
-	saved_draw_antic_ptr = draw_antic_ptr;
-	draw_antic_ptr_changed = 1;
-	if (anticmode == 2 || anticmode == 3 || anticmode == 0xf) {
-		draw_antic_ptr = draw_antic_2_dmactl_bug;
-		dmactl_bug_chdata = (anticmode == 0xf) ? 0 : ANTIC_memory[ANTIC_margin + chars_read[md] - 1];
-	}
-	else {
-		draw_antic_ptr = draw_antic_0_dmactl_bug;
-	}
-}
-
-/* draw a partial scanline between point l and point r */
-/* l is the left hand word, r is the point one past the right-most word to draw */
-void draw_partial_scanline(int l, int r)
-{
-	/* lborder_chars: save left border chars,we restore it after */
-	/*                it is the number of 8pixel 'chars' in the left border */
-	int lborder_chars = left_border_chars;
-
-	/* rborder_start: save right border start, we restore it after */
-	/*                it is the start of the right border, in words */
-	int rborder_start = right_border_start;
-
-	/* lborder_start: start of the left border, in words */
-	int lborder_start = LCHOP * 4;
-	/* end of the left border, in words */
-	int lborder_end = LCHOP * 4 + left_border_chars * 4;
-	/* end of the right border, in words */
-	int rborder_end = (48 - RCHOP) * 4;
-	/* flag: if true, don't show playfield. used if the partial scanline */
-	/*    does not include the playfield */
-	int dont_display_playfield = 0;
-	/* offset of the left most drawable 8 pixel pf block */
-	/* int l_pfchar = (lborder_end - x_min[md]) / 4; */
-	int l_pfchar = 0;
-	/* offset of the right most drawable 8 pixel pf plock, *plus one* */
-	int r_pfchar = 0;
-	/* buffer to save 0,1,2 or 3 words of the left hand portion of an 8pixel */
-	/* 'char' which is going to be erased by the left hand side of the */
-	/* left most 8pixel 'char' in the partial scanline and must be saved */
-	/* and restored later */
-	UWORD sv_buf[4];
-	/* buffer to save 0 or 1 (modes 6,7,a,b,c) ,or , (0,1,2 or 3) (modes 8,9) */
-	/* 8pixel 'chars' of playfield which is going to be erased by the left */
-	/* hand most 8pixel 'char's of the 2(modes 67abc) or 4(modes 89) 8pixel */
-	/* 'char'-sized blocks that these modes must draw. */
-	UWORD sv_buf2[4 * 4]; /* for modes 6,7,8,9,a,b,c */
-	/* start,size of the above buffers */
-	int sv_bufstart = 0;
-	int sv_bufsize = 0;
-	int sv_bufstart2 = 0;
-	int sv_bufsize2 = 0;
-	/* number of 8,16,32pixel chars to draw in the playfield */
-	int nchars = 0;
-	/* adjusment to ch_index , it is the number of 8,16,32pixel chars */
-	/* that we do not draw on the left hand side that would usually be drawn */
-	/* for this mode */
-	int ch_adj = 0;
-	/* adjustment to x_min to skip over the left side */
-	int x_min_adj = 0;
-	/* it's the offset of the left most drawable 8pixel pfblock which is */
-	/* rounded *down* to the nearest factor of (2:mode 67abc,4:mode 89) */
-	/* if it is divided by (2:mode 67abc,4:mode 89) it will give the */
-	/* offset of the left most drawable (16,32)pixel 'char' */
-	int l_pfactual = 0;
-	/* it is the offset of the right most drawable 8pixel pf block which is */
-	/* rounded *up* to the nearest factor of (2,4),  *plus one* */
-	/* so that r_pfactual-l_pfactual / (2,4) = number of 16,32 pixel 'chars' */
-	/* to be drawn */
-	int r_pfactual = 0;
-	/* it is the offset of the 8pixel block aligned with pf which overlaps */
-	/* the left border. We need this for modes 6-c, because in these modes */
-	/* the code will save 8pixel blocks to the left of l_pfchar and */
-	/* >= l_pfactual, which will result in portions of the left border */
-	/* being saved on some occasions which should not be, unless we */
-	/* use this variable to alter the number of chars saved */
-	/* int l_borderpfchar=0; */
-
-	r_pfchar = chars_displayed[md];
-	if (md == NORMAL1 || md == SCROLL1) { /* modes 6,7,a,b,c */
-		r_pfchar *= 2;
-	}
-	else if (md == NORMAL2 || md == SCROLL2) { /* modes 8,9 */
-		r_pfchar *= 4;
-	}
-	if (anticmode < 2 || (DMACTL & 3) == 0) {
-		lborder_end = rborder_end;
-		dont_display_playfield = 1;
-	}
-	if (l > rborder_end)
-		l = rborder_end;
-	if (r > rborder_end)
-		r = rborder_end;
-	if (l < lborder_start)
-		l = lborder_start;
-	if (r < lborder_start)
-		r = lborder_start;
-	if (l >= r)
-		return;
-	if (l < lborder_end) {
-		/* left point is within left border */
-		sv_bufstart = (l & (~3)); /* high order bits give buffer start */
-		sv_bufsize = l - sv_bufstart;
-		left_border_start = sv_bufstart;
-		left_border_chars = lborder_chars - (sv_bufstart - lborder_start) / 4;
-		if (l > x_min[md]) {
-			/* special case for modes 56789abc */
-			/* position buffer within the reference frame */
-			/* of the playfield if that */
-			/* results in more pixels being saved in the buffer */
-			/* needed because for modes 5789abc the overlapping part */
-			/* can be more than 1 8pixel char and we only save the left */
-			/* hand most 8pixel chars in the code in the later section */
-			/* further down, so there is a possibility that the 8pixels */
-			/* which are saved within the reference frame of the border */
-			/* are not enough to ensure that everyting gets saved */
-			l_pfchar = (l - x_min[md]) / 4;
-			if (((l - x_min[md]) & 3) > sv_bufsize) {
-				sv_bufsize = ((l - x_min[md]) & 3);
-				sv_bufstart = l - sv_bufsize;
-			}
-		}
-	}
-	else if (l >= rborder_start) {
-		sv_bufstart = (l & (~3)); /* high order bits give buffer start */
-		sv_bufsize = l - sv_bufstart;
-		right_border_start = sv_bufstart;
-		dont_display_playfield = 1; /* don't display the playfield */
-	}
-	else { /*within screen */
-		sv_bufsize = ((l - x_min[md]) & 3); /* low bits have buf size */
-		sv_bufstart = l - sv_bufsize; /* difference gives start */
-		l_pfchar = (sv_bufstart - x_min[md]) / 4;
-		left_border_chars = 0; /* dont display left border */
-	}
-	memcpy(sv_buf, scrn_ptr + sv_bufstart, sv_bufsize * sizeof(UWORD)); /* save part of screen */
-
-	if (r <= lborder_end) {
-		/* right_end_char = (r + 3) / 4; */
-		left_border_chars = (r + 3) / 4 - sv_bufstart / 4;
-		/* everything must be within the left border */
-		dont_display_playfield = 1; /* don't display the playfield */
-	}
-	else { /* right point is past start of playfield */
-		/* now load ANTIC data: needed for ANTIC glitches */
-		if (need_load) {
-			ANTIC_load();
-#ifdef USE_CURSES
-			/* Normally, we would call curses_display_line here,
-			   and not use scanlines_to_curses_display at all.
-			   That would however cause incorrect color of the "MEMORY"
-			   menu item in Self Test - it isn't set properly
-			   in the first scanline. We therefore postpone
-			   curses_display_line call to the next scanline. */
-			scanlines_to_curses_display = 1;
-#endif
-			need_load = FALSE;
-		}
-
-		if (r > rborder_start) {
-			right_border_end = ((r + 3) & (~3)); /* round up to nearest 8pixel */
-		}
-		else {
-			r_pfchar = (r - x_min[md] + 3) / 4; /* round up to nearest 8pixel */
-		}
-	}
-	if (dont_display_playfield) {
-		nchars = 0;
-		x_min_adj = 0;
-		ch_adj = 0;
-	}
-	else if (md == NORMAL1 || md == SCROLL1) { /* modes 6,7,a,b,c */
-		l_pfactual = (l_pfchar & (~1)); /* round down to nearest 16pixel */
-		sv_bufsize2 = (l_pfchar - l_pfactual) * 4;
-		sv_bufstart2 = x_min[md] + l_pfactual * 4;
-		r_pfactual = ((r_pfchar + 1) & (~1)); /* round up to nearest 16pixel */
-		nchars = (r_pfactual - l_pfactual) / 2;
-		x_min_adj = l_pfactual * 4;
-		ch_adj = l_pfactual / 2;
-	}
-	else if (md == NORMAL2 || md == SCROLL2) { /* modes 8,9 */
-		l_pfactual = (l_pfchar & (~3));
-		sv_bufsize2 = (l_pfchar - l_pfactual) * 4;
-		sv_bufstart2 = x_min[md] + l_pfactual * 4;
-		r_pfactual = ((r_pfchar + 3) & (~3));
-		nchars = (r_pfactual - l_pfactual) / 4;
-		x_min_adj = l_pfactual * 4;
-		ch_adj = l_pfactual / 4;
-	}
-	else {
-		nchars = r_pfchar - l_pfchar;
-		x_min_adj = l_pfchar * 4;
-		ch_adj = l_pfchar;
-	}
-	memcpy(sv_buf2, scrn_ptr + sv_bufstart2, sv_bufsize2 * sizeof(UWORD)); /* save part of screen */
-
-	if (dont_display_playfield) {
-/* the idea here is to use draw_antic_0_ptr() to draw just the border only, since */
-/* we can't set nchars=0.  draw_antic_0_ptr will work if left_border_start and */
-/* right_border_end are set correctly */
-		if (anticmode < 2 || (DMACTL & 3) == 0 || r <= lborder_end) {
-			right_border_end = left_border_start + left_border_chars * 4;
-		}
-		else if (l >= rborder_start) {
-			left_border_start = right_border_start;
-		}
-		draw_antic_0_ptr();
-	}
-	else {
-		draw_antic_ptr(nchars, /* chars_displayed[md], */
-			ANTIC_memory + ANTIC_margin + ch_offset[md] + ch_adj,
-			scrn_ptr + x_min[md] + x_min_adj,
-			(ULONG *) &pm_scanline[x_min[md] + x_min_adj]);
-	}
-	memcpy(scrn_ptr + sv_bufstart2, sv_buf2, sv_bufsize2 * sizeof(UWORD)); /* restore screen */
-	memcpy(scrn_ptr + sv_bufstart, sv_buf, sv_bufsize * sizeof(UWORD)); /* restore screen */
-
-	/* restore border global variables */
-	left_border_chars=lborder_chars;
-	right_border_start=rborder_start;
-	left_border_start = LCHOP * 4;
-	right_border_end = (48-RCHOP)  *4;
-}
-#endif /* NEW_CYCLE_EXACT */
-
-#endif /* !defined(BASIC) && !defined(CURSES_BASIC) */
-
 /* ANTIC registers --------------------------------------------------------- */
 
-UBYTE ANTIC_GetByte(UWORD addr)
+ITCM_CODE UBYTE ANTIC_GetByte(UWORD addr)
 {
 	switch (addr & 0xf) {
 	case _VCOUNT:
@@ -3417,75 +2477,10 @@ UBYTE ANTIC_GetByte(UWORD addr)
 	}
 }
 
-#if !defined(BASIC) && !defined(CURSES_BASIC)
-
 /* GTIA calls it on write to PRIOR */
 void set_prior(UBYTE byte)
 {
 	if ((byte ^ PRIOR) & 0x0f) {
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-		UBYTE col = 0;
-		UBYTE col2 = 0;
-		UBYTE hi;
-		UBYTE hi2;
-		if ((byte & 3) == 0) {
-			col = COLPF0;
-			col2 = COLPF1;
-		}
-		if ((byte & 0xc) == 0) {
-			cl_lookup[C_PF0 | C_PM0] = colour_translation_table[col | COLPM0];
-			cl_lookup[C_PF0 | C_PM1] = colour_translation_table[col | COLPM1];
-			cl_lookup[C_PF0 | C_PM01] = colour_translation_table[col | COLPM0 | COLPM1];
-			cl_lookup[C_PF1 | C_PM0] = colour_translation_table[col2 | COLPM0];
-			cl_lookup[C_PF1 | C_PM1] = colour_translation_table[col2 | COLPM1];
-			cl_lookup[C_PF1 | C_PM01] = colour_translation_table[col2 | COLPM0 | COLPM1];
-		}
-		else {
-			cl_lookup[C_PF0 | C_PM01] = cl_lookup[C_PF0 | C_PM1] = cl_lookup[C_PF0 | C_PM0] = colour_translation_table[col];
-			cl_lookup[C_PF1 | C_PM01] = cl_lookup[C_PF1 | C_PM1] = cl_lookup[C_PF1 | C_PM0] = colour_translation_table[col2];
-		}
-		if (byte & 4) {
-			cl_lookup[C_PF2 | C_PM01] = cl_lookup[C_PF2 | C_PM1] = cl_lookup[C_PF2 | C_PM0] = cl_lookup[C_PF2];
-			cl_lookup[C_PF3 | C_PM01] = cl_lookup[C_PF3 | C_PM1] = cl_lookup[C_PF3 | C_PM0] = cl_lookup[C_PF3];
-			cl_lookup[C_HI2 | C_PM01] = cl_lookup[C_HI2 | C_PM1] = cl_lookup[C_HI2 | C_PM0] = cl_lookup[C_HI2];
-		}
-		else {
-			cl_lookup[C_PF3 | C_PM0] = cl_lookup[C_PF2 | C_PM0] = cl_lookup[C_PM0];
-			cl_lookup[C_PF3 | C_PM1] = cl_lookup[C_PF2 | C_PM1] = cl_lookup[C_PM1];
-			cl_lookup[C_PF3 | C_PM01] = cl_lookup[C_PF2 | C_PM01] = cl_lookup[C_PM01];
-			cl_lookup[C_HI2 | C_PM0] = colour_translation_table[(COLPM0 & 0xf0) | (COLPF1 & 0xf)];
-			cl_lookup[C_HI2 | C_PM1] = colour_translation_table[(COLPM1 & 0xf0) | (COLPF1 & 0xf)];
-			cl_lookup[C_HI2 | C_PM01] = colour_translation_table[((COLPM0 | COLPM1) & 0xf0) | (COLPF1 & 0xf)];
-		}
-		col = col2 = 0;
-		hi = hi2 = COLPF1 & 0xf;
-		cl_lookup[C_BLACK - C_PF2 + C_HI2] = colour_translation_table[hi];
-		if ((byte & 9) == 0) {
-			col = COLPF2;
-			col2 = COLPF3;
-			hi |= col & 0xf0;
-			hi2 |= col2 & 0xf0;
-		}
-		if ((byte & 6) == 0) {
-			cl_lookup[C_PF2 | C_PM2] = colour_translation_table[col | COLPM2];
-			cl_lookup[C_PF2 | C_PM3] = colour_translation_table[col | COLPM3];
-			cl_lookup[C_PF2 | C_PM23] = colour_translation_table[col | COLPM2 | COLPM3];
-			cl_lookup[C_PF3 | C_PM2] = colour_translation_table[col2 | COLPM2];
-			cl_lookup[C_PF3 | C_PM3] = colour_translation_table[col2 | COLPM3];
-			cl_lookup[C_PF3 | C_PM23] = colour_translation_table[col2 | COLPM2 | COLPM3];
-			cl_lookup[C_HI2 | C_PM2] = colour_translation_table[hi | (COLPM2 & 0xf0)];
-			cl_lookup[C_HI2 | C_PM3] = colour_translation_table[hi | (COLPM3 & 0xf0)];
-			cl_lookup[C_HI2 | C_PM23] = colour_translation_table[hi | ((COLPM2 | COLPM3) & 0xf0)];
-			cl_lookup[C_HI2 | C_PM25] = colour_translation_table[hi2 | (COLPM2 & 0xf0)];
-			cl_lookup[C_HI2 | C_PM35] = colour_translation_table[hi2 | (COLPM3 & 0xf0)];
-			cl_lookup[C_HI2 | C_PM235] = colour_translation_table[hi2 | ((COLPM2 | COLPM3) & 0xf0)];
-		}
-		else {
-			cl_lookup[C_PF2 | C_PM23] = cl_lookup[C_PF2 | C_PM3] = cl_lookup[C_PF2 | C_PM2] = colour_translation_table[col];
-			cl_lookup[C_PF3 | C_PM23] = cl_lookup[C_PF3 | C_PM3] = cl_lookup[C_PF3 | C_PM2] = colour_translation_table[col2];
-			cl_lookup[C_HI2 | C_PM23] = cl_lookup[C_HI2 | C_PM3] = cl_lookup[C_HI2 | C_PM2] = colour_translation_table[hi];
-		}
-#else /* USE_COLOUR_TRANSLATION_TABLE */
 		UWORD cword = 0;
 		UWORD cword2 = 0;
 		if ((byte & 3) == 0) {
@@ -3530,7 +2525,7 @@ void set_prior(UBYTE byte)
 			cl_lookup[C_PF2 | C_PM23] = cl_lookup[C_PF2 | C_PM3] = cl_lookup[C_PF2 | C_PM2] = cword;
 			cl_lookup[C_PF3 | C_PM23] = cl_lookup[C_PF3 | C_PM3] = cl_lookup[C_PF3 | C_PM2] = cword2;
 		}
-#endif /* USE_COLOUR_TRANSLATION_TABLE */
+
 		if (byte & 1) {
 			cl_lookup[C_PF1 | C_PM2] = cl_lookup[C_PF0 | C_PM2] = cl_lookup[C_PM2];
 			cl_lookup[C_PF1 | C_PM3] = cl_lookup[C_PF0 | C_PM3] = cl_lookup[C_PM3];
@@ -3568,9 +2563,7 @@ void set_prior(UBYTE byte)
 		draw_antic_ptr = draw_antic_table[byte >> 6][anticmode];
 }
 
-#endif /* !defined(BASIC) && !defined(CURSES_BASIC) */
-
-void ANTIC_PutByte(UWORD addr, UBYTE byte)
+ITCM_CODE void ANTIC_PutByte(UWORD addr, UBYTE byte)
 {
 	switch (addr & 0xf) {
 	case _DLISTL:
@@ -3580,99 +2573,7 @@ void ANTIC_PutByte(UWORD addr, UBYTE byte)
 		dlist = (dlist & 0x00ff) | (byte << 8);
 		break;
 	case _DMACTL:
-/* TODO: make this truely cycle-exact, update cpu2antic and antic2cpu,
-add support for wider->narrow glitches including the interesting mode 6
-glitch */
-#ifdef NEW_CYCLE_EXACT
-		dmactl_changed=0;
-		/* has DMACTL width changed?  */
-		if ((byte & 3) != (DMACTL & 3) ){
-			/* DMACTL width changed from 0 */
-			if ((DMACTL & 3) == 0) {
-				int glitch_cycle = (3 + 32) - 8*(byte & 3);
-				int x = XPOS;
-				if((IR & 0x10) && ((byte & 3) != 3)){
-					/*adjust for narrow or std HSCROL*/
-				       	glitch_cycle -= 8;
-				}
-				/*ANTIC doesn't fetch and display data if the*/
-				/*DMACTL width changes from zero after this */
-				/*cycle.  Instead, it displays a blank scan */
-				/*line for modes other than 23F and for 23F */
-				/*it displays a glitched line after the change*/
-				if(x >= glitch_cycle){
-					if(DRAWING_SCREEN){
-						update_scanline();
-					        set_dmactl_bug();
-					}
-				}
-				else {
-					if (DRAWING_SCREEN) {
-						update_scanline();
-					}
-				}
-			}
-			/* DMACTL width changed to 0 */
-			else if ((byte & 3)==0)  {
-				/* TODO: this is not 100% correct */
-				if (DRAWING_SCREEN) {
-					int antic_xpos = cpu2antic_ptr[xpos];
-					int antic_limit = cpu2antic_ptr[xpos_limit];
-					update_scanline();
-					/*fix for a minor glitch in fasteddie*/
-					/*don't steal cycles after DMACTL off*/
-					cpu2antic_ptr = &cpu2antic[0];
-					antic2cpu_ptr = &antic2cpu[0];
-					xpos = antic2cpu_ptr[antic_xpos];
-					xpos_limit = antic2cpu_ptr[antic_limit];
-				}
-			/* DMACTL width has changed and not to 0 and not from 0 */
-			}
-			else {
-				/* DMACTL width has increased and no HSCROL */
-				if (((byte & 3) > (DMACTL & 3)) && !(IR & 0x10)) {
-					int x; /* the change cycle */
-					int left_glitch_cycle = 0;
-					int right_glitch_cycle = 0;
-					x = XPOS;
-					if (((DMACTL & 3) == 2) && ((byte & 3) == 3)) { /* Normal->Wide */
-						left_glitch_cycle = 11;
-						right_glitch_cycle = 18;
-					}
-					else if (((DMACTL & 3) == 1) && ((byte & 3) == 3)) { /* Narrow->Wide */
-						left_glitch_cycle = 11;
-						right_glitch_cycle = 26;
-					}
-					else if (((DMACTL & 3) == 1) && ((byte & 3) == 2)) { /* Narrow->Normal */
-						left_glitch_cycle = 19;
-						right_glitch_cycle = 27;
-					}
-					/* change occurs during drawing of line */
-					/* delay change till next line */
-					if (x > right_glitch_cycle) {
-						dmactl_changed = 1;
-						DELAYED_DMACTL = byte;
-						break;
-					/* change occurs during 'glitch' region */
-					}
-					else if (x >= left_glitch_cycle && x <= right_glitch_cycle && anticmode > 1) {
-						set_dmactl_bug();
-					}
-				}
-				else {
-					/* DMACTL width has decreased or HSCROL */
-					/* TODO: this is not 100% correct */
-					if (DRAWING_SCREEN) {
-						update_scanline();
-					}
-				}
-			}
-		}
-#endif /* NEW_CYCLE_EXACT */
 		DMACTL = byte;
-#if defined(BASIC) || defined(CURSES_BASIC)
-		break;
-#else
 		switch (byte & 0x03) {
 		case 0x00:
 			/* no ANTIC_load when screen off */
@@ -3886,83 +2787,26 @@ glitch */
 		pmbase_s = pmbase_d & 0xf8ff;
 		break;
 	case _CHACTL:
-#ifdef NEW_CYCLE_EXACT
-		if (DRAWING_SCREEN) {
-			update_scanline_invert();
-		}
-#endif
 		invert_mask = byte & 2 ? 0x80 : 0;
-#ifdef NEW_CYCLE_EXACT
-		if (DRAWING_SCREEN) {
-			update_scanline_blank();
-		}
-#endif
 		blank_mask = byte & 1 ? 0xe0 : 0x60;
 		if ((CHACTL ^ byte) & 4) {
-#ifdef NEW_CYCLE_EXACT
-			if (DRAWING_SCREEN) {
-				/* timing for flip is the same as chbase */
-				update_scanline_chbase();
-			}
-#endif
 			chbase_20 ^= 7;
 		}
 		CHACTL = byte;
 		break;
 	case _CHBASE:
-#ifdef NEW_CYCLE_EXACT
-		if (DRAWING_SCREEN) {
-			update_scanline_chbase();
-		}
-#endif
 		CHBASE = byte;
 		chbase_20 = (byte & 0xfe) << 8;
 		if (CHACTL & 4)
 			chbase_20 ^= 7;
 		break;
-#endif /* defined(BASIC) || defined(CURSES_BASIC) */
 	case _WSYNC:
-#ifdef NEW_CYCLE_EXACT
-		if (DRAWING_SCREEN) {
-			if (xpos <= antic2cpu_ptr[WSYNC_C] && xpos_limit >= antic2cpu_ptr[WSYNC_C])
-				if (cpu2antic_ptr[xpos + 1] == cpu2antic_ptr[xpos] + 1) {
-					/* antic does not steal the current cycle */
-/* note that if WSYNC_C is a stolen cycle, then antic2cpu_ptr[WSYNC_C+1]-1 corresponds
-to the last cpu cycle < WSYNC_C.  Then the cpu will see this cycle if WSYNC
-is not delayed, since it really occured one cycle after the STA WSYNC.  But if
-WSYNC is "delayed" then xpos is the next cpu cycle after WSYNC_C (which was stolen
-), so it is one greater than the above value.  EG if WSYNC_C=10 and is stolen
-(and let us say cycle 9,11 are also stolen, and 8,12 are not), then in the first
-case we have cpu2antic_ptr[WSYNC_C+1]-1 = 8 and in the 2nd =12  */
-					xpos = antic2cpu_ptr[WSYNC_C + 1] - 1;
-				}
-				else {
-					xpos = antic2cpu_ptr[WSYNC_C + 1];
-				}
-			else {
-				wsync_halt = TRUE;
-				xpos = xpos_limit;
-				if (cpu2antic_ptr[xpos + 1] == cpu2antic_ptr[xpos] + 1) {
-					/* antic does not steal the current cycle */
-					delayed_wsync = 0;
-				}
-				else {
-					delayed_wsync = 1;
-				}
-			}
-		}
-		else {
-			delayed_wsync = 0;
-#endif /* NEW_CYCLE_EXACT */
-			if (xpos <= WSYNC_C && xpos_limit >= WSYNC_C)
-				xpos = WSYNC_C;
-			else {
-				wsync_halt = TRUE;
-				xpos = xpos_limit;
-			}
-#ifdef NEW_CYCLE_EXACT
-		}
-#endif /* NEW_CYCLE_EXACT */
+        if (xpos <= WSYNC_C && xpos_limit >= WSYNC_C)
+            xpos = WSYNC_C;
+        else {
+            wsync_halt = TRUE;
+            xpos = xpos_limit;
+        }
 		break;
 	case _NMIEN:
 		NMIEN = byte;
@@ -3976,58 +2820,10 @@ case we have cpu2antic_ptr[WSYNC_C+1]-1 = 8 and in the 2nd =12  */
 }
 
 /* State ------------------------------------------------------------------- */
-#ifndef BASIC
-void AnticStateSave(void) {
-	SaveUBYTE(&DMACTL, 1);
-	SaveUBYTE(&CHACTL, 1);
-	SaveUBYTE(&HSCROL, 1);
-	SaveUBYTE(&VSCROL, 1);
-	SaveUBYTE(&PMBASE, 1);
-	SaveUBYTE(&CHBASE, 1);
-	SaveUBYTE(&NMIEN, 1);
-	SaveUBYTE(&NMIST, 1);
-	SaveUBYTE(&IR, 1);
-	SaveUBYTE(&anticmode, 1);
-	SaveUBYTE(&dctr, 1);
-	SaveUBYTE(&lastline, 1);
-	SaveUBYTE(&need_dl, 1);
-	SaveUBYTE(&vscrol_off, 1);
-
-	SaveUWORD(&dlist, 1);
-	SaveUWORD(&screenaddr, 1);
-
-	SaveINT(&xpos, 1);
-	SaveINT(&xpos_limit, 1);
-	SaveINT(&ypos, 1);
+void AnticStateSave(void) 
+{
 }
 
-void AnticStateRead(void) {
-	ReadUBYTE(&DMACTL, 1);
-	ReadUBYTE(&CHACTL, 1);
-	ReadUBYTE(&HSCROL, 1);
-	ReadUBYTE(&VSCROL, 1);
-	ReadUBYTE(&PMBASE, 1);
-	ReadUBYTE(&CHBASE, 1);
-	ReadUBYTE(&NMIEN, 1);
-	ReadUBYTE(&NMIST, 1);
-	ReadUBYTE(&IR, 1);
-	ReadUBYTE(&anticmode, 1);
-	ReadUBYTE(&dctr, 1);
-	ReadUBYTE(&lastline, 1);
-	ReadUBYTE(&need_dl, 1);
-	ReadUBYTE(&vscrol_off, 1);
-
-	ReadUWORD(&dlist, 1);
-	ReadUWORD(&screenaddr, 1);
-
-	ReadINT(&xpos, 1);
-	ReadINT(&xpos_limit, 1);
-	ReadINT(&ypos, 1);
-
-	ANTIC_PutByte(_DMACTL, DMACTL);
-	ANTIC_PutByte(_CHACTL, CHACTL);
-	ANTIC_PutByte(_PMBASE, PMBASE);
-	ANTIC_PutByte(_CHBASE, CHBASE);
+void AnticStateRead(void) 
+{
 }
-
-#endif /* BASIC */
