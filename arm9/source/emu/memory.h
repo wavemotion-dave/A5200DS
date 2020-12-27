@@ -9,27 +9,11 @@
 #define dGetByte(x)				(memory[x])
 #define dPutByte(x, y)			(memory[x] = y)
 
-#ifndef WORDS_BIGENDIAN
-#ifdef WORDS_UNALIGNED_OK
-#define dGetWord(x)				UNALIGNED_GET_WORD(&memory[x], memory_read_word_stat)
-#define dPutWord(x, y)			UNALIGNED_PUT_WORD(&memory[x], (y), memory_write_word_stat)
-#define dGetWordAligned(x)		UNALIGNED_GET_WORD(&memory[x], memory_read_aligned_word_stat)
-#define dPutWordAligned(x, y)	UNALIGNED_PUT_WORD(&memory[x], (y), memory_write_aligned_word_stat)
-#else	/* WORDS_UNALIGNED_OK */
 #define dGetWord(x)				(memory[x] + (memory[(x) + 1] << 8))
 #define dPutWord(x, y)			(memory[x] = (UBYTE) (y), memory[(x) + 1] = (UBYTE) ((y) >> 8))
-/* faster versions of dGetWord and dPutWord for even addresses */
-/* TODO: guarantee that memory is UWORD-aligned and use UWORD access */
+
 #define dGetWordAligned(x)		dGetWord(x)
 #define dPutWordAligned(x, y)	dPutWord(x, y)
-#endif	/* WORDS_UNALIGNED_OK */
-#else	/* WORDS_BIGENDIAN */
-/* can't do any word optimizations for big endian machines */
-#define dGetWord(x)				(memory[x] + (memory[(x) + 1] << 8))
-#define dPutWord(x, y)			(memory[x] = (UBYTE) (y), memory[(x) + 1] = (UBYTE) ((y) >> 8))
-#define dGetWordAligned(x)		dGetWord(x)
-#define dPutWordAligned(x, y)	dPutWord(x, y)
-#endif	/* WORDS_BIGENDIAN */
 
 #define dCopyFromMem(from, to, size)	memcpy(to, memory + (from), size)
 #define dCopyToMem(from, to, size)		memcpy(memory + (to), from, size)
@@ -84,7 +68,6 @@ void MemStateSave(UBYTE SaveVerbose);
 void MemStateRead(UBYTE SaveVerbose);
 void CopyFromMem(UWORD from, UBYTE *to, int size);
 void CopyToMem(const UBYTE *from, UWORD to, int size);
-void MEMORY_HandlePORTB(UBYTE byte, UBYTE oldval);
 void Cart809F_Disable(void);
 void Cart809F_Enable(void);
 void CartA0BF_Disable(void);

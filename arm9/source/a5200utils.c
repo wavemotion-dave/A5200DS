@@ -29,8 +29,6 @@ int gTotalAtariFrames = 0;
 int bg0, bg1, bg0b,bg1b;
 unsigned int etatEmu;
 
-void dsShowAnalog(unsigned int showit);
-
 unsigned char bufVideo[512*512];        // Video buffer
 gamecfg GameConf;                        // Game Config svg
 
@@ -281,8 +279,6 @@ void dsShowScreenMain(void) {
 
   REG_BLDCNT=0; REG_BLDCNT_SUB=0; REG_BLDY=0; REG_BLDY_SUB=0;
   
-  dsShowAnalog(myCart.use_analog);
-
   swiWaitForVBlank();
 }
 
@@ -756,16 +752,6 @@ void dsPrintValue(int x, int y, unsigned int isSelect, char *pchStr)
   }
 }
 
-void dsShowAnalog(unsigned int showit) {
-  u16 *pusEcran=(u16*) (bgGetMapPtr(bg1b))+26+(18<<5);
-  u16 *pusDess =(u16*) (bgGetMapPtr(bg0b))+(4*showit)+(28<<5);
-
-  dmaCopy((pusDess),        (pusEcran),4*2);
-  dmaCopy((pusDess+(1<<5)),(pusEcran+(1<<5)),4*2);
-  dmaCopy((pusDess+(2<<5)),(pusEcran+(2<<5)),4*2);
-  dmaCopy((pusDess+(3<<5)),(pusEcran+(3<<5)),4*2);
-}
-
 //---------------------------------------------------------------------------------
 void dsInstallSoundEmuFIFO(void) {
 	FifoMessage msg;
@@ -817,7 +803,6 @@ void dsMainLoop(void) {
         
       case A5200_PLAYINIT:
         dsShowScreenEmu();
-        dsShowAnalog(myCart.use_analog);
         irqEnable(IRQ_TIMER2);  
         etatEmu = A5200_PLAYGAME;
         break;
@@ -876,36 +861,33 @@ void dsMainLoop(void) {
             touchRead(&touch);
             iTx = touch.px;
             iTy = touch.py;
-            if ((iTx>206) && (iTx<250) && (iTy>110) && (iTy<129))  { // 207,111  -> 249,128   quit
+            if ((iTx>206) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
               irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
               else { irqEnable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME); }
             }
-            else if ((iTx>27) && (iTx<50) && (iTy>111) && (iTy<122))  { // 28,112  -> 49,121   pause
+            else if ((iTx>120) && (iTx<160) && (iTy>112) && (iTy<130))  { //pause
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_PAUSE + key_code;
               hold_touch = 5;
             }
-            else if ((iTx>16) && (iTx<39) && (iTy>122) && (iTy<133))  { // 17,123  -> 38,132   reset
+            else if ((iTx>65) && (iTx<108) && (iTy>112) && (iTy<130))  { //reset
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_RESET + key_code;
               hold_touch = 5;
             }
-            else if ((iTx>4) && (iTx<27) && (iTy>111) && (iTy<122))  { // 5,112  -> 26,121   start
+            else if ((iTx>10) && (iTx<50) && (iTy>112) && (iTy<130))  { //start
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_START + key_code;
               hold_touch = 5;
             }
-            else if ((iTx>9) && (iTx<44) && (iTy>135) && (iTy<181)) {     // 10,136 -> 43,180 numeric pad
-              char padKey[] = {AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_ASTERISK,AKEY_5200_0,AKEY_5200_HASH};
-              iTx = iTx-10; iTy = iTy-136; iTx = iTx / 11; iTy = iTy / 11;
-              iTx = iTx + iTy *3;
-              if ((iTx != 9) && (iTx != 11)) {
-                key_code = padKey[iTx] + key_code;
-              }
-              else
-                key_code = padKey[iTx];
+            else if ((iTy>155) && (iTy<185)) 
+            { 
+              char padKey[] = {AKEY_5200_0,AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_HASH,AKEY_5200_ASTERISK};
+              if (iTx > 0) iTx--;
+              if (iTx > 0) iTx--;
+              key_code = padKey[iTx / 21];
               hold_touch = 5;
             }
             else if ((iTx>71) && (iTx<183) && (iTy>7) && (iTy<43)) {     // 72,8 -> 182,42 cartridge slot
@@ -916,12 +898,6 @@ void dsMainLoop(void) {
               if (romSel) { etatEmu=A5200_PLAYINIT; dsLoadGame(a5200romlist[ucFicAct].filename); }
               else { irqEnable(IRQ_TIMER2); }
               fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
-              dsShowAnalog(myCart.use_analog);
-            }
-            else if ((iTx>207) && (iTx<249) && (iTy>143) && (iTy<184)) {     // 208,144 -> 248,183 simulate analog
-              soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
-              myCart.use_analog = 1 - myCart.use_analog;
-              dsShowAnalog(myCart.use_analog);
             }
           }
         }

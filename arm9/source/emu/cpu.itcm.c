@@ -78,21 +78,11 @@
 /* Windows headers define it */
 #undef ABSOLUTE
 
-//#ifndef __GNUC__
-//#define NO_GOTO
-//#endif
-
 /* #define CYCLES_PER_OPCODE */
 
 /* #define MONITOR_PROFILE */
 
-/* #define NO_V_FLAG_VARIABLE */
-
-/* If PC_PTR is defined, local PC is "const UBYTE *", otherwise it's UWORD. */
-/* #define PC_PTR */
-
-/* If PREFETCH_CODE is defined, 2 bytes after the opcode are always fetched. */
-//#define PREFETCH_CODE
+#define NO_V_FLAG_VARIABLE      // Very slight speedup... we will check the processor status directly in the rare case of needing this...
 
 /* 6502 stack handling */
 #define PL                  dGetByte(0x0100 + ++S)
@@ -100,59 +90,15 @@
 #define PHW(x)              PH((x) >> 8); PH((x) & 0xff)
 
 /* 6502 code fetching */
-#ifdef PC_PTR
-#define GET_PC()            (PC - memory)
-#define SET_PC(newpc)       (PC = memory + (newpc))
-#define PHPC                { UWORD tmp = PC - memory; PHW(tmp); }
-#define GET_CODE_BYTE()     (*PC++)
-#define PEEK_CODE_BYTE()    (*PC)
-//#if !defined(WORDS_BIGENDIAN) && defined(WORDS_UNALIGNED_OK)
-#if 1
-#define PEEK_CODE_WORD()    (*(const UWORD *) PC)
-#else
-#define PEEK_CODE_WORD()    (*PC + (PC[1] << 8))
-#endif
-#else /* PC_PTR */
 #define GET_PC()            PC
 #define SET_PC(newpc)       (PC = (newpc))
 #define PHPC                PHW(PC)
 #define GET_CODE_BYTE()     dGetByte(PC++)
 #define PEEK_CODE_BYTE()    dGetByte(PC)
 #define PEEK_CODE_WORD()    dGetWord(PC)
-#endif /* PC_PTR */
 
-/* Cycle-exact Read-Modify-Write instructions.
-   RMW instructions: ASL, LSR, ROL, ROR, INC, DEC
-   (+ some undocumented) write to the specified address
-   *twice*: first the unmodified value, then the modified value.
-   This can be observed only with some hardware registers. */
-/* XXX: we do this only for GTIA, because NEW_CYCLE_EXACT does not correctly
-   emulate INC $D400 (and INC $D40A wasn't tested) */
-#ifdef NEW_CYCLE_EXACT
-#ifndef PAGED_ATTRIB
-#define RMW_GetByte(x, addr) \
-	if (attrib[addr] == HARDWARE) { \
-		x = Atari800_GetByte(addr); \
-		if ((addr & 0xef00) == 0xc000) { \
-			xpos--; \
-			Atari800_PutByte(addr, x); \
-			xpos++; \
-		} \
-	} else \
-		x = dGetByte(addr);
-#else /* PAGED_ATTRIB */
-#define RMW_GetByte(x, addr) \
-	x = GetByte(addr); \
-	if ((addr & 0xef00) == 0xc000) { \
-		xpos--; \
-		PutByte(addr, x); \
-		xpos++; \
-	}
-#endif /* PAGED_ATTRIB */
-#else /* NEW_CYCLE_EXACT */
 /* Don't emulate the first write */
 #define RMW_GetByte(x, addr) x = GetByte(addr);
-#endif /* NEW_CYCLE_EXACT */
 
 /* 6502 registers. */
 UWORD regPC;
@@ -176,7 +122,7 @@ static UBYTE Z;					/* zero     => Z flag set */
 static UBYTE C;					/* must be 0 or 1 */
 /* B, D, I are always in regP */
 
-void CPU_GetStatus(void)
+inline void CPU_GetStatus(void)
 {
 #ifndef NO_V_FLAG_VARIABLE
 	regP = (N & 0x80) + (V ? 0x40 : 0) + (regP & 0x3c) + ((Z == 0) ? 0x02 : 0) + C;
@@ -185,7 +131,7 @@ void CPU_GetStatus(void)
 #endif
 }
 
-void CPU_PutStatus(void)
+inline void CPU_PutStatus(void)
 {
 	N = regP;
 #ifndef NO_V_FLAG_VARIABLE
@@ -223,22 +169,7 @@ unsigned int remember_jmp_curpos = 0;
 #else
 #define zGetWord(x) dGetWord(x)
 #endif
-#ifdef PREFETCH_CODE
-#if defined(WORDS_BIGENDIAN) || !defined(WORDS_UNALIGNED_OK)
-#warning PREFETCH_CODE is efficient only on little-endian machines with WORDS_UNALIGNED_OK
-#endif
-#define OP_BYTE     ((UBYTE) addr)
-#define OP_WORD     addr
-#define IMMEDIATE   (PC++, (UBYTE) addr)
-#define ABSOLUTE    PC += 2
-#define ZPAGE       PC++; addr &= 0xff
-#define ABSOLUTE_X  addr += X; PC += 2
-#define ABSOLUTE_Y  addr += Y; PC += 2
-#define INDIRECT_X  PC++; addr = (UBYTE) (addr + X); addr = zGetWord(addr)
-#define INDIRECT_Y  PC++; addr &= 0xff; addr = zGetWord(addr) + Y
-#define ZPAGE_X     PC++; addr = (UBYTE) (addr + X)
-#define ZPAGE_Y     PC++; addr = (UBYTE) (addr + Y)
-#else /* PREFETCH_CODE */
+
 #define OP_BYTE     PEEK_CODE_BYTE()
 #define OP_WORD     PEEK_CODE_WORD()
 #define IMMEDIATE   GET_CODE_BYTE()
@@ -250,7 +181,6 @@ unsigned int remember_jmp_curpos = 0;
 #define INDIRECT_Y  addr = GET_CODE_BYTE(); addr = zGetWord(addr) + Y
 #define ZPAGE_X     addr = (UBYTE) (GET_CODE_BYTE() + X)
 #define ZPAGE_Y     addr = (UBYTE) (GET_CODE_BYTE() + Y)
-#endif /* PREFETCH_CODE */
 
 /* Instructions */
 #define AND(t_data) Z = N = A &= t_data
@@ -358,10 +288,6 @@ static const int cycles[256] =
 /* 6502 emulation routine */
 void GO(int limit)
 {
-#ifdef NO_GOTO
-#define OPCODE_ALIAS(code)	case 0x##code:
-#define DONE				break;
-#else
 #define OPCODE_ALIAS(code)	opcode_##code:
 #define DONE				goto next;
 	static const void *opcode[256] =
@@ -446,7 +372,6 @@ void GO(int limit)
 		&&opcode_f8, &&opcode_f9, &&opcode_fa, &&opcode_fb,
 		&&opcode_fc, &&opcode_fd, &&opcode_fe, &&opcode_ff,
 	};
-#endif	/* NO_GOTO */
 
 #ifdef CYCLES_PER_OPCODE
 #define OPCODE(code) OPCODE_ALIAS(code) xpos += cycles[0x##code];
@@ -479,35 +404,9 @@ void GO(int limit)
    2. The timing of the IRQs are not that critical. */
 
 	if (wsync_halt) {
-
-#ifdef NEW_CYCLE_EXACT
-		if (DRAWING_SCREEN) {
-/* if WSYNC_C is a stolen cycle, antic2cpu_ptr will convert that to the nearest
-   cpu cycle before that cycle.  The CPU will see this cycle, if WSYNC is not
-   delayed. (Actually this cycle is the first cycle of the instruction after
-   STA WSYNC, which was really executed one cycle after STA WSYNC because
-   of an internal antic delay ).   delayed_wsync is added to this cycle to form
-   the limit in the case that WSYNC is not early (does not allow this extra cycle) */
-
-			if (limit < antic2cpu_ptr[WSYNC_C] + delayed_wsync)
-				return;
-			xpos = antic2cpu_ptr[WSYNC_C] + delayed_wsync;
-		}
-		else {
-			if (limit < (WSYNC_C + delayed_wsync))
-				return;
-			xpos = WSYNC_C;
-		}
-		delayed_wsync = 0;
-
-#else /* NEW_CYCLE_EXACT */
-
 		if (limit < WSYNC_C)
 			return;
 		xpos = WSYNC_C;
-
-#endif /* NEW_CYCLE_EXACT */
-
 		wsync_halt = 0;
 	}
 	xpos_limit = limit;			/* needed for WSYNC store inside ANTIC */
@@ -740,17 +639,8 @@ void GO(int limit)
 #ifdef MONITOR_PROFILE
 		instruction_count[insn]++;
 #endif
-
-#ifdef PREFETCH_CODE
-		addr = PEEK_CODE_WORD();
-#endif
-
-#ifdef NO_GOTO
-		switch (insn) {
-#else
 		goto *opcode[insn];
-#endif
-
+        
 	OPCODE(00)				/* BRK */
 #ifdef MONITOR_BREAK
 		if (break_brk) {
@@ -1298,10 +1188,6 @@ void GO(int limit)
 		if (break_ret && --ret_nesting <= 0)
 			break_step = TRUE;
 #endif
-		if (rts_handler != NULL) {
-			rts_handler();
-			rts_handler = NULL;
-		}
 		DONE
 
 	OPCODE(61)				/* ADC (ab,x) */
@@ -2313,40 +2199,11 @@ void CPU_Reset(void)
 	regPC = dGetWordAligned(0xfffc);
 }
 
-#if !defined(BASIC) && !defined(ASAP)
-
 void CpuStateSave(UBYTE SaveVerbose)
 {
-	SaveUBYTE(&regA, 1);
-
-	CPU_GetStatus();	/* Make sure flags are all updated */
-	SaveUBYTE(&regP, 1);
-
-	SaveUBYTE(&regS, 1);
-	SaveUBYTE(&regX, 1);
-	SaveUBYTE(&regY, 1);
-	SaveUBYTE(&IRQ, 1);
-
-	MemStateSave(SaveVerbose);
-
-	SaveUWORD(&regPC, 1);
 }
 
 void CpuStateRead(UBYTE SaveVerbose)
 {
-	ReadUBYTE(&regA, 1);
-
-	ReadUBYTE(&regP, 1);
-	CPU_PutStatus();	/* Make sure flags are all updated */
-
-	ReadUBYTE(&regS, 1);
-	ReadUBYTE(&regX, 1);
-	ReadUBYTE(&regY, 1);
-	ReadUBYTE(&IRQ, 1);
-
-	MemStateRead( SaveVerbose );
-
-	ReadUWORD(&regPC, 1);
 }
 
-#endif

@@ -60,7 +60,6 @@ void PIA_Initialise(void) {
 	PORT_input[0] = 0xff;
 	PORT_input[1] = 0xff;
 }
-const UBYTE *antic_xe_ptr = NULL;
 
 void PIA_Reset(void) {
 	PORTA = 0xff;

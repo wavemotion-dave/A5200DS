@@ -79,8 +79,6 @@ extern struct cart_t myCart;
 #define CART_MAX_SIZE	(64 * 1024)
 extern int cart_kb[CART_LAST_SUPPORTED + 1];
 
-int CART_IsFor5200(int type);
-
 #define CART_CANT_OPEN		-1	/* Can't open cartridge image file */
 #define CART_BAD_FORMAT		-2	/* Unknown cartridge format */
 #define CART_BAD_CHECKSUM	-3	/* Warning: bad CART checksum */

@@ -79,20 +79,6 @@ extern int enable_sio_patch;
 #define ATARI_WIDTH  384
 #define ATARI_HEIGHT 240
 
-/* Simply incremented by Atari800_Frame(). */
-extern unsigned int nframes;
-
-/* You can read it to see how fast is the emulator compared to real Atari
-   (100 if running at real Atari speed). */
-extern int percent_atari_speed;
-
-/* How often the screen is updated (1 = every Atari frame). */
-extern int refresh_rate;
-
-/* Set to TRUE for faster emulation with refresh_rate > 1.
-   Set to FALSE for accurate emulation with refresh_rate > 1. */
-extern int sprite_collisions_in_skipped_frames;
-
 /* Special key codes.
    Store in key_code. */
 #define AKEY_WARMSTART             -2
@@ -161,9 +147,6 @@ void Warmstart(void);
 /* Reinitializes after machine_type or ram_size change.
    You should call Coldstart() after it. */
 int Atari800_InitialiseMachine(void);
-
-/* Reinitializes patches after enable_*_patch change. */
-void Atari800_UpdatePatches(void);
 
 /* Auto-detects file type and returns one of AFILE_* values. */
 int Atari800_DetectFileType(const char *filename);

@@ -119,18 +119,6 @@ int enable_sio_patch = TRUE;
 
 int verbose = FALSE;
 
-//unsigned int nframes = 0;
-//int refresh_rate = 1;
-int sprite_collisions_in_skipped_frames = TRUE;
-
-int percent_atari_speed = 100;
-#ifdef BENCHMARK
-static double benchmark_start_time;
-static double Atari_time(void);
-#endif
-
-//int emuos_mode = 1;	/* 0 = never use EmuOS, 1 = use EmuOS if real OS not available, 2 = always use EmuOS */
-
 /* Now we check address of every escape code, to make sure that the patch
    has been set by the emulator and is not a CIM in Atari program.
    Also switch() for escape codes has been changed to array of pointers
@@ -447,16 +435,11 @@ int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly
       break;
     case AFILE_STATE:
     case AFILE_STATE_GZ:
-#ifdef BASIC
-      iprintf("State files are not supported in BASIC version");
-      return AFILE_ERROR;
-#else
       if (!ReadAtariState(filename, "rb"))
         return AFILE_ERROR;
       /* Don't press Option */
       consol_table[1] = consol_table[2] = 0xf;
       break;
-#endif
     default:
       break;
 	}
@@ -464,16 +447,7 @@ int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly
 }
 
 int Atari800_Initialise(void) {
-/*JGD
-  memset(&ATARI, 0, sizeof(ATARI_t));
-
-  ATARI.atari_snd_enable    = 1;
-  ATARI.atari_render_mode   = ATARI_RENDER_FIT_WIDTH;
-  ATARI.atari_joyemulation  = 1;
-  ATARI.atari_autoload = TRUE;
-*/
-  
-  Device_Initialise();
+    Device_Initialise();
 	RTIME_Initialise();
 	SIO_Initialise ();
 	CASSETTE_Initialise();
@@ -489,7 +463,7 @@ int Atari800_Initialise(void) {
 	PIA_Initialise();
 	POKEY_Initialise();
 
-  Atari800_InitialiseMachine();
+    Atari800_InitialiseMachine();
 
 	return TRUE;
 }
@@ -503,29 +477,6 @@ UNALIGNED_STAT_DEF(memory_write_aligned_word_stat)
 
 int Atari800_Exit(int run_monitor) {
 	int restart;
-
-#ifdef STAT_UNALIGNED_WORDS
-	printf("(ptr&7) atari_screen  pm_scanline  _____ memory ______  memory (aligned addr)\n");
-	printf("          32-bit W      32-bit R   16-bit R   16-bit W   16-bit R   16-bit W\n");
-	{
-		unsigned int sums[6] = {0, 0, 0, 0, 0, 0};
-		int i;
-		for (i = 0; i < 8; i++) {
-			printf("%6d%12u%14u%11u%11u%11u%11u\n", i,
-				atari_screen_write_long_stat[i], pm_scanline_read_long_stat[i],
-				memory_read_word_stat[i], memory_write_word_stat[i],
-				memory_read_aligned_word_stat[i], memory_write_aligned_word_stat[i]);
-			sums[0] += atari_screen_write_long_stat[i];
-			sums[1] += pm_scanline_read_long_stat[i];
-			sums[2] += memory_read_word_stat[i];
-			sums[3] += memory_write_word_stat[i];
-			sums[4] += memory_read_aligned_word_stat[i];
-			sums[5] += memory_write_aligned_word_stat[i];
-		}
-		printf("total:%12u%14u%11u%11u%11u%11u\n",
-			sums[0], sums[1], sums[2], sums[3], sums[4], sums[5]);
-	}
-#endif /* STAT_UNALIGNED_WORDS */
 	restart = Atari_Exit(run_monitor);
 #ifndef __PLUS
 	if (!restart) {
@@ -538,21 +489,21 @@ int Atari800_Exit(int run_monitor) {
 UBYTE Atari800_GetByte(UWORD addr) {
 	UBYTE byte = 0xff;
 	switch (addr & 0xff00) {
-	case 0x4f00:
-	case 0x8f00:
+    case 0x4f00:
+//	case 0x8f00:
 		CART_BountyBob1(addr);
 		byte = 0;
 		break;
 	case 0x5f00:
-	case 0x9f00:
+//	case 0x9f00:
 		CART_BountyBob2(addr);
 		byte = 0;
 		break;
-	case 0xd000:				/* GTIA */
+//	case 0xd000:				/* GTIA */
 	case 0xc000:				/* GTIA - 5200 */
 		byte = GTIA_GetByte(addr);
 		break;
-	case 0xd200:				/* POKEY */
+//	case 0xd200:				/* POKEY */
 	case 0xe800:				/* POKEY - 5200 */
 	case 0xeb00:				/* POKEY - 5200 */
 	  byte = POKEY_GetByte(addr);
@@ -583,11 +534,11 @@ void Atari800_PutByte(UWORD addr, UBYTE byte) {
     case 0x9f00:
       CART_BountyBob2(addr);
       break;
-    case 0xd000:				/* GTIA */
+//    case 0xd000:				/* GTIA */
     case 0xc000:				/* GTIA - 5200 */
       GTIA_PutByte(addr, byte);
       break;
-    case 0xd200:				/* POKEY */
+//    case 0xd200:				/* POKEY */
     case 0xe800:				/* POKEY - 5200 AAA added other pokey space */
     case 0xeb00:				/* POKEY - 5200 */
       POKEY_PutByte(addr, byte);
@@ -606,210 +557,22 @@ void Atari800_PutByte(UWORD addr, UBYTE byte) {
 	}
 }
 
-void Atari800_UpdatePatches(void) {
-	switch (machine_type) {
-	case MACHINE_OSA:
-	case MACHINE_OSB:
-		/* Restore unpatched OS */
-		dCopyToMem(atari_os, 0xd800, 0x2800);
-		/* Set patches */
-		Atari800_PatchOS();
-		Device_UpdatePatches();
-		break;
-	case MACHINE_XLXE:
-		/* Don't patch if OS disabled */
-		if ((PORTB & 1) == 0)
-			break;
-		/* Restore unpatched OS */
-		dCopyToMem(atari_os, 0xc000, 0x1000);
-		dCopyToMem(atari_os + 0x1800, 0xd800, 0x2800);
-		/* Set patches */
-		Atari800_PatchOS();
-		Device_UpdatePatches();
-		break;
-	default:
-		break;
-	}
-}
-
-#ifndef __PLUS
-
-u32 refresh_counter;
-
-void Atari800_Frame(unsigned int refresh_rate) {
-	//ALEK Device_Frame();
-#ifndef BASIC
+void Atari800_Frame(unsigned int refresh_rate) 
+{
 	INPUT_Frame();
-#endif
 	GTIA_Frame();
-#ifdef SOUND
-//ALEK	Sound_Update();
-#endif
-
-	if (++refresh_counter >= refresh_rate) {
-		refresh_counter = 0;
-		ANTIC_Frame(TRUE);
-		//INPUT_DrawMousePointer();
-		//Screen_DrawAtariSpeed();
-		//Screen_DrawDiskLED();
-	}
-	else {
-		ANTIC_Frame(FALSE);
-	}
+    ANTIC_Frame(TRUE);
     POKEY_Frame();
     
     extern int gTotalAtariFrames;
     gTotalAtariFrames++;
-    
-	//nframes++;
 }
 
-#endif /* __PLUS */
 
-#ifndef BASIC
-
-void MainStateSave(void) {
-	UBYTE temp;
-	int default_tv_mode;
-	int os = 0;
-	int default_system = 3;
-	int pil_on = FALSE;
-
-	if (tv_mode == TV_PAL) {
-		temp = 0;
-		default_tv_mode = 1;
-	}
-	else {
-		temp = 1;
-		default_tv_mode = 2;
-	}
-	SaveUBYTE(&temp, 1);
-
-	switch (machine_type) {
-	case MACHINE_OSA:
-		temp = ram_size == 16 ? 5 : 0;
-		os = 1;
-		default_system = 1;
-		break;
-	case MACHINE_OSB:
-		temp = ram_size == 16 ? 5 : 0;
-		os = 2;
-		default_system = 2;
-		break;
-	case MACHINE_XLXE:
-		switch (ram_size) {
-		case 16:
-			temp = 6;
-			default_system = 3;
-			break;
-		case 64:
-			temp = 1;
-			default_system = 3;
-			break;
-		case 128:
-			temp = 2;
-			default_system = 4;
-			break;
-		case 192:
-			temp = 9;
-			default_system = 8;
-			break;
-		case RAM_320_RAMBO:
-		case RAM_320_COMPY_SHOP:
-			temp = 3;
-			default_system = 5;
-			break;
-		case 576:
-			temp = 7;
-			default_system = 6;
-			break;
-		case 1088:
-			temp = 8;
-			default_system = 7;
-			break;
-		}
-		break;
-	case MACHINE_5200:
-		temp = 4;
-		default_system = 6;
-		break;
-	}
-	SaveUBYTE(&temp, 1);
-
-	SaveINT(&os, 1);
-	SaveINT(&pil_on, 1);
-	SaveINT(&default_tv_mode, 1);
-	SaveINT(&default_system, 1);
+void MainStateSave(void) 
+{
 }
 
-void MainStateRead(void) {
-	/* these are all for compatibility with previous versions */
-	UBYTE temp;
-	int default_tv_mode;
-	int os;
-	int default_system;
-	int pil_on;
-
-	ReadUBYTE(&temp, 1);
-	tv_mode = (temp == 0) ? TV_PAL : TV_NTSC;
-
-	ReadUBYTE(&temp, 1);
-	ReadINT(&os, 1);
-	switch (temp) {
-	case 0:
-		machine_type = os == 1 ? MACHINE_OSA : MACHINE_OSB;
-		ram_size = 48;
-		break;
-	case 1:
-		machine_type = MACHINE_XLXE;
-		ram_size = 64;
-		break;
-	case 2:
-		machine_type = MACHINE_XLXE;
-		ram_size = 128;
-		break;
-	case 3:
-		machine_type = MACHINE_XLXE;
-		ram_size = RAM_320_COMPY_SHOP;
-		break;
-	case 4:
-		machine_type = MACHINE_5200;
-		ram_size = 16;
-		break;
-	case 5:
-		machine_type = os == 1 ? MACHINE_OSA : MACHINE_OSB;
-		ram_size = 16;
-		break;
-	case 6:
-		machine_type = MACHINE_XLXE;
-		ram_size = 16;
-		break;
-	case 7:
-		machine_type = MACHINE_XLXE;
-		ram_size = 576;
-		break;
-	case 8:
-		machine_type = MACHINE_XLXE;
-		ram_size = 1088;
-		break;
-	case 9:
-		machine_type = MACHINE_XLXE;
-		ram_size = 192;
-		break;
-	default:
-		machine_type = MACHINE_XLXE;
-		ram_size = 64;
-		iprintf("Warning: Bad machine type read in from state save, defaulting to 800 XL");
-		break;
-	}
-
-	ReadINT(&pil_on, 1);
-	ReadINT(&default_tv_mode, 1);
-	ReadINT(&default_system, 1);
-
-//	load_roms();
-	/* XXX: what about patches? */
+void MainStateRead(void) 
+{
 }
-
-#endif
-

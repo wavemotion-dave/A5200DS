@@ -162,22 +162,6 @@ static const struct cart_t cart_table[] =
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,30},  // End of List
 };
 
-int CART_IsFor5200(int type)
-{
-    switch (type) {
-    case CART_5200_32:
-    case CART_5200_EE_16:
-    case CART_5200_40:
-    case CART_BBSB_40:
-    case CART_5200_NS_16:
-    case CART_5200_8:
-    case CART_5200_4:
-        return TRUE;
-    default:
-        break;
-    }
-    return FALSE;
-}
 
 UBYTE *cart_image = NULL;       /* For cartridge memory */
 char cart_filename[FILENAME_MAX];
@@ -380,8 +364,6 @@ void CART_Start(void)
     }
 }
 
-#ifndef BASIC
-
 void CARTStateRead(void)
 {
 }
@@ -389,5 +371,3 @@ void CARTStateRead(void)
 void CARTStateSave(void)
 {
 }
-
-#endif
