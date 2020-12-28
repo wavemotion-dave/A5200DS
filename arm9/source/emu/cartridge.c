@@ -147,7 +147,7 @@ static const struct cart_t cart_table[] =
     {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16},  // Space Invaders (USA).a52
     {"802a11dfcba6229cc2f93f0f3aaeb3aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16},  // Space Shuttle - A Journey Into Space (USA).a52
     {"6208110dc3c0bf7b15b33246f2971b6e",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16},  // Spy Hunter (XL Conversion).a52
-    {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,     2,   6, 220,    256,    192,    32, 0},  // Star Raiders (USA).a52
+    {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,     2,   6, 220,    256,    240,    32,17},  // Star Raiders (USA).a52
     {"c959b65be720a03b5479650a3af5a511",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Star Trek - Strategic Operations Simulator (USA).a52
     {"00beaa8405c7fb90d86be5bb1b01ea66",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,     2,   6, 220,    256,    192,    32, 0},  // Star Wars - The Arcade Game (USA).a52
     {"865570ff9052c1704f673e6222192336",    CART_5200_4,        CTRL_JOY,   ANALOG,     3,   6, 220,    280,    256,    36,18},  // Super Breakout (USA).a52

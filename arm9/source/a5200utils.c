@@ -781,9 +781,6 @@ void dsMainLoop(void) {
   unsigned int keys_pressed,keys_touch=0, romSel;
   int iTx,iTy, shiftctrl;
   bool showFps=false;
-  int hold_touch = 0;
-  
-  myCart.use_analog = 0;
   
   // Timers are fed with 33.513982 MHz clock.
   // With DIV_1024 the clock is 32,728.5 ticks per sec...
@@ -841,11 +838,6 @@ void dsMainLoop(void) {
             gTotalAtariFrames = 0;
         }
         
-        if (hold_touch > 0)
-        {
-           hold_touch--;
-           continue;
-        }
         // Read keys
         keys_pressed=keysCurrent();
         key_consol = CONSOL_NONE; //|= (CONSOL_OPTION | CONSOL_SELECT | CONSOL_START); /* OPTION/START/SELECT key OFF */
@@ -858,10 +850,9 @@ void dsMainLoop(void) {
         key_code = shiftctrl ? 0x40 : 0x00;
         
         // if touch screen pressed
-        if (keys_pressed & KEY_TOUCH) {
-          if (!keys_touch) {
+        if (keys_pressed & KEY_TOUCH) 
+        {
             touchPosition touch;
-            keys_touch=1;
             touchRead(&touch);
             iTx = touch.px;
             iTy = touch.py;
@@ -872,27 +863,28 @@ void dsMainLoop(void) {
               else { irqEnable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME); }
             }
             else if ((iTx>120) && (iTx<160) && (iTy>112) && (iTy<130))  { //pause
-              soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_PAUSE + key_code;
-              hold_touch = 5;
+              keys_touch = 1;
             }
             else if ((iTx>65) && (iTx<108) && (iTy>112) && (iTy<130))  { //reset
-              soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_RESET + key_code;
-              hold_touch = 5;
+              keys_touch = 1;
             }
             else if ((iTx>10) && (iTx<50) && (iTy>112) && (iTy<130))  { //start
-              soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_START + key_code;
-              hold_touch = 5;
+              keys_touch = 1;
             }
             else if ((iTy>155) && (iTy<185)) 
             { 
               char padKey[] = {AKEY_5200_0,AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_HASH,AKEY_5200_ASTERISK};
+              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (iTx > 0) iTx--;
               if (iTx > 0) iTx--;
               key_code = padKey[iTx / 21];
-              hold_touch = 5;
+              keys_touch = 1;
             }
             else if ((iTx>71) && (iTx<183) && (iTy>7) && (iTy<43)) {     // 72,8 -> 182,42 cartridge slot
               irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
@@ -903,12 +895,10 @@ void dsMainLoop(void) {
               else { irqEnable(IRQ_TIMER2); }
               fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
             }
-          }
         }
-        // else manage a5200 pad 
-        else 
+        else
         {
-          keys_touch=0;
+            keys_touch = 0;
         }
       
         if (myCart.control == CTRL_JOY)
