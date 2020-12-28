@@ -2433,14 +2433,10 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 		dctr &= 0xf;
 	} while (ypos < (ATARI_HEIGHT + 8));
     
-    extern char *psound_buffer; 
-    Pokey_process(psound_buffer, 368); //tbd-dsb
-
-/* TODO: cycle-exact overscreen lines */
-  POKEY_Scanline();		/* check and generate IRQ */
-	GO(NMIST_C);
-	NMIST = 0x5f;				/* Set VBLANK */
-	if (NMIEN & 0x40) {
+    POKEY_Scanline();		/* check and generate IRQ */
+    GO(NMIST_C);
+    NMIST = 0x5f;				/* Set VBLANK */
+    if (NMIEN & 0x40) {
 		GO(NMI_C);
 		NMI();
 	}
@@ -2448,8 +2444,8 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 	GOEOL;
 
 	do {
-	  POKEY_Scanline();		/* check and generate IRQ */
-		OVERSCREEN_LINE;
+        POKEY_Scanline();		/* check and generate IRQ */
+        OVERSCREEN_LINE;
 	} while (ypos < max_ypos);
 	ypos = 0; /* just for monitor.c */
 }

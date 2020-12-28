@@ -45,11 +45,6 @@
 #endif
 #include "antic.h"
 #include "cassette.h"
-//ALEK #include "log.h"
-
-#ifdef POKEY_UPDATE
-void pokey_update(void);
-#endif
 
 UBYTE KBCODE;
 UBYTE SERIN;
@@ -60,6 +55,8 @@ UBYTE SKCTLS;
 int DELAYED_SERIN_IRQ;
 int DELAYED_SEROUT_IRQ;
 int DELAYED_XMTDONE_IRQ;
+
+UBYTE chanDisabled[4] = {0,0,0,0};
 
 /* structures to hold the 9 pokey control bytes */
 UBYTE AUDF[4 * MAXPOKEYS];	/* AUDFx (D200, D202, D204, D206) */
@@ -189,20 +186,32 @@ void POKEY_PutByte(UWORD addr, UBYTE byte)
 #endif
 	switch (addr) {
 	case _AUDC1:
-		AUDC[CHAN1] = byte;
-		Update_pokey_sound(_AUDC1, byte, 0, SOUND_GAIN);
+        if (!chanDisabled[CHAN1])
+        {
+            AUDC[CHAN1] = byte;
+            Update_pokey_sound(_AUDC1, byte, 0, SOUND_GAIN);
+        }
 		break;
 	case _AUDC2:
-		AUDC[CHAN2] = byte;
-		Update_pokey_sound(_AUDC2, byte, 0, SOUND_GAIN);
+        if (!chanDisabled[CHAN2])
+        {
+    		AUDC[CHAN2] = byte;
+	    	Update_pokey_sound(_AUDC2, byte, 0, SOUND_GAIN);
+        }
 		break;
 	case _AUDC3:
-		AUDC[CHAN3] = byte;
-		Update_pokey_sound(_AUDC3, byte, 0, SOUND_GAIN);
+        if (!chanDisabled[CHAN3])
+        {
+    		AUDC[CHAN3] = byte;
+	    	Update_pokey_sound(_AUDC3, byte, 0, SOUND_GAIN);
+        }
 		break;
 	case _AUDC4:
-		AUDC[CHAN4] = byte;
-		Update_pokey_sound(_AUDC4, byte, 0, SOUND_GAIN);
+        if (!chanDisabled[CHAN4])
+        {
+    		AUDC[CHAN4] = byte;
+	    	Update_pokey_sound(_AUDC4, byte, 0, SOUND_GAIN);
+        }
 		break;
 	case _AUDCTL:
 		AUDCTL[0] = byte;
@@ -238,9 +247,6 @@ void POKEY_PutByte(UWORD addr, UBYTE byte)
 		break;
 	case _IRQEN:
 		IRQEN = byte;
-#ifdef DEBUG1
-		printf("WR: IRQEN = %x, PC = %x\n", IRQEN, PC);
-#endif
 		IRQST |= ~byte & 0xf7;	/* Reset disabled IRQs except XMTDONE */
 		if (IRQEN & 0x20) {
 			SLONG delay;
@@ -284,7 +290,7 @@ void POKEY_PutByte(UWORD addr, UBYTE byte)
 		break;
 	case _SKCTLS:
 		SKCTLS = byte;
-    Update_pokey_sound(_SKCTLS, byte, 0, SOUND_GAIN);
+        Update_pokey_sound(_SKCTLS, byte, 0, SOUND_GAIN);
 		if (byte & 4)
 			pot_scanline = 228;	/* fast pot mode - return results immediately */
 		break;
@@ -393,8 +399,11 @@ void POKEY_Initialise(void)
 #endif
 }
 
-void POKEY_Frame(void) {
+void POKEY_Frame(void) 
+{
 	random_scanline_counter %= (AUDCTL[0] & POLY9) ? POLY9_SIZE : POLY17_SIZE;
+    extern char *psound_buffer; 
+    Pokey_process(psound_buffer, 368);
 }
 
 /***************************************************************************
@@ -404,32 +413,17 @@ void POKEY_Frame(void) {
  ***************************************************************************/
 
 void POKEY_Scanline(void) {
-#ifdef POKEY_UPDATE
-	pokey_update();
-#endif
 
 #ifdef VOL_ONLY_SOUND
 	Update_vol_only_sound();
 #endif
 
-#ifndef BASIC
-	//ALEK INPUT_Scanline();	/* Handle Amiga and ST mice. */
-						/* It's not a part of POKEY emulation, */
-						/* but it looks to be the best place to put it. */
-#endif
-
-	if (pot_scanline < 228)
+    if (pot_scanline < 228)
 		pot_scanline++;
   
   POT_input[0] = PCPOT_input[0]; POT_input[1] = PCPOT_input[1]; POT_input[2] = PCPOT_input[2]; POT_input[3] = PCPOT_input[3];
   
 	random_scanline_counter += LINE_C;
-
-	/* on nonpatched i/o-operation, enable the cassette timing */
-/* ALEK
-	if (!enable_sio_patch)
-		CASSETTE_AddScanLine();
-*/
 
 	if (DELAYED_SERIN_IRQ > 0) {
 		if (--DELAYED_SERIN_IRQ == 0) {
@@ -586,62 +580,10 @@ void Update_Counter(int chan_mask)
 	}
 }
 
-#ifndef BASIC
-
 void POKEYStateSave(void)
 {
-	int SHIFT_KEY = 0;
-	int KEYPRESSED = 0;
-
-	SaveUBYTE(&KBCODE, 1);
-	SaveUBYTE(&IRQST, 1);
-	SaveUBYTE(&IRQEN, 1);
-	SaveUBYTE(&SKCTLS, 1);
-
-	SaveINT(&SHIFT_KEY, 1);
-	SaveINT(&KEYPRESSED, 1);
-	SaveINT(&DELAYED_SERIN_IRQ, 1);
-	SaveINT(&DELAYED_SEROUT_IRQ, 1);
-	SaveINT(&DELAYED_XMTDONE_IRQ, 1);
-
-	SaveUBYTE(&AUDF[0], 4);
-	SaveUBYTE(&AUDC[0], 4);
-	SaveUBYTE(&AUDCTL[0], 1);
-
-	SaveINT(&DivNIRQ[0], 4);
-	SaveINT(&DivNMax[0], 4);
-	SaveINT(&Base_mult[0], 1);
 }
 
 void POKEYStateRead(void)
 {
-	int i;
-	int SHIFT_KEY;
-	int KEYPRESSED;
-
-	ReadUBYTE(&KBCODE, 1);
-	ReadUBYTE(&IRQST, 1);
-	ReadUBYTE(&IRQEN, 1);
-	ReadUBYTE(&SKCTLS, 1);
-
-	ReadINT(&SHIFT_KEY, 1);
-	ReadINT(&KEYPRESSED, 1);
-	ReadINT(&DELAYED_SERIN_IRQ, 1);
-	ReadINT(&DELAYED_SEROUT_IRQ, 1);
-	ReadINT(&DELAYED_XMTDONE_IRQ, 1);
-
-	ReadUBYTE(&AUDF[0], 4);
-	ReadUBYTE(&AUDC[0], 4);
-	ReadUBYTE(&AUDCTL[0], 1);
-	for (i = 0; i < 4; i++) {
-		POKEY_PutByte((UWORD) (_AUDF1 + i * 2), AUDF[i]);
-		POKEY_PutByte((UWORD) (_AUDC1 + i * 2), AUDC[i]);
-	}
-	POKEY_PutByte(_AUDCTL, AUDCTL[0]);
-
-	ReadINT(&DivNIRQ[0], 4);
-	ReadINT(&DivNMax[0], 4);
-	ReadINT(&Base_mult[0], 1);
 }
-
-#endif

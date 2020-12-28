@@ -40,13 +40,12 @@ gamecfg GameConf;                        // Game Config svg
 unsigned int atari_pal16[256] = {0};
 unsigned char *filebuffer;
 
-#define SNDLENGTH 4096
+#define SNDLENGTH 2048
 signed char sound_buffer[SNDLENGTH];
 signed char *psound_buffer;
 
 int alpha_1 = 8;
 int alpha_2 = 8;
-
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
@@ -294,10 +293,10 @@ void dsFreeEmu(void) {
 u16 targetIndex = 0;
 void VsoundHandler(void) 
 {
-  extern char pokey_buffer[];
+  extern unsigned char pokey_buffer[];
   static u16 sound_idx=0;
-  sound_buffer[sound_idx] = pokey_buffer[targetIndex] +128;
-  sound_idx = (sound_idx + 1) & 0x0FFF;
+  sound_buffer[sound_idx] = pokey_buffer[targetIndex];
+  sound_idx = (sound_idx + 1) & 0x07FF;
   targetIndex=(targetIndex + 1) % 368;  
 }
 
@@ -757,18 +756,19 @@ void dsPrintValue(int x, int y, unsigned int isSelect, char *pchStr)
 }
 
 //---------------------------------------------------------------------------------
-void dsInstallSoundEmuFIFO(void) {
-	FifoMessage msg;
-  msg.SoundPlay.data = &sound_buffer;
-  msg.SoundPlay.freq = 22050;
-	msg.SoundPlay.volume = 127;
-	msg.SoundPlay.pan = 64;
-	msg.SoundPlay.loop = 1;
-	msg.SoundPlay.format = ((1)<<4) | SoundFormat_8Bit;
-  msg.SoundPlay.loopPoint = 0;
-  msg.SoundPlay.dataSize = SNDLENGTH >> 2;
-  msg.type = EMUARM7_PLAY_SND;
-  fifoSendDatamsg(FIFO_USER_01, sizeof(msg), (u8*)&msg);
+void dsInstallSoundEmuFIFO(void) 
+{
+    FifoMessage msg;
+    msg.SoundPlay.data = &sound_buffer;
+    msg.SoundPlay.freq = 22050;
+    msg.SoundPlay.volume = 127;
+    msg.SoundPlay.pan = 64;
+    msg.SoundPlay.loop = 1;
+    msg.SoundPlay.format = ((1)<<4) | SoundFormat_8Bit;
+    msg.SoundPlay.loopPoint = 0;
+    msg.SoundPlay.dataSize = SNDLENGTH >> 2;
+    msg.type = EMUARM7_PLAY_SND;
+    fifoSendDatamsg(FIFO_USER_01, sizeof(msg), (u8*)&msg);
 }
 
 extern u32 trig0, trig1;
