@@ -156,9 +156,30 @@ static const struct cart_t cart_table[] =
     {"556a66d6737f0f793821e702547bc051",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24},  // Vanguard (USA).a52
     {"560b68b7f83077444a57ebe9f932905a",    CART_5200_NS_16,    CTRL_SWAP,  DIGITAL,    2,   6, 220,    256,    240,    32,14},  // Wizard of Wor (USA).a52
     {"9fee054e7d4ba2392f4ba0cb73fc99a5",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10},  // Zaxxon (USA).a52
+    {"433d3a2fc9896aa8294271a0204dc7e3",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Zaxxon 32k_final.a52
     {"77beee345b4647563e20fd896231bd47",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0},  // Zenji (USA).a52
     {"dc45af8b0996cb6a94188b0be3be2e17",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22},  // Zone Ranger (USA).a52
     
+    {"737717ff4f8402ed5b02e4bf866bbbe3",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // ANALOG Multicart (XL Conversion).a52
+    {"77c6b647746bb1413c5566378ef25eec",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Archon (XL Conversion).a52
+    {"ec65389cc604b279d69a889725c723e7",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Attack of the Mutant Camels (XL Conversion).a52
+    {"96b424d0bb0339f4edfe8095fe275d62",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,24},  // Batty Builders (XL Conversion).a52
+    {"713feccd8f2722f2e9bdcab98e25a35f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Buried Bucks (XL Conversion).a52
+    {"701dd2903b55a5b6734afa120e141334",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Chicken (XL Conversion).a52
+    {"e60a98edcc5cad98170772ea8d8c118d",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Claim Jumper (XL Conversion).a52
+    {"4a754460e43bebd08b943c8dba31d581",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Clowns & Balloons (XL Conversion).a52
+    {"195c23a894c7ac8631757eec661ab1e6",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Crossfire (XL Conversion).a52
+    {"6049d5ef7eddb1bb3a643151ff506219",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Diamond Mine (XL Conversion).a52
+    {"fc3ab610323cc34e7984f4bd599b871f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Mr Cool (XL Conversion).a52
+    {"5781071d4e3760dd7cd46e1061a32046",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // O'Riley's Mine (XL Conversion).a52
+    {"43e9af8d8c648515de46b9f4bcd024d7",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Pacific Coast Hwy (XL Conversion).a52
+    {"57c5b010ec9b5f6313e691bdda94e185",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Pastfinder (XL Conversion).a52
+    {"894959d9c5a88c8e1744f7fcbb930065",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Preppie (XL Conversion).a52
+    {"54aa9130fa0a50ab8a74ed5b9076ff81",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Shamus (XL Conversion).a52
+    {"bf4f25d64b364dd53fbd63562ea1bcda",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Turmoil (XL Conversion).a52
+    {"3649bfd2008161b9825f386dbaff88da",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Up'n Down (XL Conversion).a52
+    {"8e2ac7b944c30af9fae5f10c3a40f7a4",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Worm War I (XL Conversion).a52
+    {"4012282da62c0d72300294447ef6b9a2",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19},  // Gateway to Apshai.a52
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,30},  // End of List
 };
 
