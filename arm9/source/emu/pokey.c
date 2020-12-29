@@ -265,9 +265,6 @@ void POKEY_PutByte(UWORD addr, UBYTE byte)
 		if (!(SKCTLS & 4)) {
 			pot_scanline = 0;	/* slow pot mode */
     }  
-    //else
-    //  pot_scanline = 226;//228;  
-      //INPUT_potgo(&POT_all);
 		break;
 	case _SEROUT:
 		if ((SKCTLS & 0x70) == 0x20 && POKEY_siocheck())
@@ -275,18 +272,12 @@ void POKEY_PutByte(UWORD addr, UBYTE byte)
 		DELAYED_SEROUT_IRQ = SEROUT_INTERVAL;
 		IRQST |= 0x08;
 		DELAYED_XMTDONE_IRQ = XMTDONE_INTERVAL;
-#ifdef SERIO_SOUND
-		Update_serio_sound(1, byte);
-#endif
 		break;
 	case _STIMER:
 		DivNIRQ[CHAN1] = DivNMax[CHAN1];
 		DivNIRQ[CHAN2] = DivNMax[CHAN2];
 		DivNIRQ[CHAN4] = DivNMax[CHAN4];
 		Update_pokey_sound(_STIMER, byte, 0, SOUND_GAIN);
-#ifdef DEBUG1
-		printf("WR: STIMER = %x\n", byte);
-#endif
 		break;
 	case _SKCTLS:
 		SKCTLS = byte;
@@ -294,53 +285,6 @@ void POKEY_PutByte(UWORD addr, UBYTE byte)
 		if (byte & 4)
 			pot_scanline = 228;	/* fast pot mode - return results immediately */
 		break;
-#ifdef STEREO_SOUND
-	case _AUDC1 + _POKEY2:
-		AUDC[CHAN1 + CHIP2] = byte;
-		Update_pokey_sound(_AUDC1, byte, 1, SOUND_GAIN);
-		break;
-	case _AUDC2 + _POKEY2:
-		AUDC[CHAN2 + CHIP2] = byte;
-		Update_pokey_sound(_AUDC2, byte, 1, SOUND_GAIN);
-		break;
-	case _AUDC3 + _POKEY2:
-		AUDC[CHAN3 + CHIP2] = byte;
-		Update_pokey_sound(_AUDC3, byte, 1, SOUND_GAIN);
-		break;
-	case _AUDC4 + _POKEY2:
-		AUDC[CHAN4 + CHIP2] = byte;
-		Update_pokey_sound(_AUDC4, byte, 1, SOUND_GAIN);
-		break;
-	case _AUDCTL + _POKEY2:
-		AUDCTL[1] = byte;
-		/* determine the base multiplier for the 'div by n' calculations */
-		if (byte & CLOCK_15)
-			Base_mult[1] = DIV_15;
-		else
-			Base_mult[1] = DIV_64;
-
-		Update_pokey_sound(_AUDCTL, byte, 1, SOUND_GAIN);
-		break;
-	case _AUDF1 + _POKEY2:
-		AUDF[CHAN1 + CHIP2] = byte;
-		Update_pokey_sound(_AUDF1, byte, 1, SOUND_GAIN);
-		break;
-	case _AUDF2 + _POKEY2:
-		AUDF[CHAN2 + CHIP2] = byte;
-		Update_pokey_sound(_AUDF2, byte, 1, SOUND_GAIN);
-		break;
-	case _AUDF3 + _POKEY2:
-		AUDF[CHAN3 + CHIP2] = byte;
-		Update_pokey_sound(_AUDF3, byte, 1, SOUND_GAIN);
-		break;
-	case _AUDF4 + _POKEY2:
-		AUDF[CHAN4 + CHIP2] = byte;
-		Update_pokey_sound(_AUDF4, byte, 1, SOUND_GAIN);
-		break;
-	case _STIMER + _POKEY2:
-		Update_pokey_sound(_STIMER, byte, 1, SOUND_GAIN);
-		break;
-#endif
 	}
 }
 

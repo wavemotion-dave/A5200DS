@@ -60,7 +60,7 @@ static const struct cart_t cart_table[] =
     {"17e5c03b4fcada48d4c2529afcfe3a70",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24,  0x0000},  // BCs Quest For Tires (XL Conversion).a52
     {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0000},  // Beamrider (USA).a52
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,25,  0x0000},  // BerZerk (USA).a52
-    {"139229eed18032fdea735fa5360bd551",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,23,  0x0000},  // Beef Drop Ultimate SD Edition.a52
+    {"139229eed18032fdea735fa5360bd551",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // Beef Drop Ultimate SD Edition.a52
     {"81790daff7f7646a6c371c056622be9c",    CART_5200_40,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Bounty Bob Strikes Back (Merged) (Big Five Software) (U).a52
     {"a074a1ff0a16d1e034ee314b85fa41e9",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    230,    32,15,  0x0000},  // Buck Rogers - Planet of Zoom (USA).a52
     {"713feccd8f2722f2e9bdcab98e25a35f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Buried Bucks (XL Conversion).a52
@@ -120,7 +120,7 @@ static const struct cart_t cart_table[] =
     {"b99f405de8e7700619bcd18524ba0e0e",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0000},  // K-Razy Shoot-Out (USA).a52
     {"66977296ff8c095b8cb755de3472b821",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0000},  // K-Razy Shoot-Out (1982) (CBS) [h1] (Two Port).a52
     {"5154dc468c00e5a343f5a8843a14f8ce",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24,  0x0000},  // K-Star Patrol (XL Conversion).a52
-    {"c4931be078e2b16dc45e9537ebce836b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,30,  0x0000},  // Laser Gates (Conversion).a52
+    {"c4931be078e2b16dc45e9537ebce836b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24,  0x0000},  // Laser Gates (Conversion).a52
     {"46264c86edf30666e28553bd08369b83",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // Last Starfighter, The (USA) (Proto).a52
     {"ff785ce12ad6f4ca67f662598025c367",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,12,  0x0000},  // Megamania (1983) (Activision).a52
     {"d00dff571bfa57c7ff7880c3ce03b178",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Mario Brothers (1983) (Atari).a52

@@ -528,7 +528,7 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 	register uint8 *samp_cnt_w_ptr;
 	register uint32 event_min;
 	register uint8 next_event;
-	register char  cur_val;		/* otherwise we'll simplify as 8-bit unsigned */
+	register unsigned char cur_val;		/* otherwise we'll simplify as 8-bit unsigned */
 	register uint8 *out_ptr;
 	register uint8 audc;
 	register uint8 toggle;
@@ -741,8 +741,8 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 			}
 #endif  /* VOL_ONLY_SOUND */
 
-        if (iout > 128) 
-          *buffer++ = 255;
+        if (iout < 0 || iout > 128)   // Should never happen but just in case...
+          *buffer++ = 0;
         else
            *buffer++ = (char) ((iout))+128;
         *Samp_n_cnt += Samp_n_max;
