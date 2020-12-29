@@ -61,7 +61,7 @@ static const struct cart_t cart_table[] =
     {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0000},  // Beamrider (USA).a52
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,25,  0x0000},  // BerZerk (USA).a52
     {"139229eed18032fdea735fa5360bd551",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // Beef Drop Ultimate SD Edition.a52
-    {"81790daff7f7646a6c371c056622be9c",    CART_5200_40,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Bounty Bob Strikes Back (Merged) (Big Five Software) (U).a52
+    {"81790daff7f7646a6c371c056622be9c",    CART_5200_40,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    238,    32,16,  0x0000},  // Bounty Bob Strikes Back (Merged) (Big Five Software) (U).a52
     {"a074a1ff0a16d1e034ee314b85fa41e9",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    230,    32,15,  0x0000},  // Buck Rogers - Planet of Zoom (USA).a52
     {"713feccd8f2722f2e9bdcab98e25a35f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Buried Bucks (XL Conversion).a52
     {"3147ad22f8d5f46b1ef40a39da3a3de1",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,23,  0x0000},  // Captain Beeble (XL Conversion).a52
@@ -199,7 +199,6 @@ static const struct cart_t cart_table[] =
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,30,  0x0000},  // End of List
 };
 
-
 UBYTE *cart_image = NULL;       /* For cartridge memory */
 char cart_filename[FILENAME_MAX];
 
@@ -244,7 +243,7 @@ inline UBYTE CART_BountyBob2(UWORD addr)
 }
 
 #ifdef PAGED_ATTRIB
-UBYTE BountyBob1_GetByte(UWORD addr)
+ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
 {
     if ((addr & 0xFFF0) == 0x4FF0) {
         return CART_BountyBob1(addr);
@@ -252,7 +251,7 @@ UBYTE BountyBob1_GetByte(UWORD addr)
     return dGetByte(addr);
 }
 
-UBYTE BountyBob2_GetByte(UWORD addr)
+ITCM_CODE UBYTE BountyBob2_GetByte(UWORD addr)
 {
     if ((addr & 0xFFF0) == 0x5FF0) {
         return CART_BountyBob2(addr);
@@ -260,14 +259,14 @@ UBYTE BountyBob2_GetByte(UWORD addr)
     return dGetByte(addr);
 }
 
-void BountyBob1_PutByte(UWORD addr, UBYTE value)
+ITCM_CODE void BountyBob1_PutByte(UWORD addr, UBYTE value)
 {
     if ((addr & 0xFFF0) == 0x4FF0) {
         CART_BountyBob1(addr);
     }
 }
 
-void BountyBob2_PutByte(UWORD addr, UBYTE value)
+ITCM_CODE void BountyBob2_PutByte(UWORD addr, UBYTE value)
 {
     if ((addr & 0xFFF0) == 0x5FF0) {
         CART_BountyBob2(addr);
