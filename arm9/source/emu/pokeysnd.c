@@ -306,7 +306,8 @@ void Pokey_process(void *sndbuffer, unsigned int sndn)
 /*                                                                           */
 /*****************************************************************************/
 
-static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain) {
+static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain) 
+{
 	uint32 new_val = 0;
 	uint8 chan;
 	uint8 chan_mask;
@@ -315,34 +316,34 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 	switch (addr & 0x0f) {
 	case _AUDF1:
 		chan_mask = 1 << CHAN1;
-		if (AUDCTL[chip] & CH1_CH2)		/* if ch 1&2 tied together */
+		if (AUDCTL[0] & CH1_CH2)		/* if ch 1&2 tied together */
 			chan_mask |= 1 << CHAN2;	/* then also change on ch2 */
 		break;
 	case _AUDC1:
-		AUDV[CHAN1] = (val & VOLUME_MASK) * gain;
+		AUDV[CHAN1] = (val & VOLUME_MASK); // * gain;
 		chan_mask = 1 << CHAN1;
 		break;
 	case _AUDF2:
 		chan_mask = 1 << CHAN2;
 		break;
 	case _AUDC2:
-		AUDV[CHAN2] = (val & VOLUME_MASK) * gain;
+		AUDV[CHAN2] = (val & VOLUME_MASK); // * gain;
 		chan_mask = 1 << CHAN2;
 		break;
 	case _AUDF3:
 		chan_mask = 1 << CHAN3;
-		if (AUDCTL[chip] & CH3_CH4)		/* if ch 3&4 tied together */
+		if (AUDCTL[0] & CH3_CH4)		/* if ch 3&4 tied together */
 			chan_mask |= 1 << CHAN4;	/* then also change on ch4 */
 		break;
 	case _AUDC3:
-		AUDV[CHAN3] = (val & VOLUME_MASK) * gain;
+		AUDV[CHAN3] = (val & VOLUME_MASK); // * gain;
 		chan_mask = 1 << CHAN3;
 		break;
 	case _AUDF4:
 		chan_mask = 1 << CHAN4;
 		break;
 	case _AUDC4:
-		AUDV[CHAN4] = (val & VOLUME_MASK) * gain;
+		AUDV[CHAN4] = (val & VOLUME_MASK); // * gain;
 		chan_mask = 1 << CHAN4;
 		break;
 	case _AUDCTL:
@@ -365,10 +366,10 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 
 	if (chan_mask & (1 << CHAN1)) {
 		/* process channel 1 frequency */
-		if (AUDCTL[chip] & CH1_179)
+		if (AUDCTL[0] & CH1_179)
 			new_val = AUDF[CHAN1] + 4;
 		else
-			new_val = (AUDF[CHAN1] + 1) * Base_mult[chip];
+			new_val = (AUDF[CHAN1] + 1) * Base_mult[0];
 
 		if (new_val != Div_n_max[CHAN1]) {
 			Div_n_max[CHAN1] = new_val;
@@ -381,16 +382,16 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 
 	if (chan_mask & (1 << CHAN2)) {
 		/* process channel 2 frequency */
-		if (AUDCTL[chip] & CH1_CH2) {
-			if (AUDCTL[chip] & CH1_179)
+		if (AUDCTL[0] & CH1_CH2) {
+			if (AUDCTL[0] & CH1_179)
 				new_val = AUDF[CHAN2] * 256 +
 					AUDF[CHAN1] + 7;
 			else
 				new_val = (AUDF[CHAN2] * 256 +
-						   AUDF[CHAN1] + 1) * Base_mult[chip];
+						   AUDF[CHAN1] + 1) * Base_mult[0];
 		}
 		else
-			new_val = (AUDF[CHAN2] + 1) * Base_mult[chip];
+			new_val = (AUDF[CHAN2] + 1) * Base_mult[0];
 
 		if (new_val != Div_n_max[CHAN2]) {
 			Div_n_max[CHAN2] = new_val;
@@ -403,10 +404,10 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 
 	if (chan_mask & (1 << CHAN3)) {
 		/* process channel 3 frequency */
-		if (AUDCTL[chip] & CH3_179)
+		if (AUDCTL[0] & CH3_179)
 			new_val = AUDF[CHAN3] + 4;
 		else
-			new_val = (AUDF[CHAN3] + 1) * Base_mult[chip];
+			new_val = (AUDF[CHAN3] + 1) * Base_mult[0];
 
 		if (new_val != Div_n_max[CHAN3]) {
 			Div_n_max[CHAN3] = new_val;
@@ -419,16 +420,16 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 
 	if (chan_mask & (1 << CHAN4)) {
 		/* process channel 4 frequency */
-		if (AUDCTL[chip] & CH3_CH4) {
-			if (AUDCTL[chip] & CH3_179)
+		if (AUDCTL[0] & CH3_CH4) {
+			if (AUDCTL[0] & CH3_179)
 				new_val = AUDF[CHAN4] * 256 +
 					AUDF[CHAN3] + 7;
 			else
 				new_val = (AUDF[CHAN4] * 256 +
-						   AUDF[CHAN3] + 1) * Base_mult[chip];
+						   AUDF[CHAN3] + 1) * Base_mult[0];
 		}
 		else
-			new_val = (AUDF[CHAN4] + 1) * Base_mult[chip];
+			new_val = (AUDF[CHAN4] + 1) * Base_mult[0];
 
 		if (new_val != Div_n_max[CHAN4]) {
 			Div_n_max[CHAN4] = new_val;
@@ -483,8 +484,8 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 				Outvol[chan] = 1;
 
 				/* can only ignore channel if filtering off */
-				if ((chan == CHAN3 && !(AUDCTL[chip] & CH1_FILTER)) ||
-					(chan == CHAN4 && !(AUDCTL[chip] & CH2_FILTER)) ||
+				if ((chan == CHAN3 && !(AUDCTL[0] & CH1_FILTER)) ||
+					(chan == CHAN4 && !(AUDCTL[0] & CH2_FILTER)) ||
 					(chan == CHAN1) ||
 					(chan == CHAN2)
 				) {

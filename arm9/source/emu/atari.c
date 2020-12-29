@@ -534,11 +534,9 @@ void Atari800_PutByte(UWORD addr, UBYTE byte) {
     case 0x9f00:
       CART_BountyBob2(addr);
       break;
-//    case 0xd000:				/* GTIA */
     case 0xc000:				/* GTIA - 5200 */
       GTIA_PutByte(addr, byte);
       break;
-//    case 0xd200:				/* POKEY */
     case 0xe800:				/* POKEY - 5200 AAA added other pokey space */
     case 0xeb00:				/* POKEY - 5200 */
       POKEY_PutByte(addr, byte);
