@@ -235,14 +235,14 @@ void dsInitTimer(void) {
 
 void dsShowScreenEmu(void) {
   // Change vram
-	videoSetMode(MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE);
+  videoSetMode(MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE);
   vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
   vramSetBankB(VRAM_B_MAIN_BG_0x06020000 );
   bg0 = bgInit(3, BgType_Bmp8, BgSize_B8_512x512, 0,0);
   bg1 = bgInit(2, BgType_Bmp8, BgSize_B8_512x512, 0,0);
 
   REG_BLDCNT = BLEND_ALPHA | BLEND_SRC_BG2 | BLEND_DST_BG3;
-  REG_BLDALPHA = (9 << 8) | 9; // 75% / 60% 
+  REG_BLDALPHA = (9 << 8) | 9; // 60% / 50% 
 
   //bufVideo = BG_GFX;   
   REG_BG2PB = 0;
