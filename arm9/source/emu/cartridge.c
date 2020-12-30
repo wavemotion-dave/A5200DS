@@ -95,13 +95,14 @@ static const struct cart_t cart_table[] =
     {"14bd9a0423eafc3090333af916cfbce6",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // Frisky Tom (USA) (Proto).a52
     {"2c89c9444f99fd7ac83f88278e6772c6",    CART_5200_8,        CTRL_FROG,  DIGITAL,    2,   6, 220,    256,    230,    32,14,  0x0908},  // Frogger (1983) (Parker Bros).a52
     {"d8636222c993ca71ca0904c8d89c4411",    CART_5200_EE_16,    CTRL_FROG,  DIGITAL,    2,   6, 220,    256,    230,    32,14,  0x0908},  // Frogger II - Threeedeep! (USA).a52
-    {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    236,    32,16,  0x0908},  // Galaxian (1982) (Atari).a52
+    {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    236,    32,16,  0x0A0A},  // Galaxian (1982) (Atari).a52
     {"4012282da62c0d72300294447ef6b9a2",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Gateway to Apshai (XL Conversion).a52
     {"0fdce0dd4014f3188d0ca289f53387d0",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Gebelli (XL Conversion).a52
     {"85fe2492e2945015000272a9fefc06e3",    CART_5200_8,        CTRL_JOY,   ANALOG,     1,   6, 220,    256,    240,    32,16,  0x0908},  // Gorf (1982) (CBS).a52
     {"a21c545a52d488bfdaf078d786bf4916",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0908},  // Gorf Converted (1982) (CBS).a52   
     {"dc271e475b4766e80151f1da5b764e52",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // Gremlins (USA).a52
-    {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0908},  // Gyruss (USA).a52
+    {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0F0F},  // Gyruss (USA).a52
+    {"b7617ac90462ef13f8350e32b8198873",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0F0F},  // Gyruss (Autofire Hack).a52    
     {"f8f0e0a6dc2ffee41b2a2dd736cba4cd",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0908},  // H.E.R.O. (USA).a52
     {"d824f6ee24f8bc412468268395a76159",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // Ixion (XL Conversion).a52
     {"936db7c08e6b4b902c585a529cb15fc5",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // James Bond 007 (USA).a52
