@@ -486,6 +486,8 @@ int Atari800_Exit(int run_monitor) {
 	return restart;
 }
 
+
+
 ITCM_CODE UBYTE Atari800_GetByte(UWORD addr) {
 	UBYTE byte = 0xff;
 	switch (addr & 0xff00) {

@@ -216,9 +216,11 @@ void vblankIntr()
   REG_BG3Y = cyBG+jitter4[sIndex++]; 
   if(sIndex >= 8) sIndex = 0;
     
-// REG_BLDALPHA = (alpha_1 << 8) | alpha_2; // 75% / 60% 
- //debug[0] = alpha_1;
- //debug[1] = alpha_2;
+#if 0
+ REG_BLDALPHA = (alpha_1 << 8) | alpha_2; // 75% / 60% 
+ debug[0] = alpha_1;
+ debug[1] = alpha_2;
+#endif    
 }
 
 void dsInitScreenMain(void) {
@@ -242,7 +244,9 @@ void dsShowScreenEmu(void) {
   bg1 = bgInit(2, BgType_Bmp8, BgSize_B8_512x512, 0,0);
 
   REG_BLDCNT = BLEND_ALPHA | BLEND_SRC_BG2 | BLEND_DST_BG3;
-  REG_BLDALPHA = (9 << 8) | 9; // 60% / 50% 
+  REG_BLDALPHA = myCart.alphaBlend;
+  alpha_1 =( myCart.alphaBlend >> 8) & 0xFF;
+  alpha_2 =( myCart.alphaBlend >> 0) & 0xFF;
 
   //bufVideo = BG_GFX;   
   REG_BG2PB = 0;
