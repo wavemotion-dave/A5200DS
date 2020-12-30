@@ -49,14 +49,14 @@ static const struct cart_t cart_table[] =
     {"45f8841269313736489180c8ec3e9588",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,18,  0x0000},  // Activision Decathlon, The (USA).a52
     {"4b1aecab0e2f9c90e514cb0a506e3a5f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,14,  0x0000},  // Adventure II-a.a52
     {"e2f6085028eb8cf24ad7b50ca4ef640f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,14,  0x0000},  // Adventure II-b.a52
-    {"737717ff4f8402ed5b02e4bf866bbbe3",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x1100},  // ANALOG Multicart (XL Conversion).a52
+    {"737717ff4f8402ed5b02e4bf866bbbe3",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // ANALOG Multicart (XL Conversion).a52
     {"77c6b647746bb1413c5566378ef25eec",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Archon (XL Conversion).a52
     {"bae7c1e5eb04e19ef8d0d0b5ce134332",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // Astro Chase (USA).a52
     {"d31a3bbb4c99f539f0d2c4e02bec516e",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,19,  0x0000},  // Atlantis (XL Conversion).a52
     {"ec65389cc604b279d69a889725c723e7",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,20,  0x0000},  // Attack of the Mutant Camels (XL Conversion).a52
     {"f5cd178cbea0ae7d8cf65b30cfd04225",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    256,    32,16,  0x0000},  // Ballblazer (USA).a52
     {"96b424d0bb0339f4edfe8095fe275d62",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,24,  0x0000},  // Batty Builders (XL Conversion).a52
-    {"8123393ae9635f6bc15ddc3380b04328",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0010},  // Blueprint (1982) (CBS).a52    
+    {"8123393ae9635f6bc15ddc3380b04328",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0000},  // Blueprint (1982) (CBS).a52    
     {"17e5c03b4fcada48d4c2529afcfe3a70",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24,  0x0000},  // BCs Quest For Tires (XL Conversion).a52
     {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0000},  // Beamrider (USA).a52
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,25,  0x0000},  // BerZerk (USA).a52
@@ -83,7 +83,7 @@ static const struct cart_t cart_table[] =
     {"7c27d225a13e178610babf331a0759c0",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,23,  0x0000},  // David Crane's Pitfall II - Lost Caverns (USA).a52
     {"27d5f32b0d46d3d80773a2b505f95046",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,18,  0x0000},  // Defender (1982) (Atari).a52
     {"b4af8b555278dec6e2c2329881dc0a15",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,18,  0x0000},  // Demon Attack (XL Conversion).a52
-    {"32b2bb28213dbb01b69e003c4b35bb57",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,18,  0x0010},  // Desmonds Dungeon (XL Conversion).a52
+    {"32b2bb28213dbb01b69e003c4b35bb57",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,18,  0x0000},  // Desmonds Dungeon (XL Conversion).a52
     {"6049d5ef7eddb1bb3a643151ff506219",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Diamond Mine (XL Conversion).a52
     {"3abd0c057474bad46e45f3d4e96eecee",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    340,    256,    34,22,  0x0000},  // Dig Dug (1983) (Atari).a52
     {"1d1eab4067fc0aaf2b2b880fb8f72e40",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Donkey Kong Arcade.a52
@@ -92,7 +92,7 @@ static const struct cart_t cart_table[] =
     {"ae5b9bbe91983ab111fd7cf3d29d6b11",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Donkey Kong Jr (XL Conversion).a52
     {"159ccaa564fc2472afd1f06665ec6d19",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,14,  0x0000},  // Dreadnaught Factor, The (USA).a52
     {"4b6c878758f4d4de7f9650296db76d2e",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Fast Eddie (XL Conversion).a52
-    {"14bd9a0423eafc3090333af916cfbce6",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // Frisky Tom (USA) (Proto).a52
+    {"14bd9a0423eafc3090333af916cfbce6",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Frisky Tom (USA) (Proto).a52
     {"2c89c9444f99fd7ac83f88278e6772c6",    CART_5200_8,        CTRL_FROG,  DIGITAL,    2,   6, 220,    256,    230,    32,14,  0x0000},  // Frogger (1983) (Parker Bros).a52
     {"d8636222c993ca71ca0904c8d89c4411",    CART_5200_EE_16,    CTRL_FROG,  DIGITAL,    2,   6, 220,    256,    230,    32,14,  0x0000},  // Frogger II - Threeedeep! (USA).a52
     {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    236,    32,16,  0x0000},  // Galaxian (1982) (Atari).a52
@@ -101,7 +101,7 @@ static const struct cart_t cart_table[] =
     {"85fe2492e2945015000272a9fefc06e3",    CART_5200_8,        CTRL_JOY,   ANALOG,     1,   6, 220,    256,    240,    32,16,  0x0000},  // Gorf (1982) (CBS).a52
     {"a21c545a52d488bfdaf078d786bf4916",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // Gorf Converted (1982) (CBS).a52   
     {"dc271e475b4766e80151f1da5b764e52",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Gremlins (USA).a52
-    {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Gyruss (USA).a52
+    {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // Gyruss (USA).a52
     {"f8f0e0a6dc2ffee41b2a2dd736cba4cd",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // H.E.R.O. (USA).a52
     {"d824f6ee24f8bc412468268395a76159",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Ixion (XL Conversion).a52
     {"936db7c08e6b4b902c585a529cb15fc5",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // James Bond 007 (USA).a52
@@ -121,7 +121,7 @@ static const struct cart_t cart_table[] =
     {"66977296ff8c095b8cb755de3472b821",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0000},  // K-Razy Shoot-Out (1982) (CBS) [h1] (Two Port).a52
     {"5154dc468c00e5a343f5a8843a14f8ce",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24,  0x0000},  // K-Star Patrol (XL Conversion).a52
     {"c4931be078e2b16dc45e9537ebce836b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24,  0x0000},  // Laser Gates (Conversion).a52
-    {"46264c86edf30666e28553bd08369b83",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // Last Starfighter, The (USA) (Proto).a52
+    {"46264c86edf30666e28553bd08369b83",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Last Starfighter, The (USA) (Proto).a52
     {"ff785ce12ad6f4ca67f662598025c367",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,12,  0x0000},  // Megamania (1983) (Activision).a52
     {"d00dff571bfa57c7ff7880c3ce03b178",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Mario Brothers (1983) (Atari).a52
     {"1cd67468d123219201702eadaffd0275",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // Meteorites (USA).a52
@@ -136,7 +136,7 @@ static const struct cart_t cart_table[] =
     {"618e3eb7ae2810768e1aefed1bfdcec4",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Mountain King (USA).a52
     {"23296829e0e1316541aa6b5540b9ba2e",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Mountain King (1984) (Sunrise Software) [h1] (Two Port).a52
     {"fc3ab610323cc34e7984f4bd599b871f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Mr Cool (XL Conversion).a52
-    {"d1873645fee21e84b25dc5e939d93e9b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // Mr. Do!'s Castle (USA).a52
+    {"d1873645fee21e84b25dc5e939d93e9b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Mr. Do!'s Castle (USA).a52
     {"ef9a920ffdf592546499738ee911fc1e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,25,  0x0000},  // Ms. Pac-Man (USA).a52
     {"6c661ed6f14d635482f1d35c5249c788",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0000},  // Oils Well (XL Conversion).a52
     {"5781071d4e3760dd7cd46e1061a32046",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // O'Riley's Mine (XL Conversion).a52
@@ -152,15 +152,15 @@ static const struct cart_t cart_table[] =
     {"66057fd4b37be2a45bd8c8e6aa12498d",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    250,    32,20,  0x0000},  // Popeye Arcade Final (Hack).a52
     {"894959d9c5a88c8e1744f7fcbb930065",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Preppie (XL Conversion).a52
     {"ce44d14341fcc5e7e4fb7a04f77ffec9",    CART_5200_8,        CTRL_QBERT, DIGITAL,    2,   6, 220,    256,    240,    32,20,  0x0000},  // Q-bert (USA).a52
-    {"9b7d9d874a93332582f34d1420e0f574",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    320,    256,    66,20,  0x0000},  // QIX (USA).a52
+    {"9b7d9d874a93332582f34d1420e0f574",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0000},  // QIX (USA).a52
     {"099706cedd068aced7313ffa371d7ec3",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Quest for Quintana Roo (USA).a52
     {"80e0ad043da9a7564fec75c1346dbc6e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0000},  // RainbowWalker.a52
     {"88fa71fc34e81e616bdffc30e013330b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0000},  // Ratcatcher.a52
-    {"2bb928d7516e451c6b0159ac413407de",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // RealSports Baseball (USA).a52
-    {"e056001d304db597bdd21b2968fcc3e6",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // RealSports Basketball (USA).a52
-    {"022c47b525b058796841134bb5c75a18",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // RealSports Football (USA).a52
-    {"3074fad290298d56c67f82e8588c5a8b",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // RealSports Soccer (USA).a52
-    {"7e683e571cbe7c77f76a1648f906b932",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    192,    32, 0,  0x0000},  // RealSports Tennis (USA).a52
+    {"2bb928d7516e451c6b0159ac413407de",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // RealSports Baseball (USA).a52
+    {"e056001d304db597bdd21b2968fcc3e6",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // RealSports Basketball (USA).a52
+    {"022c47b525b058796841134bb5c75a18",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // RealSports Football (USA).a52
+    {"3074fad290298d56c67f82e8588c5a8b",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // RealSports Soccer (USA).a52
+    {"7e683e571cbe7c77f76a1648f906b932",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // RealSports Tennis (USA).a52
     {"0dc44c5bf0829649b7fec37cb0a8186b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Rescue on Fractalus! (USA).a52
     {"ddf7834a420f1eaae20a7a6255f80a99",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0000},  // Road Runner (USA) (Proto).a52
     {"5dba5b478b7da9fd2c617e41fb5ccd31",    CART_5200_NS_16,    CTRL_ROBO,  DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0000},  // Robotron 2084 (USA).a52
@@ -188,7 +188,7 @@ static const struct cart_t cart_table[] =
     {"bf4f25d64b364dd53fbd63562ea1bcda",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Turmoil (XL Conversion).a52
     {"3649bfd2008161b9825f386dbaff88da",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Up'n Down (XL Conversion).a52
     {"556a66d6737f0f793821e702547bc051",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,24,  0x0000},  // Vanguard (USA).a52
-    {"560b68b7f83077444a57ebe9f932905a",    CART_5200_NS_16,    CTRL_SWAP,  DIGITAL,    2,   6, 220,    256,    240,    32,14,  0x0011},  // Wizard of Wor (USA).a52
+    {"560b68b7f83077444a57ebe9f932905a",    CART_5200_NS_16,    CTRL_SWAP,  DIGITAL,    2,   6, 220,    256,    240,    32,14,  0x0000},  // Wizard of Wor (USA).a52
     {"8e2ac7b944c30af9fae5f10c3a40f7a4",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0000},  // Worm War I (XL Conversion).a52
     {"4f6c58c28c41f31e3a1515fe1e5d15af",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0000},  // Xari Arena (USA) (Proto).a52
     {"f35f9e5699079e2634c4bfed0c5ef2f0",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0000},  // Yars Strike (XL Conversion).a52
@@ -221,12 +221,17 @@ void CART_PutByte(UWORD addr, UBYTE byte)
     }
 }
 
+//#define CopyROM(addr1, addr2, src) memcpy(memory + (addr1), src, (addr2) - (addr1) + 1)
+
 /* special support of Bounty Bob on Atari5200 */
 inline UBYTE CART_BountyBob1(UWORD addr)
 {
     if (addr >= 0x4ff6 && addr <= 0x4ff9) {
         addr -= 0x4ff6;
-        CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
+        u32 *dest_ptr = (u32*) (memory + 0x4000);
+        u32 *src_ptr = (u32 *)(cart_image+(addr * 0x1000));
+        for (int i=0; i<0x1000/4; i++)  *dest_ptr++ = *src_ptr++;
+        //CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
         return 0;
     }
     else return dGetByte(addr);
@@ -236,7 +241,10 @@ inline UBYTE CART_BountyBob2(UWORD addr)
 {
     if (addr >= 0x5ff6 && addr <= 0x5ff9) {
         addr -= 0x5ff6;
-        CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
+        u32 *dest_ptr = (u32*) (memory + 0x5000);
+        u32 *src_ptr = (u32*)(cart_image+(0x4000+addr * 0x1000));
+        for (int i=0; i<0x1000/4; i++)  *dest_ptr++ = *src_ptr++;
+        //CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
         return 0;
     }
     else return dGetByte(addr);
@@ -245,9 +253,12 @@ inline UBYTE CART_BountyBob2(UWORD addr)
 #ifdef PAGED_ATTRIB
 ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
 {
-    if (addr >= 0x4ff6 && addr <= 0x4ff9) {
+    if (addr >= 0x4ff6 && addr <= 0x4ff9) 
+    {
         addr -= 0x4ff6;
-        CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
+        u32 *dest_ptr = (u32*) (memory + 0x4000);
+        u32 *src_ptr = (u32 *)(cart_image+(addr * 0x1000));
+        for (int i=0; i<0x1000/4; i++)  *dest_ptr++ = *src_ptr++;
         return 0;
     }
     else return dGetByte(addr);
@@ -255,9 +266,12 @@ ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
 
 ITCM_CODE UBYTE BountyBob2_GetByte(UWORD addr)
 {
-    if (addr >= 0x5ff6 && addr <= 0x5ff9) {
+    if (addr >= 0x5ff6 && addr <= 0x5ff9) 
+    {
         addr -= 0x5ff6;
-        CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
+        u32 *dest_ptr = (u32*) (memory + 0x5000);
+        u32 *src_ptr = (u32*)(cart_image+(0x4000+addr * 0x1000));
+        for (int i=0; i<0x1000/4; i++)  *dest_ptr++ = *src_ptr++;
         return 0;
     }
     else return dGetByte(addr);
@@ -265,15 +279,21 @@ ITCM_CODE UBYTE BountyBob2_GetByte(UWORD addr)
 
 ITCM_CODE void BountyBob1_PutByte(UWORD addr, UBYTE value)
 {
-    if ((addr & 0xFFF0) == 0x4FF0) {
-        CART_BountyBob1(addr);
+    if (addr >= 0x4ff6 && addr <= 0x4ff9) {
+        addr -= 0x4ff6;
+        u32 *dest_ptr = (u32*) (memory + 0x4000);
+        u32 *src_ptr = (u32 *)(cart_image+(addr * 0x1000));
+        for (int i=0; i<0x1000/4; i++)  *dest_ptr++ = *src_ptr++;
     }
 }
 
 ITCM_CODE void BountyBob2_PutByte(UWORD addr, UBYTE value)
 {
-    if ((addr & 0xFFF0) == 0x5FF0) {
-        CART_BountyBob2(addr);
+    if (addr >= 0x5ff6 && addr <= 0x5ff9) {
+        addr -= 0x5ff6;
+        u32 *dest_ptr = (u32*) (memory + 0x5000);
+        u32 *src_ptr = (u32*)(cart_image+(0x4000+addr * 0x1000));
+        for (int i=0; i<0x1000/4; i++)  *dest_ptr++ = *src_ptr++;
     }
 }
 #endif

@@ -2,27 +2,34 @@ a5200DS
 --------------------------------------------------------------------------------
 a5200DS is an Atari VCS 5200 console emulator.
 To use this emulator, you must use compatibles rom with a52/bin format. 
-You also need the 5200.bin rom bios to use it. A quick search on atariage website 
-will help you about that ;-)
-Do not ask me about such files, I don't have them. A search with Google will certainly 
-help you. 
+You also need the 5200.bin rom bios to use it (there is a built-in open-source
+replacement BIOS which will work for many games but doesn't have full compatibilty
+so it is still recommended you use 5200.bin). A quick search on atariage website 
+will help you about that ;-) Do not ask me about such files, I don't have them. 
 
 Features :
 ----------
- Most things you should expect from an emulator.
+ Most things you should expect from an emulator. 
+ Most games run at full speed on a DSi or above.
 
 Missing :
 ---------
- All that is not yet emulated ;)
- Need to improve speed
- Hangs a lot of time if you do not choose the correct 16 bit cartridghe type
- 
+Sound emulation is passable but not great. I wish a good sound engineer who
+knows how to program for the DS would come along and magically make it sound 
+perfect... but at least all the sounds are available now :)
+
 Check updates on my web site : 
 http://www.portabledev.com
 
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V2.0 : 30-Dec-2020 by wavemotion-dave
+  * Fixed background noise bug on Pokey emulation - all sounds now available in 
+    all games (fixes Wizard of Wor sound, Blueprint sound, etc).
+  * Tons of minor screen adjustments for various games to make them look as good as possible.
+  * More games run properly - Bounty Bob Strikes Back is playable (but not yet full speed)
+
 V1.9 : 27-Dec-2020 by wavemotion-dave
   * New virtual keypad layout. 
   * Improved Analog vs Digital auto-selection. 

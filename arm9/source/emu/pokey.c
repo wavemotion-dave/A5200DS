@@ -88,10 +88,6 @@ UBYTE POKEY_GetByte(UWORD addr)
 {
 	UBYTE byte = 0xff;
 
-#ifdef STEREO_SOUND
-	if (addr & 0x0010 && stereo_enabled)
-		return 0;
-#endif
 	addr &= 0x0f;
 	switch (addr) {
 	case _POT0:
@@ -142,12 +138,6 @@ UBYTE POKEY_GetByte(UWORD addr)
 		break;
 	case _SERIN:
 		byte = SERIN;
-#ifdef DEBUG3
-		printf("SERIO: SERIN read, bytevalue %02x\n",SERIN);
-#endif
-#ifdef SERIO_SOUND
-		Update_serio_sound(0,byte);
-#endif
 		break;
 	case _IRQST:
 		byte = IRQST;
@@ -173,45 +163,25 @@ static int POKEY_siocheck(void)
 #define SOUND_GAIN 4
 #endif
 
-#ifndef SOUND
-#define Update_pokey_sound(addr, val, chip, gain)
-#endif
-
 void POKEY_PutByte(UWORD addr, UBYTE byte)
 {
-#ifdef STEREO_SOUND
-	addr &= stereo_enabled ? 0x1f : 0x0f;
-#else
 	addr &= 0x0f;
-#endif
 	switch (addr) {
 	case _AUDC1:
-        if (!chanDisabled[CHAN1])
-        {
-            AUDC[CHAN1] = byte;
-            Update_pokey_sound(_AUDC1, byte, 0, SOUND_GAIN);
-        }
+        AUDC[CHAN1] = byte;
+        Update_pokey_sound(_AUDC1, byte, 0, SOUND_GAIN);
 		break;
 	case _AUDC2:
-        if (!chanDisabled[CHAN2])
-        {
-    		AUDC[CHAN2] = byte;
-	    	Update_pokey_sound(_AUDC2, byte, 0, SOUND_GAIN);
-        }
+        AUDC[CHAN2] = byte;
+        Update_pokey_sound(_AUDC2, byte, 0, SOUND_GAIN);
 		break;
 	case _AUDC3:
-        if (!chanDisabled[CHAN3])
-        {
-    		AUDC[CHAN3] = byte;
-	    	Update_pokey_sound(_AUDC3, byte, 0, SOUND_GAIN);
-        }
+        AUDC[CHAN3] = byte;
+        Update_pokey_sound(_AUDC3, byte, 0, SOUND_GAIN);
 		break;
 	case _AUDC4:
-        if (!chanDisabled[CHAN4])
-        {
-    		AUDC[CHAN4] = byte;
-	    	Update_pokey_sound(_AUDC4, byte, 0, SOUND_GAIN);
-        }
+        AUDC[CHAN4] = byte;
+        Update_pokey_sound(_AUDC4, byte, 0, SOUND_GAIN);
 		break;
 	case _AUDCTL:
 		AUDCTL[0] = byte;

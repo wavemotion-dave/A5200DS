@@ -95,21 +95,6 @@ static uint32 Samp_n_max,		/* Sample max.  For accuracy, it is *256 */
 extern int atari_speaker;
 
 /* Volume only emulations declarations */
-#ifdef VOL_ONLY_SOUND
-
-#define	SAMPBUF_MAX	2048
-int	sampbuf_val[SAMPBUF_MAX];	/* volume values */
-int	sampbuf_cnt[SAMPBUF_MAX];	/* relative start time */
-int	sampbuf_ptr = 0;		/* pointer to sampbuf */
-int	sampbuf_rptr = 0;		/* pointer to read from sampbuf */
-int	sampbuf_last = 0;		/* last absolute time */
-int	sampbuf_AUDV[4 * MAXPOKEYS];	/* prev. channel volume */
-int	sampbuf_lastval = 0;		/* last volume */
-int	sampout;			/* last out volume */
-uint16 samp_freq;
-int	samp_consol_val = 0;		/* actual value of console sound */
-#endif  /* VOL_ONLY_SOUND */
-
 static uint32 snd_freq17 = FREQ_17_APPROX;
 int32 snd_playback_freq = 22050;
 uint8 snd_num_pokeys = 1;
@@ -134,26 +119,6 @@ static void Update_pokey_sound_rf(uint16, uint8, uint8, uint8);
 static void null_pokey_sound(uint16 addr, uint8 val, uint8 chip, uint8 gain) {}
 void (*Update_pokey_sound) (uint16 addr, uint8 val, uint8 chip, uint8 gain)
   = null_pokey_sound;
-
-#ifdef SERIO_SOUND
-static void Update_serio_sound_rf(int out, UBYTE data);
-static void null_serio_sound(int out, UBYTE data) {}
-void (*Update_serio_sound)(int out, UBYTE data) = null_serio_sound;
-int serio_sound_enabled = 1;
-#endif
-
-#ifdef CONSOLE_SOUND
-static void Update_consol_sound_rf(int set);
-static void null_consol_sound(int set) {}
-void (*Update_consol_sound)(int set) = null_consol_sound;
-int console_sound_enabled = 1;
-#endif
-
-#ifdef VOL_ONLY_SOUND
-static void Update_vol_only_sound_rf(void);
-static void null_vol_only_sound(void) {}
-void (*Update_vol_only_sound)(void) = null_vol_only_sound;
-#endif
 
 /*****************************************************************************/
 /* In my routines, I treat the sample output as another divide by N counter  */
@@ -204,21 +169,6 @@ static int Pokey_sound_init_rf(uint32 freq17, uint16 playback_freq,
 	uint8 chan;
 
 	Update_pokey_sound = Update_pokey_sound_rf;
-#ifdef SERIO_SOUND
-	Update_serio_sound = Update_serio_sound_rf;
-#endif
-#ifdef CONSOLE_SOUND
-	Update_consol_sound = Update_consol_sound_rf;
-#endif
-#ifdef VOL_ONLY_SOUND
-	Update_vol_only_sound = Update_vol_only_sound_rf;
-#endif
-
-	//Pokey_process_ptr = (flags & SND_BIT16) ? Pokey_process_16 : Pokey_process_8;
-
-#ifdef VOL_ONLY_SOUND
-	samp_freq = playback_freq;
-#endif
 
 	/* start all of the polynomial counters at zero */
 	P4 = 0;
@@ -238,9 +188,6 @@ static int Pokey_sound_init_rf(uint32 freq17, uint16 playback_freq,
 		Div_n_cnt[chan] = 0;
 		Div_n_max[chan] = 0x7fffffffL;
 		AUDV[chan] = 0;
-#ifdef VOL_ONLY_SOUND
-		sampbuf_AUDV[chan] = 0;
-#endif
 	}
 
 	/* set the number of pokey chips currently emulated */
@@ -441,63 +388,24 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 	}
 
 	/* if channel is volume only, set current output */
-	for (chan = CHAN1; chan <= CHAN4; chan++) {
-		if (chan_mask & (1 << chan)) {
-
-#ifdef VOL_ONLY_SOUND
-
-			if ((AUDC[chan] & VOL_ONLY)) {
- 
-	  		{
-					sampbuf_lastval += AUDV[chan]-sampbuf_AUDV[chan];
-
-					sampbuf_val[sampbuf_ptr] = sampbuf_lastval;
-					sampbuf_AUDV[chan] = AUDV[chan];
-					sampbuf_cnt[sampbuf_ptr] =
-						(cpu_clock - sampbuf_last) * 128 * samp_freq / 178979;
-					sampbuf_last = cpu_clock;
-					sampbuf_ptr++;
-					if (sampbuf_ptr >= SAMPBUF_MAX)
-						sampbuf_ptr = 0;
-					if (sampbuf_ptr == sampbuf_rptr) {
-						sampbuf_rptr++;
-						if (sampbuf_rptr >= SAMPBUF_MAX)
-							sampbuf_rptr = 0;
-					}
-				}
-			}
-
-#endif /* VOL_ONLY_SOUND */
-
+	for (chan = CHAN1; chan <= CHAN4; chan++) 
+    {
+		if (chan_mask & (1 << chan)) 
+        {
 			/* I've disabled any frequencies that exceed the sampling
 			   frequency.  There isn't much point in processing frequencies
 			   that the hardware can't reproduce.  I've also disabled
 			   processing if the volume is zero. */
-
-			/* if the channel is volume only */
-			/* or the channel is off (volume == 0) */
-			/* or the channel freq is greater than the playback freq */
-			if ( (AUDC[chan] & VOL_ONLY) ||
-				((AUDC[chan] & VOLUME_MASK) == 0)
-				) {
+            if ((AUDC[chan] & VOL_ONLY) || ((AUDC[chan] & VOLUME_MASK) == 0) || (Div_n_max[chan] < (Samp_n_max >> 8)))
+            {
 				/* indicate the channel is 'on' */
 				Outvol[chan] = 1;
-
-				/* can only ignore channel if filtering off */
-				if ((chan == CHAN3 && !(AUDCTL[0] & CH1_FILTER)) ||
-					(chan == CHAN4 && !(AUDCTL[0] & CH2_FILTER)) ||
-					(chan == CHAN1) ||
-					(chan == CHAN2)
-				) {
-					/* and set channel freq to max to reduce processing */
-					Div_n_max[chan] = 0x7fffffffL;
-					Div_n_cnt[chan] = 0x7fffffffL;
-				}
+                /* and set channel freq to max to reduce processing */
+                Div_n_max[chan] = 0x7fffffffL;
+                Div_n_cnt[chan] = 0x7fffffffL;
 			}
 		}
 	}
-
-	/*    _enable(); */ /* RSF - removed for portability 31-MAR-97 */
 }
 
 
@@ -545,24 +453,21 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 	/* output change for increased performance (less over-all math). */
 	/* add the output values of all 4 channels */
 	cur_val = SAMP_MIN;
-  if (*out_ptr++)
-      cur_val += *vol_ptr;
-  vol_ptr++;
+    if (*out_ptr++) cur_val += *vol_ptr;
+    vol_ptr++;
 
-  if (*out_ptr++)
-      cur_val += *vol_ptr;
-  vol_ptr++;
+    if (*out_ptr++) cur_val += *vol_ptr;
+    vol_ptr++;
 
-  if (*out_ptr++)
-      cur_val += *vol_ptr;
-  vol_ptr++;
+    if (*out_ptr++) cur_val += *vol_ptr;
+    vol_ptr++;
 
-  if (*out_ptr++)
-      cur_val += *vol_ptr;
-  vol_ptr++;
+    if (*out_ptr++) cur_val += *vol_ptr;
+    vol_ptr++;
 
 	/* loop until the buffer is filled */
- while (n) {
+    while (n) 
+    {
 		/* Normally the routine would simply decrement the 'div by N' */
 		/* counters and react when they reach zero.  Since we normally */
 		/* won't be processing except once every 80 or so counts, */
@@ -719,50 +624,11 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 
 			int iout;
 			iout = cur_val;
-
-#ifdef VOL_ONLY_SOUND
-			{
-				if (sampbuf_rptr != sampbuf_ptr) {
-					int l;
-					if (sampbuf_cnt[sampbuf_rptr] > 0)
-						sampbuf_cnt[sampbuf_rptr] -= 1280;
-					while ((l = sampbuf_cnt[sampbuf_rptr]) <= 0) {
-						sampout = sampbuf_val[sampbuf_rptr];
-						sampbuf_rptr++;
-						if (sampbuf_rptr >= SAMPBUF_MAX)
-							sampbuf_rptr = 0;
-						if (sampbuf_rptr != sampbuf_ptr)
-							sampbuf_cnt[sampbuf_rptr] += l;
-						else
-							break;
-					}
-				}
-				iout += sampout;
-			}
-#endif  /* VOL_ONLY_SOUND */
-
-        if (iout < 0 || iout > 128)   // Should never happen but just in case...
-          *buffer++ = 0;
-        else
-           *buffer++ = (char) ((iout))+128;
+        *buffer++ = (char) ((iout))+128;
         *Samp_n_cnt += Samp_n_max;
         /* and indicate one less byte in the buffer */
         n--;
 		}
 	}
-#ifdef VOL_ONLY_SOUND
-	{
-		if (sampbuf_rptr == sampbuf_ptr)
-			sampbuf_last = cpu_clock;
-	}
-#endif  /* VOL_ONLY_SOUND */
 }
 
-#ifdef VOL_ONLY_SOUND
-static void Update_vol_only_sound_rf(void)
-{
-#ifdef CONSOLE_SOUND
-	Update_consol_sound(0);	/* mmm */
-#endif /* CONSOLE_SOUND */
-}
-#endif  /* VOL_ONLY_SOUND */
