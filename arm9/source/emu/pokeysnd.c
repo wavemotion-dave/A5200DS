@@ -24,22 +24,13 @@
 #include <nds.h>
 
 #include "config.h"
-
-#ifdef ASAP /* external project, see http://asap.sf.net */
-#include "asap_internal.h"
-#else
 #include "atari.h"
-#endif
 #include "pokeysnd.h"
 
-#ifdef WORDS_UNALIGNED_OK
-#  define READ_U32(x)     (*(uint32 *) (x))
-#  define WRITE_U32(x, d) (*(uint32 *) (x) = (d))
-#else
-#    define READ_U32(x) \
+#define READ_U32(x) \
   ((*(unsigned char *) (x)) | ((*((unsigned char *) (x) + 1)) << 8) | \
   ((*((unsigned char *) (x) + 2)) << 16) | ((*((unsigned char *) (x) + 3)) << 24))
-#    define WRITE_U32(x, d) \
+#define WRITE_U32(x, d) \
   { \
   uint32 i = d; \
   (*(unsigned char *)(x)) = ((i) & 255); \
@@ -47,9 +38,9 @@
   (*((unsigned char *)(x) + 2)) = (((i) >> 16) & 255); \
   (*((unsigned char *)(x) + 3)) = (((i) >> 24) & 255); \
   }
-#endif
 
 /* GLOBAL VARIABLE DEFINITIONS */
+extern int debug[];
 
 /* number of pokey chips currently emulated */
 static uint8 Num_pokeys;
@@ -68,18 +59,10 @@ static uint8 Outvol[4 * MAXPOKEYS];		/* last output volume for each channel */
 /* efficient processing. */
 
 static uint8 bit4[POLY4_SIZE] =
-#ifndef POKEY23_POLY
 {1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0};	/* new table invented by Perry */
-#else
-{1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0};	/* original POKEY 2.3 table */
-#endif
 
 static uint8 bit5[POLY5_SIZE] =
-#ifndef POKEY23_POLY
 {1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0};
-#else
-{0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1};
-#endif
 
 static uint32 P4 = 0,			/* Global position pointer for the 4-bit  POLY array */
  P5 = 0,						/* Global position pointer for the 5-bit  POLY array */
@@ -92,24 +75,11 @@ static uint32 Div_n_cnt[4 * MAXPOKEYS],		/* Divide by n counter. one for each ch
 static uint32 Samp_n_max,		/* Sample max.  For accuracy, it is *256 */
  Samp_n_cnt[2] __attribute__ ((aligned (4)));					/* Sample cnt. */
 
-extern int atari_speaker;
-
 /* Volume only emulations declarations */
 static uint32 snd_freq17 = FREQ_17_APPROX;
 int32 snd_playback_freq = 22050;
 uint8 snd_num_pokeys = 1;
 static int snd_flags = 0;
-static int mz_quality = 0;		/* default quality for mzpokeysnd */
-
-# if 0 //LUDO:
-int enable_new_pokey = TRUE;
-#ifndef ASAP
-int stereo_enabled = FALSE;
-#endif
-# else
-int enable_new_pokey = FALSE;
-int stereo_enabled   = FALSE;
-# endif
 
 /* multiple sound engine interface */
 static void null_pokey_process(void *sndbuffer, unsigned int sndn) {}
@@ -163,8 +133,7 @@ void (*Update_pokey_sound) (uint16 addr, uint8 val, uint8 chip, uint8 gain)
 /*                                                                           */
 /*****************************************************************************/
 
-static int Pokey_sound_init_rf(uint32 freq17, uint16 playback_freq,
-           uint8 num_pokeys, unsigned int flags)
+static int Pokey_sound_init_rf(uint32 freq17, uint16 playback_freq, uint8 num_pokeys, unsigned int flags)
 {
 	uint8 chan;
 
@@ -196,25 +165,12 @@ static int Pokey_sound_init_rf(uint32 freq17, uint16 playback_freq,
 	return 0; /* OK */
 }
 
-int Pokey_DoInit(void) {
-# if 0 //LUDO:
-	if (enable_new_pokey) {
-		return Pokey_sound_init_mz(snd_freq17, (uint16) snd_playback_freq,
-				snd_num_pokeys, snd_flags, mz_quality
-		);
-  }
-	else 
-# endif
-  {
-		return Pokey_sound_init_rf(snd_freq17, (uint16) snd_playback_freq,
-				snd_num_pokeys, snd_flags);
-  }
+int Pokey_DoInit(void) 
+{
+    return Pokey_sound_init_rf(snd_freq17, (uint16) snd_playback_freq, snd_num_pokeys, snd_flags);
 }
 
-int 
-Pokey_sound_init(uint32 freq17, uint16 playback_freq, uint8 num_pokeys,
-                     unsigned int flags
-)
+int  Pokey_sound_init(uint32 freq17, uint16 playback_freq, uint8 num_pokeys, unsigned int flags)
 {
 	snd_freq17 = freq17;
 	snd_playback_freq = playback_freq;
@@ -224,10 +180,6 @@ Pokey_sound_init(uint32 freq17, uint16 playback_freq, uint8 num_pokeys,
 	return Pokey_DoInit();
 }
 
-void Pokey_set_mzquality(int quality)	/* specially for win32, perhaps not needed? */
-{
-	mz_quality = quality;
-}
 /*
 void Pokey_process(void *sndbuffer, unsigned int sndn)
 {
@@ -420,16 +372,13 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 /* Inputs:  *buffer - pointer to the buffer where the audio output will      */
 /*                    be placed                                              */
 /*          n - size of the playback buffer                                  */
-/*          num_pokeys - number of currently active pokeys to process        */
 /*                                                                           */
 /* Outputs: the buffer will be filled with n bytes of audio - no return val  */
-/*          Also the buffer will be written to disk if Sound recording is ON */
 /*                                                                           */
 /*****************************************************************************/
-char pokey_buffer[1024];
 void Pokey_process(void *sndbuffer, unsigned sndn)
 {
-	register char *buffer = (char  *) pokey_buffer;
+	register char *buffer = (char  *) sndbuffer;
 	register uint16 n = sndn;
 
 	register uint32 *div_n_ptr;
@@ -441,7 +390,7 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 	register uint8 audc;
 	register uint8 toggle;
 	register uint8 *vol_ptr;
-
+  
 	/* set a pointer to the whole portion of the samp_n_cnt */
 	samp_cnt_w_ptr = ((uint8 *) (&Samp_n_cnt[0]) + 1);
 
@@ -621,14 +570,13 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 		else {					/* otherwise we're processing a sample */
 			/* adjust the sample counter - note we're using the 24.8 integer
 			   which includes an 8 bit fraction for accuracy */
-
-			int iout;
-			iout = cur_val;
-        *buffer++ = (char) ((iout))+128;
-        *Samp_n_cnt += Samp_n_max;
-        /* and indicate one less byte in the buffer */
-        n--;
-		}
+      int iout;
+      iout = cur_val;
+      *buffer++ = (char) ((iout))+128;
+      *Samp_n_cnt += Samp_n_max;
+      /* and indicate one less byte in the buffer */
+      n--;
+		}    
 	}
 }
 

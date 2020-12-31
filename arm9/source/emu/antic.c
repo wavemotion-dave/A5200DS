@@ -28,6 +28,8 @@
 #include <nds.h>
 
 #define ALEKSCR_DIRECT 1
+#define NO_GTIA11_DELAY
+
 #include "a5200utils.h"
 
 #define NO_YPOS_BREAK_FLICKER
@@ -44,6 +46,7 @@
 #include "screen.h"
 #include "statesav.h"
 
+extern int debug[];
 
 #define LCHOP 3			/* do not build lefmost 0..3 characters in wide mode */
 #define RCHOP 3			/* do not build rightmost 0..3 characters in wide mode */
@@ -2048,7 +2051,6 @@ void ANTIC_UpdateArtifacting(void)
 		{ 0xd6, 0x46, 0xd6, 0x46, 0xdf, 0x4a, 0x4f, 0xac },	/* redgreen */
 		{ 0x46, 0xd6, 0x46, 0xd6, 0x4a, 0xdf, 0xac, 0x4f }	/* greenred */
 	};
-
 	int i;
 	int j;
 	int c;
@@ -2136,7 +2138,7 @@ void ANTIC_UpdateArtifacting(void)
 
 inline UBYTE ANTIC_GetDLByte(UWORD *paddr)
 {
-	int addr = *paddr;
+    int addr = *paddr;
 	UBYTE result;
 	result = GetByte((UWORD) addr);
 	addr++;
@@ -2195,16 +2197,6 @@ static void ANTIC_load(void)
 	}
 #endif
 }
-
-#ifdef NEW_CYCLE_EXACT
-int cur_screen_pos = NOT_DRAWING;
-#endif
-
-#ifdef USE_CURSES
-void curses_display_line(int anticmode, const UBYTE *screendata);
-
-static int scanlines_to_curses_display = 0;
-#endif
 
 /* This function emulates one frame drawing screen at atari_screen */
 ITCM_CODE void ANTIC_Frame(int draw_display) 
@@ -2374,11 +2366,7 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 			draw_antic_0_ptr();
 			GOEOL;
 			YPOS_BREAK_FLICKER
-#ifdef ALEKSCR_DIRECT
-      scrn_ptr += 256;
-#else
-      scrn_ptr += ATARI_WIDTH / 2;
-#endif
+            scrn_ptr += 256;
 			if (no_jvb) {
 				dctr++;
 				dctr &= 0xf;
@@ -2388,15 +2376,6 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 
 		if (need_load) {
 			ANTIC_load();
-#ifdef USE_CURSES
-			/* Normally, we would call curses_display_line here,
-			   and not use scanlines_to_curses_display at all.
-			   That would however cause incorrect color of the "MEMORY"
-			   menu item in Self Test - it isn't set properly
-			   in the first scanline. We therefore postpone
-			   curses_display_line call to the next scanline. */
-			scanlines_to_curses_display = 1;
-#endif
 			xpos += load_cycles[md];
 			if (anticmode <= 5)	/* extra cycles in font modes */
 				xpos -= extra_cycles[md];
@@ -2424,11 +2403,7 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 		GOEOL;
 #endif /* NEW_CYCLE_EXACT */
 		YPOS_BREAK_FLICKER
-#ifdef ALEKSCR_DIRECT
-      scrn_ptr += 256;
-#else
-      scrn_ptr += ATARI_WIDTH / 2;
-#endif
+        scrn_ptr += 256;
 		dctr++;
 		dctr &= 0xf;
 	} while (ypos < (ATARI_HEIGHT + 8));
@@ -2571,35 +2546,6 @@ ITCM_CODE void ANTIC_PutByte(UWORD addr, UBYTE byte)
 		DMACTL = byte;
 		switch (byte & 0x03) {
 		case 0x00:
-			/* no ANTIC_load when screen off */
-			/* chars_read[NORMAL0] = 0;
-			chars_read[NORMAL1] = 0;
-			chars_read[NORMAL2] = 0;
-			chars_read[SCROLL0] = 0;
-			chars_read[SCROLL1] = 0;
-			chars_read[SCROLL2] = 0; */
-			/* no draw_antic_* when screen off */
-			/* chars_displayed[NORMAL0] = 0;
-			chars_displayed[NORMAL1] = 0;
-			chars_displayed[NORMAL2] = 0;
-			chars_displayed[SCROLL0] = 0;
-			chars_displayed[SCROLL1] = 0;
-			chars_displayed[SCROLL2] = 0;
-			x_min[NORMAL0] = 0;
-			x_min[NORMAL1] = 0;
-			x_min[NORMAL2] = 0;
-			x_min[SCROLL0] = 0;
-			x_min[SCROLL1] = 0;
-			x_min[SCROLL2] = 0;
-			ch_offset[NORMAL0] = 0;
-			ch_offset[NORMAL1] = 0;
-			ch_offset[NORMAL2] = 0;
-			ch_offset[SCROLL0] = 0;
-			ch_offset[SCROLL1] = 0;
-			ch_offset[SCROLL2] = 0; */
-			/* no borders when screen off, only background */
-			/* left_border_chars = 48 - LCHOP - RCHOP;
-			right_border_start = 0; */
 			break;
 		case 0x01:
 			chars_read[NORMAL0] = 32;

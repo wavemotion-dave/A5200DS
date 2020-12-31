@@ -23,6 +23,8 @@
 
 #include "altirra_5200_os.h"
 
+#define SOUND_FREQ 31440        // 60 frames per second. 264 scanlines per frame. 2 samples per scanline. 60*264*2 = 31440
+
 FICA5200 a5200romlist[1024];  
 unsigned int counta5200=0, countfiles=0, ucFicAct=0;
 int gTotalAtariFrames = 0;
@@ -30,7 +32,7 @@ int bg0, bg1, bg0b,bg1b;
 unsigned int etatEmu;
 
 unsigned char bufVideo[512*512];        // Video buffer
-gamecfg GameConf;                        // Game Config svg
+gamecfg GameConf;                       // Game Config svg
 
 #define  cxBG (myCart.offset_x<<8)
 #define  cyBG (myCart.offset_y<<8)
@@ -40,14 +42,14 @@ gamecfg GameConf;                        // Game Config svg
 unsigned int atari_pal16[256] = {0};
 unsigned char *filebuffer;
 
-#define SNDLENGTH 2048
+#define SNDLENGTH 4096                  // Must be power of 2... so we can quicly mask it
 signed char sound_buffer[SNDLENGTH];
 signed char *psound_buffer;
 
 int alpha_1 = 8;
 int alpha_2 = 8;
 
-#define MAX_DEBUG 5
+#define MAX_DEBUG 8
 int debug[MAX_DEBUG]={0};
 //#define DEBUG_DUMP
 
@@ -85,6 +87,24 @@ static void DumpDebugData(void)
         dsPrintValue(0,3+i,0, dbgbuf);
     }
 #endif
+}
+
+void VsoundHandler(void) 
+{
+  static unsigned int sound_idx = 0;
+  extern unsigned char pokey_buffer[];
+  extern int pokeyBufIdx;
+  static int myPokeyBufIdx=0;
+  static unsigned char lastSample = 0;
+  
+  // If there is a fresh sample... 
+  if (myPokeyBufIdx != pokeyBufIdx)
+  {
+      lastSample = pokey_buffer[myPokeyBufIdx];
+      myPokeyBufIdx = (myPokeyBufIdx+1) & 0xFFF;
+  }
+  sound_buffer[sound_idx] = lastSample;
+  sound_idx = (sound_idx + 1) & (SNDLENGTH-1);
 }
 
 // Color fading effect
@@ -223,16 +243,18 @@ void vblankIntr()
 #endif    
 }
 
-void dsInitScreenMain(void) {
-  // Init vbl and hbl func
-	SetYtrigger(190); //trigger 2 lines before vsync
-	irqSet(IRQ_VBLANK, vblankIntr);
-  irqEnable(IRQ_VBLANK | IRQ_VCOUNT);
+void dsInitScreenMain(void) 
+{
+    // Init vbl and hbl func
+    SetYtrigger(190); //trigger 2 lines before vsync
+    irqSet(IRQ_VBLANK, vblankIntr);
+    irqEnable(IRQ_VBLANK | IRQ_VCOUNT);
 }
 
-void dsInitTimer(void) {
-  TIMER0_DATA=0;
-	TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024; 
+void dsInitTimer(void) 
+{
+    TIMER0_DATA=0;
+    TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024; 
 }
 
 void dsShowScreenEmu(void) {
@@ -292,16 +314,6 @@ void dsShowScreenMain(void) {
 void dsFreeEmu(void) {
   // Stop timer of sound
   TIMER2_CR=0; irqDisable(IRQ_TIMER2); 
-}
-
-u16 targetIndex = 0;
-void VsoundHandler(void) 
-{
-  extern unsigned char pokey_buffer[];
-  static u16 sound_idx=0;
-  sound_buffer[sound_idx] = pokey_buffer[targetIndex];
-  sound_idx = (sound_idx + 1) & 0x07FF;
-  targetIndex=(targetIndex + 1) % 368;  
 }
 
 #define PALETTE_SIZE 768
@@ -405,6 +417,8 @@ void dsLoadGame(char *filename) {
       dsShowScreenEmu();
         
       INPUT_Initialise();
+        
+      memset(sound_buffer, 0x00, SNDLENGTH);
 
       // Init palette
       for(index = 0; index < 256; index++) {
@@ -416,9 +430,9 @@ void dsLoadGame(char *filename) {
       }
       
       psound_buffer=sound_buffer;
-      TIMER2_DATA = TIMER_FREQ(22050);                        
-	    TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;	     
-	    irqSet(IRQ_TIMER2, VsoundHandler);                           
+      TIMER2_DATA = TIMER_FREQ(SOUND_FREQ);                        
+      TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;	     
+      irqSet(IRQ_TIMER2, VsoundHandler);                           
     }
 }
 
@@ -764,7 +778,7 @@ void dsInstallSoundEmuFIFO(void)
 {
     FifoMessage msg;
     msg.SoundPlay.data = &sound_buffer;
-    msg.SoundPlay.freq = 22050;
+    msg.SoundPlay.freq = SOUND_FREQ;
     msg.SoundPlay.volume = 127;
     msg.SoundPlay.pan = 64;
     msg.SoundPlay.loop = 1;
@@ -814,7 +828,7 @@ void dsMainLoop(void) {
         
       case A5200_PLAYGAME:
         // 65535 = 1 frame
-        // 1 frame = 1/50 ou 1/60 (0.02 ou 0.016 
+        // 1 frame = 1/50 ou 1/60 (0.02 or 0.016)
         // 656 -> 50 fps et 546 -> 60 fps
         if (!full_speed)
         {
