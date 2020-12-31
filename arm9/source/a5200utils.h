@@ -40,8 +40,6 @@ extern unsigned int gameCRC;               // crc checksum of file
 
 extern void FadeToColor(unsigned char ucSens, unsigned short ucBG, unsigned char ucScr, unsigned char valEnd, unsigned char uWait);
 
-extern unsigned int crc32 (unsigned int crc, const unsigned char *buf, unsigned int len);
-
 extern void vblankIntr();
 
 extern void dsInitScreenMain(void);

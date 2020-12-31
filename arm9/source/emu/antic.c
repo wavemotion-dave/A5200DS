@@ -32,6 +32,8 @@
 
 #include "a5200utils.h"
 
+#define ALTERNATE_LOOP_COUNTERS
+
 #define NO_YPOS_BREAK_FLICKER
 
 #include "antic.h"
@@ -2140,7 +2142,7 @@ inline UBYTE ANTIC_GetDLByte(UWORD *paddr)
 {
     int addr = *paddr;
 	UBYTE result;
-	result = GetByte((UWORD) addr);
+	result = memory[addr]; //GetByte((UWORD) addr);
 	addr++;
 	if ((addr & 0x3FF) == 0)
 		addr -= 0x400;

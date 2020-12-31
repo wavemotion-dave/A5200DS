@@ -317,11 +317,11 @@ void POKEY_Frame(void)
  ** for most applications                                                 **
  ***************************************************************************/
 int pokeyBufIdx = 0;
-char pokey_buffer[4096];
+char pokey_buffer[SNDLENGTH];
 void POKEY_Scanline(void) 
 {
-    Pokey_process(&pokey_buffer[pokeyBufIdx], 2);	// Each scanline, compute 2 output samples. This corresponds to a 31440Khz output sample rate if running at 60FPS
-    pokeyBufIdx = (pokeyBufIdx+2) & 0x0FFF;
+    Pokey_process(&pokey_buffer[pokeyBufIdx], 1);	// Each scanline, compute 1 output samples. This corresponds to a 15720Khz output sample rate if running at 60FPS (good enough)
+    pokeyBufIdx = (pokeyBufIdx+1) & (SNDLENGTH-1);
 
     if (pot_scanline < 228)
 		pot_scanline++;

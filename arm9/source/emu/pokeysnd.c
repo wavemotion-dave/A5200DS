@@ -180,12 +180,6 @@ int  Pokey_sound_init(uint32 freq17, uint16 playback_freq, uint8 num_pokeys, uns
 	return Pokey_DoInit();
 }
 
-/*
-void Pokey_process(void *sndbuffer, unsigned int sndn)
-{
-	Pokey_process_ptr(sndbuffer, sndn);
-}
-*/
 /*****************************************************************************/
 /* Module:  Update_pokey_sound()                                             */
 /* Purpose: To process the latest control values stored in the AUDF, AUDC,   */
@@ -219,14 +213,14 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 			chan_mask |= 1 << CHAN2;	/* then also change on ch2 */
 		break;
 	case _AUDC1:
-		AUDV[CHAN1] = (val & VOLUME_MASK); // * gain;
+		AUDV[CHAN1] = (val & VOLUME_MASK) * gain;
 		chan_mask = 1 << CHAN1;
 		break;
 	case _AUDF2:
 		chan_mask = 1 << CHAN2;
 		break;
 	case _AUDC2:
-		AUDV[CHAN2] = (val & VOLUME_MASK); // * gain;
+		AUDV[CHAN2] = (val & VOLUME_MASK) * gain;
 		chan_mask = 1 << CHAN2;
 		break;
 	case _AUDF3:
@@ -235,14 +229,14 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 			chan_mask |= 1 << CHAN4;	/* then also change on ch4 */
 		break;
 	case _AUDC3:
-		AUDV[CHAN3] = (val & VOLUME_MASK); // * gain;
+		AUDV[CHAN3] = (val & VOLUME_MASK) * gain;
 		chan_mask = 1 << CHAN3;
 		break;
 	case _AUDF4:
 		chan_mask = 1 << CHAN4;
 		break;
 	case _AUDC4:
-		AUDV[CHAN4] = (val & VOLUME_MASK); // * gain;
+		AUDV[CHAN4] = (val & VOLUME_MASK) * gain;
 		chan_mask = 1 << CHAN4;
 		break;
 	case _AUDCTL:

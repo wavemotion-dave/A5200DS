@@ -23,6 +23,11 @@
 #define TRUE   1
 #endif
 
+// Some global sound defines
+#define SOUND_FREQ (15720)        // 60 frames per second. 264 scanlines per frame. 1 samples per scanline. 60*264*1 = 15720
+#define SNDLENGTH  4096           // Must be power of 2... so we can quicly mask it
+
+
 /* SBYTE and UBYTE must be exactly 1 byte long. */
 /* SWORD and UWORD must be exactly 2 bytes long. */
 /* SLONG and ULONG must be exactly 4 bytes long. */
