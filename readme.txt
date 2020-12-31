@@ -14,9 +14,7 @@ Features :
 
 Missing :
 ---------
-Sound emulation is passable but not great. I wish a good sound engineer who
-knows how to program for the DS would come along and magically make it sound 
-perfect... but at least all the sounds are available now :)
+Bounty Bob Strikes Back only runs at about 45FPS... everything else is good.
 
 Check updates on my web site : 
 http://www.portabledev.com
@@ -24,6 +22,10 @@ http://www.portabledev.com
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V2.1 : 30-Dec-2020 by wavemotion-dave
+  * Pokey Emulation buffers completely re-written. It now sounds passably good! 
+    You can hear the voices in Berzerk clearly. 'Nuff said. 
+  
 V2.0 : 30-Dec-2020 by wavemotion-dave
   * Fixed background noise bug on Pokey emulation - all sounds now available in 
     all games (fixes Wizard of Wor sound, Blueprint sound, etc).
