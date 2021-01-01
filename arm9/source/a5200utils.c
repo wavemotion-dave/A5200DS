@@ -319,7 +319,7 @@ void dsLoadGame(char *filename) {
   TIMER2_CR=0; irqDisable(IRQ_TIMER2); 
 	if (filebuffer != 0)
 		free(filebuffer);
-  
+
     // load card game if ok
     if (Atari800_OpenFile(filename, true, 1, true) != AFILE_ERROR) 
     {	
@@ -344,6 +344,7 @@ void dsLoadGame(char *filename) {
       TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;	     
       irqSet(IRQ_TIMER2, VsoundHandler);                           
     }
+    else dsPrintValue(0,2,0, "UNABLE TO FIND GAME!!");
 }
 
 unsigned int dsReadPad(void) {
@@ -770,10 +771,10 @@ void dsMainLoop(void) {
         keys_pressed=keysCurrent();
         key_consol = CONSOL_NONE; //|= (CONSOL_OPTION | CONSOL_SELECT | CONSOL_START); /* OPTION/START/SELECT key OFF */
         shiftctrl = 0; key_shift = 0;
-        trig0 = (keys_pressed & KEY_A) ? 0 : 1;
+        trig0 = ((keys_pressed & KEY_A) || (keys_pressed & KEY_Y)) ? 0 : 1;
         stick0 = STICK_CENTRE;
         stick1 = STICK_CENTRE;
-                  
+            
         if (keys_pressed & KEY_B) { shiftctrl ^= AKEY_SHFT; key_shift = 1; }
         key_code = shiftctrl ? 0x40 : 0x00;
         
@@ -789,6 +790,14 @@ void dsMainLoop(void) {
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
               else { irqEnable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME); }
+            }
+            else if ((iTx>240) && (iTx<256) && (iTy>0) && (iTy<20))  { // Full Speed Toggle ... upper corner...
+               if (keys_touch == 0)
+               {
+                   full_speed = 1-full_speed; 
+                   if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
+                   keys_touch = 1;
+               }
             }
             else if ((iTx>120) && (iTx<160) && (iTy>112) && (iTy<130))  { //pause
               if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
@@ -901,7 +910,6 @@ void dsMainLoop(void) {
           if (myCart.control != CTRL_ROBO)          
           {
             if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
-            if (keys_pressed & KEY_Y) {full_speed = 1-full_speed; if (full_speed) dsPrintValue(30,0,0, "FS"); else dsPrintValue(30,0,0, "  ");}
             //if (keys_pressed & KEY_R) alpha_1 = (alpha_1+1) & 0xF;
             //if (keys_pressed & KEY_L) alpha_2= (alpha_2+1) & 0xF;
           }

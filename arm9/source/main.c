@@ -6,6 +6,7 @@
 
 #include "main.h"
 #include "intro.h"
+#include "atari.h"
 #include "a5200utils.h"
 
 extern int bg0, bg1;
@@ -50,6 +51,7 @@ int main(int argc, char **argv) {
       {
         dsShowScreenMain();
         dsLoadGame(argv[1]);
+        Atari800_Initialise();
         etatEmu = A5200_PLAYINIT;
       }
     // Main loop of emulation
