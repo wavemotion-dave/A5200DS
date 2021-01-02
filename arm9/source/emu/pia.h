@@ -24,7 +24,5 @@ extern UBYTE atari_os[16384];
 
 extern void PIA_Initialise(void);
 extern void PIA_Reset(void);
-extern UBYTE PIA_GetByte(UWORD addr);
-extern void PIA_PutByte(UWORD addr, UBYTE byte);
 
 #endif /* _PIA_H_ */

@@ -43,14 +43,8 @@
 
 UBYTE memory[65536 + 2] __attribute__ ((aligned (4)));
 
-rdfunc readmap[65536];
-wrfunc writemap[65536];
-
-typedef struct map_save {
-	int     code;
-	rdfunc  rdptr;
-	wrfunc  wrptr;
-} map_save;
+rdfunc readmap[65536]  __attribute__ ((aligned (4)));
+wrfunc writemap[65536]  __attribute__ ((aligned (4)));
 
 void ROM_PutByte(UWORD addr, UBYTE value)
 {
@@ -160,105 +154,24 @@ void MemStateRead(UBYTE SaveVerbose)
 {
 }
 
-void CopyFromMem(UWORD from, UBYTE *to, int size)
+#if 0
+void inline CopyFromMem(UWORD from, UBYTE *to, int size)
 {
-	while (--size >= 0) {
-		*to++ = GetByte(from);
+    while (--size >= 0) {
+		*to++ = memory[from]; //GetByte(from);
 		from++;
 	}
 }
 
-void CopyToMem(const UBYTE *from, UWORD to, int size)
+void inline CopyToMem(const UBYTE *from, UWORD to, int size)
 {
 	while (--size >= 0) {
-		PutByte(to, *from);
-		from++;
-		to++;
+		//PutByte(to, *from);
+		memory[to++] = *from++;
+		//to++;
 	}
 }
-
-/*
- * Returns non-zero, if Atari BASIC is disabled by given PORTB output.
- * Normally BASIC is disabled by setting bit 1, but it's also disabled
- * when using 576K and 1088K memory expansions, where bit 1 is used
- * for selecting extended memory bank number.
- */
-static int basic_disabled(UBYTE portb)
-{
-	return (portb & 0x02) != 0
-	 || ((portb & 0x10) == 0 && (ram_size == 576 || ram_size == 1088));
-}
-
-
-static int cart809F_enabled = FALSE;
-int cartA0BF_enabled = FALSE;
-static UBYTE under_cart809F[8192];
-static UBYTE under_cartA0BF[8192];
-
-void Cart809F_Disable(void)
-{
-	if (cart809F_enabled) {
-		if (ram_size > 32) {
-			memcpy(memory + 0x8000, under_cart809F, 0x2000);
-			SetRAM(0x8000, 0x9fff);
-		}
-		else
-			dFillMem(0x8000, 0xff, 0x2000);
-		cart809F_enabled = FALSE;
-	}
-}
-
-void Cart809F_Enable(void)
-{
-	if (!cart809F_enabled) {
-		if (ram_size > 32) {
-			memcpy(under_cart809F, memory + 0x8000, 0x2000);
-			SetROM(0x8000, 0x9fff);
-		}
-		cart809F_enabled = TRUE;
-	}
-}
-
-void CartA0BF_Disable(void)
-{
-	if (cartA0BF_enabled) {
-		/* No BASIC if not XL/XE or bit 1 of PORTB set */
-		/* or accessing extended 576K or 1088K memory */
-		if ((machine_type != MACHINE_XLXE) || basic_disabled((UBYTE) (PORTB | PORTB_mask))) {
-			if (ram_size > 40) {
-				memcpy(memory + 0xa000, under_cartA0BF, 0x2000);
-				SetRAM(0xa000, 0xbfff);
-			}
-			else
-				dFillMem(0xa000, 0xff, 0x2000);
-		}
-		else
-			memcpy(memory + 0xa000, atari_basic, 0x2000);
-		cartA0BF_enabled = FALSE;
-		if (machine_type == MACHINE_XLXE) {
-			TRIG[3] = 0;
-			if (GRACTL & 4)
-				TRIG_latch[3] = 0;
-		}
-	}
-}
-
-void CartA0BF_Enable(void)
-{
-	if (!cartA0BF_enabled) {
-		/* No BASIC if not XL/XE or bit 1 of PORTB set */
-		/* or accessing extended 576K or 1088K memory */
-		if (ram_size > 40 && ((machine_type != MACHINE_XLXE) || (PORTB & 0x02)
-		|| ((PORTB & 0x10) == 0 && (ram_size == 576 || ram_size == 1088)))) {
-			/* Back-up 0xa000-0xbfff RAM */
-			memcpy(under_cartA0BF, memory + 0xa000, 0x2000);
-			SetROM(0xa000, 0xbfff);
-		}
-		cartA0BF_enabled = TRUE;
-		if (machine_type == MACHINE_XLXE)
-			TRIG[3] = 1;
-	}
-}
+#endif
 
 void get_charset(UBYTE *cs)
 {

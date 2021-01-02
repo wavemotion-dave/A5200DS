@@ -48,18 +48,15 @@ void ROM_PutByte(UWORD addr, UBYTE byte);
 	} while (0)
 
 extern int have_basic;
-extern int cartA0BF_enabled;
 
 void MEMORY_InitialiseMachine(void);
 void MemStateSave(UBYTE SaveVerbose);
 void MemStateRead(UBYTE SaveVerbose);
-void CopyFromMem(UWORD from, UBYTE *to, int size);
-void CopyToMem(const UBYTE *from, UWORD to, int size);
-void Cart809F_Disable(void);
-void Cart809F_Enable(void);
-void CartA0BF_Disable(void);
-void CartA0BF_Enable(void);
 #define CopyROM(addr1, addr2, src) memcpy(memory + (addr1), src, (addr2) - (addr1) + 1)
+
+inline void CopyFromMem(UWORD from, UBYTE *to, int size) {while (--size >= 0) {*to++ = memory[from];from++;}}
+inline void CopyToMem(const UBYTE *from, UWORD to, int size) {while (--size >= 0) {memory[to++] = *from++;}}
+
 void get_charset(UBYTE *cs);
 
 #endif /* _MEMORY_H_ */
