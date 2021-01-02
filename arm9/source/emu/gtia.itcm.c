@@ -87,19 +87,6 @@ UBYTE consol_mask;
 UBYTE TRIG[4];
 UBYTE TRIG_latch[4];
 
-#if defined(BASIC) || defined(CURSES_BASIC)
-
-static UBYTE PF0PM = 0;
-static UBYTE PF1PM = 0;
-static UBYTE PF2PM = 0;
-static UBYTE PF3PM = 0;
-#define collisions_mask_missile_playfield 0
-#define collisions_mask_player_playfield 0
-#define collisions_mask_missile_player 0
-#define collisions_mask_player_player 0
-
-#else /* defined(BASIC) || defined(CURSES_BASIC) */
-
 void set_prior(UBYTE byte);         /* in antic.c */
 
 /* Player/Missile stuff ---------------------------------------------------- */
@@ -194,7 +181,6 @@ void setup_gtia9_11(void) {
     }
 }
 
-#endif /* defined(BASIC) || defined(CURSES_BASIC) */
 
 /* Initialization ---------------------------------------------------------- */
 

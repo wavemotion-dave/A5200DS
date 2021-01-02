@@ -376,7 +376,7 @@ static UBYTE mode_e_an_lookup[256];
    PF3 if (PRIOR & 0x1f) == 0x10, PF0 or PF1 otherwise.
    Additional column 'colls' holds collisions of playfields with PMG. */
 
-UWORD cl_lookup[128];
+UWORD cl_lookup[128] __attribute__((section(".dtcm")));
 
 #define C_PM0	0x01
 #define C_PM1	0x02
@@ -473,12 +473,12 @@ UWORD cl_lookup[128];
 #define HIRES_LUM_01	0x0f00
 #define HIRES_LUM_10	0x000f
 
-static UWORD hires_lookup_n[128];
-static UWORD hires_lookup_m[128];
+static UWORD hires_lookup_n[128] __attribute__((section(".dtcm")));
+static UWORD hires_lookup_m[128] __attribute__((section(".dtcm")));
 #define hires_norm(x)	hires_lookup_n[(x) >> 1]
 #define hires_mask(x)	hires_lookup_m[(x) >> 1]
 
-UWORD hires_lookup_l[128];	/* accessed in gtia.c */
+UWORD hires_lookup_l[128] __attribute__((section(".dtcm")));	/* accessed in gtia.c */
 #define hires_lum(x)	hires_lookup_l[(x) >> 1]
 
 /* Player/Missile Graphics ------------------------------------------------- */
@@ -500,11 +500,11 @@ UBYTE missile_flickering;
 static UWORD pmbase_s;
 static UWORD pmbase_d;
 
-extern UBYTE pm_scanline[ATARI_WIDTH / 2 + 8];
-extern UBYTE pm_dirty;
+extern UBYTE pm_scanline[ATARI_WIDTH / 2 + 8] __attribute__((section(".dtcm")));
+extern UBYTE pm_dirty __attribute__((section(".dtcm")));
 
 /* PMG lookup tables */
-UBYTE pm_lookup_table[20][256];
+UBYTE pm_lookup_table[20][256] __attribute__((section(".dtcm")));
 /* current PMG lookup table */
 static const UBYTE *pm_lookup_ptr;
 

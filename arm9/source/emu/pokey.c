@@ -23,28 +23,20 @@
 */
 
 #include "config.h"
-#ifdef HAVE_TIME_H
-#include <time.h>
-#endif
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include "atari.h"
 #include "cpu.h"
 #include "pia.h"
 #include "pokey.h"
 #include "gtia.h"
 #include "sio.h"
-#ifndef BASIC
 #include "input.h"
 #include "statesav.h"
-#endif
-#ifdef SOUND
 #include "pokeysnd.h"
-#endif
 #include "antic.h"
 #include "cassette.h"
+
+int pokeyBufIdx __attribute__((section(".dtcm")))= 0;
+char pokey_buffer[SNDLENGTH] __attribute__((section(".dtcm")));
 
 UBYTE KBCODE;
 UBYTE SERIN;
@@ -55,8 +47,6 @@ UBYTE SKCTLS;
 int DELAYED_SERIN_IRQ;
 int DELAYED_SEROUT_IRQ;
 int DELAYED_XMTDONE_IRQ;
-
-UBYTE chanDisabled[4] = {0,0,0,0};
 
 /* structures to hold the 9 pokey control bytes */
 UBYTE AUDF[4 * MAXPOKEYS];	/* AUDFx (D200, D202, D204, D206) */
@@ -304,8 +294,6 @@ void POKEY_Frame(void)
  ** called on a per-scanline basis, not very precise, but good enough     **
  ** for most applications                                                 **
  ***************************************************************************/
-int pokeyBufIdx = 0;
-char pokey_buffer[SNDLENGTH];
 void POKEY_Scanline(void) 
 {
     Pokey_process(&pokey_buffer[pokeyBufIdx], 1);	// Each scanline, compute 1 output samples. This corresponds to a 15720Khz output sample rate if running at 60FPS (good enough)

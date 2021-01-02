@@ -40,7 +40,6 @@ gamecfg GameConf;                       // Game Config svg
 unsigned int atari_pal16[256] = {0};
 unsigned char *filebuffer;
 
-
 signed char sound_buffer[SNDLENGTH];
 signed char *psound_buffer;
 
@@ -828,7 +827,7 @@ void dsMainLoop(void) {
               // Find files in current directory and show it 
               a52FindFiles();
               romSel=dsWaitForRom();
-              if (romSel) { etatEmu=A5200_PLAYINIT; dsLoadGame(a5200romlist[ucFicAct].filename); }
+              if (romSel) { etatEmu=A5200_PLAYINIT; dsLoadGame(a5200romlist[ucFicAct].filename); if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");}
               else { irqEnable(IRQ_TIMER2); }
               fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
             }
