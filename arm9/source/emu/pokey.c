@@ -152,12 +152,6 @@ UBYTE POKEY_GetByte(UWORD addr)
 
 void Update_Counter(int chan_mask);
 
-static int POKEY_siocheck(void)
-{
-	return (AUDF[CHAN3] == 0x28 || AUDF[CHAN3] == 0x10
-	        || AUDF[CHAN3] == 0x08 || AUDF[CHAN3] == 0x0a)
-		&& AUDF[CHAN4] == 0x00 && (AUDCTL[0] & 0x28) == 0x28;
-}
 
 #ifndef SOUND_GAIN /* sound gain can be pre-defined in the configure/Makefile */
 #define SOUND_GAIN 4
@@ -231,17 +225,11 @@ void POKEY_PutByte(UWORD addr, UBYTE byte)
 		SKSTAT |= 0xe0;
 		break;
 	case _POTGO:
-    //POT_all = 0xFF;
 		if (!(SKCTLS & 4)) {
 			pot_scanline = 0;	/* slow pot mode */
     }  
 		break;
 	case _SEROUT:
-		if ((SKCTLS & 0x70) == 0x20 && POKEY_siocheck())
-			SIO_PutByte(byte);
-		DELAYED_SEROUT_IRQ = SEROUT_INTERVAL;
-		IRQST |= 0x08;
-		DELAYED_XMTDONE_IRQ = XMTDONE_INTERVAL;
 		break;
 	case _STIMER:
 		DivNIRQ[CHAN1] = DivNMax[CHAN1];
@@ -329,39 +317,6 @@ void POKEY_Scanline(void)
     POT_input[0] = PCPOT_input[0]; POT_input[1] = PCPOT_input[1]; POT_input[2] = PCPOT_input[2]; POT_input[3] = PCPOT_input[3];
 
 	random_scanline_counter += LINE_C;
-#if 0
-	if (DELAYED_SERIN_IRQ > 0) {
-		if (--DELAYED_SERIN_IRQ == 0) {
-			if (IRQEN & 0x20) {
-				if (IRQST & 0x20) {
-					IRQST &= 0xdf;
-					SERIN = SIO_GetByte();
-				}
-				else {
-					SKSTAT &= 0xdf;
-				}
-				GenerateIRQ();
-			}
-		}
-	}
-
-	if (DELAYED_SEROUT_IRQ > 0) {
-		if (--DELAYED_SEROUT_IRQ == 0) {
-			if (IRQEN & 0x10) {
-				IRQST &= 0xef;
-				GenerateIRQ();
-			}
-		}
-	}
-
-	if (DELAYED_XMTDONE_IRQ > 0)
-		if (--DELAYED_XMTDONE_IRQ == 0) {
-			IRQST &= 0xf7;
-			if (IRQEN & 0x08) {
-				GenerateIRQ();
-			}
-		}
-#endif	
 
 	if ((DivNIRQ[CHAN1] -= LINE_C) < 0 ) {
 		DivNIRQ[CHAN1] += DivNMax[CHAN1];

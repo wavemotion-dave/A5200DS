@@ -34,14 +34,6 @@ void SIO_DisableDrive(int diskno);
 int Rotate_Disks(void);
 void SIO(void);
 
-#define SIO_NoFrame         (0x00)
-#define SIO_CommandFrame    (0x01)
-#define SIO_StatusRead      (0x02)
-#define SIO_ReadFrame       (0x03)
-#define SIO_WriteFrame      (0x04)
-#define SIO_FinalStatus     (0x05)
-#define SIO_FormatFrame     (0x06)
-#define SIO_CasRead         (0x60)
 
 UBYTE SIO_ChkSum(const UBYTE *buffer, int length);
 void SIO_TapeMotor(int onoff);
@@ -50,11 +42,5 @@ void SIO_PutByte(int byte);
 int SIO_GetByte(void);
 void SIO_Initialise(void);
 void SIO_Exit(void);
-
-/* Some defines about the serial I/O timing. Currently fixed! */
-#define XMTDONE_INTERVAL  15
-#define SERIN_INTERVAL     8
-#define SEROUT_INTERVAL    8
-#define ACK_INTERVAL      36
 
 #endif	/* _SIO_H_ */
