@@ -195,57 +195,7 @@ void Atari800_RunEsc(UBYTE esc_code)
 }
 
 void Atari800_PatchOS(void) {
-	int patched = Device_PatchOS();
 
-	if (enable_sio_patch) {
-		UWORD addr_l;
-		UWORD addr_s;
-		UBYTE check_s_0;
-		UBYTE check_s_1;
-		/* patch Open() of C: so we know when a leader is processed */
-		switch (machine_type) {
-		case MACHINE_OSA:
-		case MACHINE_OSB:
-			addr_l = 0xef74;
-			addr_s = 0xefbc;
-			check_s_0 = 0xa0;
-			check_s_1 = 0x80;
-			break;
-		case MACHINE_XLXE:
-			addr_l = 0xfd13;
-			addr_s = 0xfd60;
-			check_s_0 = 0xa9;
-			check_s_1 = 0x03;
-			break;
-		default:
-			return;
-		}
-		/* don't hurt non-standard OSes that may not support cassette at all  */
-		if (dGetByte(addr_l)     == 0xa9 && dGetByte(addr_l + 1) == 0x03
-		 && dGetByte(addr_l + 2) == 0x8d && dGetByte(addr_l + 3) == 0x2a
-		 && dGetByte(addr_l + 4) == 0x02
-		 && dGetByte(addr_s)     == check_s_0
-		 && dGetByte(addr_s + 1) == check_s_1
-		 && dGetByte(addr_s + 2) == 0x20 && dGetByte(addr_s + 3) == 0x5c
-		 && dGetByte(addr_s + 4) == 0xe4) {
-			Atari800_AddEsc(addr_l, ESC_COPENLOAD, CASSETTE_LeaderLoad);
-			Atari800_AddEsc(addr_s, ESC_COPENSAVE, CASSETTE_LeaderSave);
-		}
-		Atari800_AddEscRts(0xe459, ESC_SIOV, SIO);
-		patched = TRUE;
-	}
-	else {
-		Atari800_RemoveEsc(ESC_COPENLOAD);
-		Atari800_RemoveEsc(ESC_COPENSAVE);
-		Atari800_RemoveEsc(ESC_SIOV);
-	};
-	if (patched && machine_type == MACHINE_XLXE) {
-		/* Disable Checksum Test */
-		dPutByte(0xc314, 0x8e);
-		dPutByte(0xc315, 0xff);
-		dPutByte(0xc319, 0x8e);
-		dPutByte(0xc31a, 0xff);
-	}
 }
 
 void Warmstart(void) {
