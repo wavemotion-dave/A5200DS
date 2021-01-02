@@ -80,8 +80,6 @@
 
 /* #define CYCLES_PER_OPCODE */
 
-/* #define MONITOR_PROFILE */
-
 #define NO_V_FLAG_VARIABLE      // Very slight speedup... we will check the processor status directly in the rare case of needing this...
 
 /* 6502 stack handling */
@@ -101,25 +99,25 @@
 #define RMW_GetByte(x, addr) x = GetByte(addr);
 
 /* 6502 registers. */
-UWORD regPC;
-UBYTE regA;
-UBYTE regX;
-UBYTE regY;
-UBYTE regP;						/* Processor Status Byte (Partial) */
-UBYTE regS;
-UBYTE IRQ;
+UWORD regPC __attribute__((section(".dtcm"))); 
+UBYTE regA __attribute__((section(".dtcm")));
+UBYTE regX __attribute__((section(".dtcm")));
+UBYTE regY __attribute__((section(".dtcm")));
+UBYTE regP __attribute__((section(".dtcm")));						/* Processor Status Byte (Partial) */
+UBYTE regS __attribute__((section(".dtcm")));
+UBYTE IRQ __attribute__((section(".dtcm")));
 
 /* Transfer 6502 registers between global variables and local variables inside GO() */
 #define UPDATE_GLOBAL_REGS  regPC = GET_PC(); regS = S; regA = A; regX = X; regY = Y
 #define UPDATE_LOCAL_REGS   SET_PC(regPC); S = regS; A = regA; X = regX; Y = regY
 
 /* 6502 flags local to this module */
-static UBYTE N;					/* bit7 set => N flag set */
+static UBYTE N __attribute__((section(".dtcm")));					/* bit7 set => N flag set */
 #ifndef NO_V_FLAG_VARIABLE
-static UBYTE V;                 /* non-zero => V flag set */
+static UBYTE V __attribute__((section(".dtcm")));                 /* non-zero => V flag set */
 #endif
-static UBYTE Z;					/* zero     => Z flag set */
-static UBYTE C;					/* must be 0 or 1 */
+static UBYTE Z __attribute__((section(".dtcm")));					/* zero     => Z flag set */
+static UBYTE C __attribute__((section(".dtcm")));					/* must be 0 or 1 */
 /* B, D, I are always in regP */
 
 inline void CPU_GetStatus(void)
@@ -143,11 +141,6 @@ inline void CPU_PutStatus(void)
 
 /* For Atari Basic loader */
 void (*rts_handler)(void) = NULL;
-
-/* 6502 instruction profiling */
-#ifdef MONITOR_PROFILE
-int instruction_count[256];
-#endif
 
 UBYTE cim_encountered = FALSE;
 
@@ -262,7 +255,7 @@ void NMI(void)
 
 
 /*	0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F */
-static const int cycles[256] =
+static UBYTE cycles[256] __attribute__((section(".dtcm"))) =
 {
 	7, 6, 2, 8, 3, 3, 5, 5, 3, 2, 2, 2, 4, 4, 6, 6,		/* 0x */
 	2, 5, 2, 8, 4, 4, 6, 6, 2, 4, 2, 7, 4, 4, 7, 7,		/* 1x */
@@ -290,7 +283,7 @@ void GO(int limit)
 {
 #define OPCODE_ALIAS(code)	opcode_##code:
 #define DONE				goto next;
-	static const void *opcode[256] =
+	static const void *opcode[256] __attribute__((section(".dtcm"))) =
 	{
 		&&opcode_00, &&opcode_01, &&opcode_02, &&opcode_03,
 		&&opcode_04, &&opcode_05, &&opcode_06, &&opcode_07,
@@ -373,24 +366,15 @@ void GO(int limit)
 		&&opcode_fc, &&opcode_fd, &&opcode_fe, &&opcode_ff,
 	};
 
-#ifdef CYCLES_PER_OPCODE
-#define OPCODE(code) OPCODE_ALIAS(code) xpos += cycles[0x##code];
-#else
 #define OPCODE(code) OPCODE_ALIAS(code)
-#endif
 
-#ifdef PC_PTR
-	const UBYTE *PC;
-#else
-	UWORD PC;
-#endif
+	UWORD PC; 
+	UWORD addr;
+	UBYTE data;
 	UBYTE A;
 	UBYTE X;
 	UBYTE Y;
 	UBYTE S;
-
-	UWORD addr;
-	UBYTE data;
 #define insn data
 
 /*
@@ -1964,10 +1948,6 @@ void CPU_Initialise(void)
 
 void CPU_Reset(void)
 {
-#ifdef MONITOR_PROFILE
-	memset(instruction_count, 0, sizeof(instruction_count));
-#endif
-
 	IRQ = 0;
 
 	regP = 0x34;				/* The unused bit is always 1, I flag set! */

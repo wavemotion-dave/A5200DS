@@ -207,11 +207,11 @@ static const struct cart_t cart_table[] =
 
 UBYTE *cart_image = NULL;       /* For cartridge memory */
 char cart_filename[FILENAME_MAX];
-struct cart_t myCart = {"", CART_5200_32, CTRL_JOY, 0,0,0,0};
+struct cart_t myCart __attribute__((section(".dtcm"))) = {"", CART_5200_32, CTRL_JOY, 0,0,0,0};
 static byte cart_image_fixed_buffer[CART_MAX_SIZE] __attribute__ ((aligned (4)));;
-static byte bryan_bank = 0;
-static byte last_bryan_bank = 255;
-static UWORD last_bounty_bob_bank = 65535;
+static byte bryan_bank __attribute__((section(".dtcm"))) = 0;
+static byte last_bryan_bank __attribute__((section(".dtcm"))) = 255;
+static UWORD last_bounty_bob_bank __attribute__((section(".dtcm"))) = 65535;
 
 /* special support of Bounty Bob on Atari5200 */
 ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)

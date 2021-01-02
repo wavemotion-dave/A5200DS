@@ -37,9 +37,7 @@
 #include "pia.h"
 #include "pokeysnd.h"
 #include "util.h"
-#ifndef BASIC
 #include "statesav.h"
-#endif
 
 rdfunc readmap[65536]   __attribute__ ((aligned (16)));
 wrfunc writemap[65536]  __attribute__ ((aligned (16)));
