@@ -34,7 +34,7 @@
 
 #define ALTERNATE_LOOP_COUNTERS
 
-#define NO_YPOS_BREAK_FLICKER
+#define YPOS_BREAK_FLICKER {}
 
 #include "antic.h"
 #include "atari.h"
@@ -2344,18 +2344,6 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 			dctr &= 0xf;
 			continue;
 		}
-#ifndef NO_YPOS_BREAK_FLICKER
-#define YPOS_BREAK_FLICKER if (ypos == break_ypos - 1000) {\
-				static int toggle;\
-				if (toggle == 1) {\
-					FILL_VIDEO(scrn_ptr + LBORDER_START, 0x0f0f, (RBORDER_END - LBORDER_START) * 2);\
-				}\
-				toggle = !toggle;\
-			}
-#else
-#define YPOS_BREAK_FLICKER
-#endif /* NO_YPOS_BREAK_FLICKER */
-
 		if (need_load && anticmode <= 5 && DMACTL & 3)
 			xpos += before_cycles[md];
 
@@ -2428,10 +2416,33 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 }
 
 /* ANTIC registers --------------------------------------------------------- */
-
-ITCM_CODE UBYTE ANTIC_GetByte(UWORD addr)
+ITCM_CODE UBYTE ANTIC_Get_VCOUNT(UWORD addr)
 {
-	switch (addr & 0xf) {
+    if (XPOS < LINE_C)
+        return ypos >> 1;
+    return (ypos + 1) >> 1;
+}
+
+ITCM_CODE UBYTE ANTIC_Get_PENH(UWORD addr)
+{
+    return PENH;
+}
+
+ITCM_CODE UBYTE ANTIC_Get_PENV(UWORD addr)
+{
+    return PENV;
+}
+
+ITCM_CODE UBYTE ANTIC_Get_NMIST(UWORD addr)
+{
+    return NMIST;
+}
+
+// In theory not used anymore... as valid address combos should map into above functions for slight speed improvement...
+UBYTE ANTIC_GetByte(UWORD addr)
+{
+	switch (addr & 0xf) 
+    {
 	case _VCOUNT:
 		if (XPOS < LINE_C)
 			return ypos >> 1;

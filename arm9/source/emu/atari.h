@@ -219,7 +219,7 @@ extern int xpos_limit;
 #define DMAR     9
 
 /* Number of scanlines per frame. */
-#define max_ypos tv_mode
+#define max_ypos TV_NTSC
 
 /* Main clock value at the beginning of the current scanline. */
 extern unsigned int screenline_cpu_clock;

@@ -1,7 +1,7 @@
 a5200DS
 --------------------------------------------------------------------------------
 a5200DS is an Atari VCS 5200 console emulator.
-To use this emulator, you must use compatibles rom with a52/bin format. 
+To use this emulator, you must use NTSC compatible roms with a52/bin format. 
 You also need the 5200.bin rom bios to use it (there is a built-in open-source
 replacement BIOS which will work for many games but doesn't have full compatibilty
 so it is still recommended you use 5200.bin). A quick search on atariage website 
@@ -14,14 +14,19 @@ Features :
 
 Missing :
 ---------
-Bounty Bob Strikes Back only runs at about 45FPS... everything else is good.
+Bounty Bob Strikes Back only runs at about 48FPS... everything else is pretty good.
 
-Check updates on my web site : 
-http://www.portabledev.com
+Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V2.2 : 02-Jan-2020 by wavemotion-dave
+  * Fixed launching via command line (so TWL++ integration will work now)
+  * Added support for 64k Super Carts (Laswer Hawk, Dropzone, MULE, Berks4, etc)
+  * Added support for 512k Super Carts (Bosconian... though it runs really slowly)
+  * New memory map scheme for slight improvement in stubbon games like Bounty Bob Strikes Back 
+
 V2.1 : 30-Dec-2020 by wavemotion-dave
   * Pokey Emulation buffers completely re-written. It now sounds passably good! 
     You can hear the voices in Berzerk clearly. 'Nuff said. 

@@ -34,6 +34,8 @@
 #endif
 #include "pokeysnd.h"
 
+extern int debug[];
+
 /* GTIA Registers ---------------------------------------------------------- */
 
 UBYTE M0PL;

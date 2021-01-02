@@ -52,33 +52,18 @@ void ANTIC_Frame(int draw_display);
 UBYTE ANTIC_GetByte(UWORD addr);
 void ANTIC_PutByte(UWORD addr, UBYTE byte);
 
+extern UBYTE ANTIC_Get_VCOUNT(UWORD addr);
+extern UBYTE ANTIC_Get_PENH(UWORD addr);
+extern UBYTE ANTIC_Get_PENV(UWORD addr);
+extern UBYTE ANTIC_Get_NMIST(UWORD addr);
+
+
 UBYTE ANTIC_GetDLByte(UWORD *paddr);
 UWORD ANTIC_GetDLWord(UWORD *paddr);
 
 /* always call ANTIC_UpdateArtifacting after changing global_artif_mode */
 void ANTIC_UpdateArtifacting(void);
 
-#ifdef NEW_CYCLE_EXACT
-#define NOT_DRAWING -999
-#define DRAWING_SCREEN (cur_screen_pos!=NOT_DRAWING)
-extern int delayed_wsync;
-extern int cur_screen_pos;
-extern const int *cpu2antic_ptr;
-extern const int *antic2cpu_ptr;
-void update_scanline(void);
-void update_scanline_prior(UBYTE byte);
-#ifndef NO_GTIA11_DELAY
-extern int prevline_prior_pos;
-extern int curline_prior_pos;
-extern int prior_curpos;
-#define PRIOR_BUF_SIZE 40
-extern UBYTE prior_val_buf[PRIOR_BUF_SIZE];
-extern int prior_pos_buf[PRIOR_BUF_SIZE];
-#endif /* NO_GTIA11_DELAY */
-
-#define XPOS ( DRAWING_SCREEN ? cpu2antic_ptr[xpos] : xpos )
-#else
 #define XPOS xpos
-#endif /* NEW_CYCLE_EXACT */
 
 #endif /* _ANTIC_H_ */

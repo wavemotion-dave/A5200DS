@@ -12,7 +12,7 @@
 #define CART_DB_32		5
 #define CART_5200_EE_16	6
 #define CART_5200_40	7
-#define CART_WILL_64	8
+#define CART_5200_64	8
 #define CART_EXP_64		9
 #define CART_DIAMOND_64	10
 #define CART_SDX_64		11
@@ -46,7 +46,7 @@
 #define CART_PHOENIX_8	39
 #define CART_BLIZZARD_16 40
 #define CART_ATMAX_128	41
-#define CART_ATMAX_1024 42
+#define CART_5200_512   42
 #define CART_LAST_SUPPORTED 42
 
 
@@ -77,8 +77,7 @@ extern struct cart_t myCart;
 #define DIGITAL         0
 #define ANALOG          1
 
-#define CART_MAX_SIZE	(64 * 1024)
-extern int cart_kb[CART_LAST_SUPPORTED + 1];
+#define CART_MAX_SIZE	(512 * 1024)
 
 #define CART_CANT_OPEN		-1	/* Can't open cartridge image file */
 #define CART_BAD_FORMAT		-2	/* Unknown cartridge format */

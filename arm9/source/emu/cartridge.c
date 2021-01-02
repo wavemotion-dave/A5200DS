@@ -42,6 +42,10 @@
 #include "statesav.h"
 #endif
 
+static byte bryan_bank = 0;
+static byte last_bryan_bank = 255;
+static UWORD last_bounty_bob_bank = 65535;
+
 static const struct cart_t cart_table[] = 
 {
     {"DefaultCart000000000000000000000",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // Default Cart - If no other cart type found...
@@ -70,6 +74,7 @@ static const struct cart_t cart_table[] =
     {"8f4c07a9e0ef2ded720b403810220aaf",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // Castle Crisis (USA) (Unl).a52
     {"d64a175672b6dba0c0b244c949799e64",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0908},  // Caverns of Mars (Conv).a52
     {"1db260d6769bed6bf4731744213097b8",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0C0C},  // Caverns Of Mars 2 (Conv).a52
+    {"c4a14a88a4257970223b1ef9bf95da5b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0C0C},  // Caverns Of Mars 3 (Conv).a52    
     {"261702e8d9acbf45d44bb61fd8fa3e17",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    256,    240,    32,14,  0x0908},  // Centipede (USA).a52
     {"3ff7707e25359c9bcb2326a5d8539852",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // Choplifter! (USA).a52
     {"701dd2903b55a5b6734afa120e141334",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Chicken (XL Conversion).a52
@@ -139,6 +144,7 @@ static const struct cart_t cart_table[] =
     {"fc3ab610323cc34e7984f4bd599b871f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Mr Cool (XL Conversion).a52
     {"d1873645fee21e84b25dc5e939d93e9b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // Mr. Do!'s Castle (USA).a52
     {"ef9a920ffdf592546499738ee911fc1e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,25,  0x0908},  // Ms. Pac-Man (USA).a52
+    {"8341c9a660280292664bcaccd1bc5279",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Necromancer.a52
     {"6c661ed6f14d635482f1d35c5249c788",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0908},  // Oils Well (XL Conversion).a52
     {"5781071d4e3760dd7cd46e1061a32046",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // O'Riley's Mine (XL Conversion).a52
     {"f1a4d62d9ba965335fa13354a6264623",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,25,  0x0908},  // Pac-Man (USA).a52
@@ -174,6 +180,7 @@ static const struct cart_t cart_table[] =
     {"6e24e3519458c5cb95a7fd7711131f8d",    CART_5200_EE_16,    CTRL_ROBO,  DIGITAL,    2,   6, 220,    256,    240,    32,18,  0x0908},  // Space Dungeon (USA).a52
     {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0908},  // Space Invaders (USA).a52
     {"802a11dfcba6229cc2f93f0f3aaeb3aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0908},  // Space Shuttle - A Journey Into Space (USA).a52
+    {"88d286e4b5fbbe7fd1694d98af9ef538",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // SpeedAce5200.a52
     {"cd1c3f732c3432c4a642732182b1ea30",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    244,    32,20,  0x0908},  // Spitfire (1984) (Atari) (Prototype).a52
     {"6208110dc3c0bf7b15b33246f2971b6e",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,16,  0x0908},  // Spy Hunter (XL Conversion).a52
     {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,     3,   6, 220,    256,    240,    32,17,  0x0908},  // Star Raiders (USA).a52
@@ -197,6 +204,10 @@ static const struct cart_t cart_table[] =
     {"433d3a2fc9896aa8294271a0204dc7e3",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Zaxxon 32k_final.a52
     {"77beee345b4647563e20fd896231bd47",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,10,  0x0908},  // Zenji (USA).a52
     {"dc45af8b0996cb6a94188b0be3be2e17",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0908},  // Zone Ranger (USA).a52
+    {"c4ea4997cf906dd20ae474eebe1d2a04",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Dropzone (64k conversion).a52
+    {"4e16903c352c8ed75ed9377e72ebe333",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Laser Hawk (64k conversion).a52
+    {"a6ed56ea679e6279d0baca2e5cafab78",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // M.U.L.E. (64k conversion).a52
+    {"d9499b29559f8c3bf27391f0b9682ae8",    CART_5200_512,      CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Bosconian (512k conversion).a52 
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,30,  0x0908},  // End of List
 };
 
@@ -225,52 +236,34 @@ void CART_PutByte(UWORD addr, UBYTE byte)
 //#define CopyROM(addr1, addr2, src) memcpy(memory + (addr1), src, (addr2) - (addr1) + 1)
 
 /* special support of Bounty Bob on Atari5200 */
-inline UBYTE CART_BountyBob1(UWORD addr)
-{
-    if (addr >= 0x4ff6 && addr <= 0x4ff9) {
-        addr -= 0x4ff6;
-        CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
-        return 0;
-    }
-    else return dGetByte(addr);
-}
 
-inline UBYTE CART_BountyBob2(UWORD addr)
-{
-    if (addr >= 0x5ff6 && addr <= 0x5ff9) {
-        addr -= 0x5ff6;
-        CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
-        return 0;
-    }
-    else return dGetByte(addr);
-}
-
-#ifdef PAGED_ATTRIB
 ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
 {
-    if (addr >= 0x4ff6 && addr <= 0x4ff9) 
+    if (addr != last_bounty_bob_bank)
     {
+        last_bounty_bob_bank = addr;
         addr -= 0x4ff6;
         CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
-        return 0;
     }
-    else return dGetByte(addr);
+    return 0;
 }
 
 ITCM_CODE UBYTE BountyBob2_GetByte(UWORD addr)
 {
-    if (addr >= 0x5ff6 && addr <= 0x5ff9) 
+    if (addr != last_bounty_bob_bank)
     {
+        last_bounty_bob_bank = addr;
         addr -= 0x5ff6;
         CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
-        return 0;
     }
-    else return dGetByte(addr);
+    return 0;
 }
 
 ITCM_CODE void BountyBob1_PutByte(UWORD addr, UBYTE value)
 {
-    if (addr >= 0x4ff6 && addr <= 0x4ff9) {
+    if (addr != last_bounty_bob_bank)
+    {
+        last_bounty_bob_bank = addr;
         addr -= 0x4ff6;
         CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
     }
@@ -278,12 +271,75 @@ ITCM_CODE void BountyBob1_PutByte(UWORD addr, UBYTE value)
 
 ITCM_CODE void BountyBob2_PutByte(UWORD addr, UBYTE value)
 {
-    if (addr >= 0x5ff6 && addr <= 0x5ff9) {
+    if (addr != last_bounty_bob_bank)
+    {
+        last_bounty_bob_bank = addr;
         addr -= 0x5ff6;
         CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
     }
 }
-#endif
+
+
+
+// --------------------------------------------------------
+// Access to $BFE0-BFFF resets to home bank 1.
+// Access to $BFD0-BFDF selects bank according to A2.
+// --------------------------------------------------------
+ITCM_CODE UBYTE Bryan_GetByte64(UWORD addr)
+{
+    bryan_bank = (addr & 0x04) ? 1:0;
+    if (last_bryan_bank != bryan_bank)
+    {
+        CopyROM(0x4000, 0xbfff, cart_image + (0x8000 * bryan_bank));
+        last_bryan_bank = bryan_bank;
+    }
+    return 0x00;
+}
+
+ITCM_CODE UBYTE Bryan_GetByte64_reset(UWORD addr)
+{
+    bryan_bank = 1;
+    if (last_bryan_bank != bryan_bank)
+    {
+        CopyROM(0x4000, 0xbfff, cart_image + (0x8000 * bryan_bank));
+        last_bryan_bank = bryan_bank;
+    }
+    return 0x00;
+}
+
+// -------------------------------------------------------------
+// Access to $BFE0-BFFF resets to home bank 1.
+// Access to $BFD0-BFDF changes lower two bank bits by A2-A3.
+// Access to $BFC0-BFCF changes upper two bank bits by A2-A3.
+// -------------------------------------------------------------
+ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
+{
+    if ((addr & 0xBFC0) == 0xBFC0)
+    {
+         if (addr >= 0xBFE0)
+         {
+             bryan_bank = 15;
+         }
+         else if (addr >= 0xBFD0)
+         {
+             bryan_bank &= 0x0C;
+             bryan_bank |= ((addr & 0x0C) >> 2);
+         }
+         else if (addr >= 0xBFC0)
+         {
+             bryan_bank &= 0x03;
+             bryan_bank |= ((addr & 0x0C));
+         }
+         if (last_bryan_bank != bryan_bank)
+         {
+            CopyROM(0x4000, 0xbfff, cart_image +(0x8000L * bryan_bank));
+            last_bryan_bank = bryan_bank;
+         }
+    }
+    return dGetByte(addr);
+}
+
+
 
 int CART_Insert(const char *filename) {
     FILE *fp;
@@ -322,6 +378,8 @@ int CART_Insert(const char *filename) {
         if (len_kb == 16) myCart.type =  CART_5200_EE_16;
         if (len_kb == 32) myCart.type =  CART_5200_32;
         if (len_kb == 40) myCart.type =  CART_5200_40;
+        if (len_kb == 64) myCart.type =  CART_5200_64;
+        if (len_kb >= 128) myCart.type =  CART_5200_512;
             
         // --------------------------------------------
         // Go grab the MD5 sum and see if we find 
@@ -368,8 +426,11 @@ void CART_Start(void)
 {
     if (machine_type == MACHINE_5200) 
     {
+        
         SetROM(0x4ff6, 0x4ff9);     /* disable Bounty Bob bank switching */
         SetROM(0x5ff6, 0x5ff9);
+        SetROM(0xbfc0, 0xbfff);     /* disable 64K/512K bank switching */
+        
         switch (myCart.type) 
         {
         case CART_5200_32:
@@ -379,16 +440,6 @@ void CART_Start(void)
             CopyROM(0x4000, 0x5fff, cart_image);
             CopyROM(0x6000, 0x9fff, cart_image);
             CopyROM(0xa000, 0xbfff, cart_image + 0x2000);
-            break;
-        case CART_5200_40:
-            CopyROM(0x4000, 0x4fff, cart_image);
-            CopyROM(0x5000, 0x5fff, cart_image + 0x4000);
-            CopyROM(0x8000, 0x9fff, cart_image + 0x8000);
-            CopyROM(0xa000, 0xbfff, cart_image + 0x8000);
-            readmap[0x4f] = BountyBob1_GetByte;
-            readmap[0x5f] = BountyBob2_GetByte;
-            writemap[0x4f] = BountyBob1_PutByte;
-            writemap[0x5f] = BountyBob2_PutByte;
             break;
         case CART_5200_NS_16:
             CopyROM(0x8000, 0xbfff, cart_image);
@@ -402,6 +453,28 @@ void CART_Start(void)
             CopyROM(0x9000, 0x9fff, cart_image);
             CopyROM(0xa000, 0xafff, cart_image);
             CopyROM(0xb000, 0xbfff, cart_image);
+            break;
+        case CART_5200_40:
+            CopyROM(0x4000, 0x4fff, cart_image);
+            CopyROM(0x5000, 0x5fff, cart_image + 0x4000);
+            CopyROM(0x8000, 0x9fff, cart_image + 0x8000);
+            CopyROM(0xa000, 0xbfff, cart_image + 0x8000);
+            last_bounty_bob_bank = -1;
+            for (int i=0x4ff6; i<=0x4ff9; i++) readmap[i] = BountyBob1_GetByte;
+            for (int i=0x5ff6; i<=0x5ff9; i++) readmap[i] = BountyBob2_GetByte;
+            for (int i=0x4ff6; i<=0x4ff9; i++) writemap[i] = BountyBob1_PutByte;
+            for (int i=0x5ff6; i<=0x5ff9; i++) writemap[i] = BountyBob2_PutByte;
+            break;
+        case CART_5200_64:
+            bryan_bank = 1; last_bryan_bank=1;
+            CopyROM(0x4000, 0xbfff, cart_image + (0x8000 * bryan_bank));
+            for (int i=0xbfd0; i<= 0xbfdf; i++) readmap[i] = Bryan_GetByte64;
+            for (int i=0xbfe0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte64_reset;
+            break;
+        case CART_5200_512:
+            bryan_bank = 15; last_bryan_bank=15;
+            CopyROM(0x4000, 0xbfff, cart_image + (0x8000L * (long)bryan_bank));
+            for (int i=0xbfc0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte512;
             break;
         default:
             /* clear cartridge area so the 5200 will crash */

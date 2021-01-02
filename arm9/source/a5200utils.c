@@ -47,7 +47,7 @@ signed char *psound_buffer;
 int alpha_1 = 8;
 int alpha_2 = 8;
 
-#define MAX_DEBUG 8
+#define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
 //#define DEBUG_DUMP
 
