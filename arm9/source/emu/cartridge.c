@@ -38,13 +38,7 @@
 #include "pia.h"
 #include "rtime.h"
 #include "util.h"
-#ifndef BASIC
 #include "statesav.h"
-#endif
-
-static byte bryan_bank = 0;
-static byte last_bryan_bank = 255;
-static UWORD last_bounty_bob_bank = 65535;
 
 static const struct cart_t cart_table[] = 
 {
@@ -213,30 +207,13 @@ static const struct cart_t cart_table[] =
 
 UBYTE *cart_image = NULL;       /* For cartridge memory */
 char cart_filename[FILENAME_MAX];
-
 struct cart_t myCart = {"", CART_5200_32, CTRL_JOY, 0,0,0,0};
-
-/* a read from D500-D5FF area */
-UBYTE CART_GetByte(UWORD addr)
-{
-    if (rtime_enabled && (addr == 0xd5b8 || addr == 0xd5b9))
-        return RTIME_GetByte();
-    return 0xff;
-}
-
-/* a write to D500-D5FF area */
-void CART_PutByte(UWORD addr, UBYTE byte)
-{
-    if (rtime_enabled && (addr == 0xd5b8 || addr == 0xd5b9)) {
-        RTIME_PutByte(byte);
-        return;
-    }
-}
-
-//#define CopyROM(addr1, addr2, src) memcpy(memory + (addr1), src, (addr2) - (addr1) + 1)
+static byte cart_image_fixed_buffer[CART_MAX_SIZE] __attribute__ ((aligned (4)));;
+static byte bryan_bank = 0;
+static byte last_bryan_bank = 255;
+static UWORD last_bounty_bob_bank = 65535;
 
 /* special support of Bounty Bob on Atari5200 */
-
 ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
 {
     if (addr != last_bounty_bob_bank)
@@ -278,7 +255,6 @@ ITCM_CODE void BountyBob2_PutByte(UWORD addr, UBYTE value)
         CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
     }
 }
-
 
 
 // --------------------------------------------------------
@@ -339,8 +315,6 @@ ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
     return dGetByte(addr);
 }
 
-
-
 int CART_Insert(const char *filename) {
     FILE *fp;
     int len;
@@ -352,7 +326,7 @@ int CART_Insert(const char *filename) {
     fp = fopen(filename, "rb");
     if (fp == NULL) {
         return CART_CANT_OPEN;
-  }
+    }
     /* check file length */
     len = Util_flen(fp);
     Util_rewind(fp);
@@ -360,75 +334,63 @@ int CART_Insert(const char *filename) {
     /* Save Filename for state save */
     strcpy(cart_filename, filename);
 
-    /* if full kilobytes, assume it is raw image */
-    if ((len & 0x3ff) == 0) 
-    {
-        /* alloc memory and read data */
-        cart_image = (UBYTE *) Util_malloc(len);
-        fread(cart_image, 1, len, fp);
-        fclose(fp);
-        /* find cart type */
+    memcpy(&myCart, &cart_table[0], sizeof(myCart));
 
-        memcpy(&myCart, &cart_table[0], sizeof(myCart));
-        myCart.type = CART_NONE;
-        myCart.control = CTRL_JOY;
-        int len_kb = len >> 10; /* number of kilobytes */
-        if (len_kb == 4)  myCart.type =  CART_5200_4;
-        if (len_kb == 8)  myCart.type =  CART_5200_8;
-        if (len_kb == 16) myCart.type =  CART_5200_EE_16;
-        if (len_kb == 32) myCart.type =  CART_5200_32;
-        if (len_kb == 40) myCart.type =  CART_5200_40;
-        if (len_kb == 64) myCart.type =  CART_5200_64;
-        if (len_kb >= 128) myCart.type =  CART_5200_512;
-            
-        // --------------------------------------------
-        // Go grab the MD5 sum and see if we find 
-        // it in our master table of games...
-        // --------------------------------------------
-        char md5[33];
-        hash_Compute(cart_image, len, (byte*)md5);
-        //dsPrintValue(0,23,0,md5);
-        
-        int idx=0;
-        while (cart_table[idx].type != CART_NONE)
-        {
-            if (strncasecmp(cart_table[idx].md5, md5,32) == 0)
-            {
-                memcpy(&myCart, &cart_table[idx], sizeof(myCart));
-                break;   
-            }
-            idx++;
-        }
-
-        if (myCart.type != CART_NONE) 
-        {
-            CART_Start();
-            return 0;   
-        }
-        free(cart_image);
-        cart_image = NULL;
-        return CART_BAD_FORMAT;
-    }
+    /* we used a fixed cart memory buffer... it's big enough! */
+    cart_image = (UBYTE *) cart_image_fixed_buffer;
+    fread(cart_image, 1, len, fp);
     fclose(fp);
+    
+    /* find cart type */
+    myCart.type = CART_NONE;
+    myCart.control = CTRL_JOY;
+    int len_kb = len >> 10; /* number of kilobytes */
+    if (len_kb == 4)  myCart.type =  CART_5200_4;
+    if (len_kb == 8)  myCart.type =  CART_5200_8;
+    if (len_kb == 16) myCart.type =  CART_5200_EE_16;
+    if (len_kb == 32) myCart.type =  CART_5200_32;
+    if (len_kb == 40) myCart.type =  CART_5200_40;
+    if (len_kb == 64) myCart.type =  CART_5200_64;
+    if (len_kb >= 128) myCart.type =  CART_5200_512;
+
+    // --------------------------------------------
+    // Go grab the MD5 sum and see if we find 
+    // it in our master table of games...
+    // --------------------------------------------
+    char md5[33];
+    hash_Compute(cart_image, len, (byte*)md5);
+    int idx=0;
+    while (cart_table[idx].type != CART_NONE)
+    {
+        if (strncasecmp(cart_table[idx].md5, md5,32) == 0)
+        {
+            memcpy(&myCart, &cart_table[idx], sizeof(myCart));
+            break;   
+        }
+        idx++;
+    }
+
+    if (myCart.type != CART_NONE) 
+    {
+        CART_Start();
+        return 0;   
+    }
+    cart_image = NULL;
     return CART_BAD_FORMAT;
 }
 
 void CART_Remove(void) {
     myCart.type = CART_NONE;
-    if (cart_image != NULL) {
-        free(cart_image);
-        cart_image = NULL;
-    }
+    cart_image = NULL;
     CART_Start();
 }
 
 void CART_Start(void) 
 {
     if (machine_type == MACHINE_5200) 
-    {
-        
+    {        
         SetROM(0x4ff6, 0x4ff9);     /* disable Bounty Bob bank switching */
-        SetROM(0x5ff6, 0x5ff9);
+        SetROM(0x5ff6, 0x5ff9);     /* disable Bounty Bob bank switching */
         SetROM(0xbfc0, 0xbfff);     /* disable 64K/512K bank switching */
         
         switch (myCart.type) 

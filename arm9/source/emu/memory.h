@@ -19,14 +19,13 @@
 #define dCopyToMem(from, to, size)		memcpy(memory + (to), from, size)
 #define dFillMem(addr1, value, length)	memset(memory + (addr1), value, length)
 
-extern UBYTE memory[65536 + 2];
-
 #define RAM       0
 #define ROM       1
 #define HARDWARE  2
 
 typedef UBYTE (*rdfunc)(UWORD addr);
 typedef void (*wrfunc)(UWORD addr, UBYTE value);
+extern UBYTE memory[65536];
 extern rdfunc readmap[65536];
 extern wrfunc writemap[65536];
 void ROM_PutByte(UWORD addr, UBYTE byte);

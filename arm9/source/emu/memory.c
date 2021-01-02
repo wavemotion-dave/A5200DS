@@ -41,10 +41,9 @@
 #include "statesav.h"
 #endif
 
-UBYTE memory[65536 + 2] __attribute__ ((aligned (4)));
-
-rdfunc readmap[65536]  __attribute__ ((aligned (4)));
-wrfunc writemap[65536]  __attribute__ ((aligned (4)));
+rdfunc readmap[65536]   __attribute__ ((aligned (16)));
+wrfunc writemap[65536]  __attribute__ ((aligned (16)));
+UBYTE  memory[65536]    __attribute__ ((aligned (16)));
 
 void ROM_PutByte(UWORD addr, UBYTE value)
 {
@@ -77,8 +76,7 @@ void MEMORY_InitialiseMachine(void)
     readmap[0xD4CB] = ANTIC_Get_VCOUNT;
     readmap[0xD4DB] = ANTIC_Get_VCOUNT;
     readmap[0xD4EB] = ANTIC_Get_VCOUNT;
-    readmap[0xD4FB] = ANTIC_Get_VCOUNT;
-    
+    readmap[0xD4FB] = ANTIC_Get_VCOUNT;    
     
     readmap[0xD40C] = ANTIC_Get_PENH;
     readmap[0xD41C] = ANTIC_Get_PENH;
@@ -130,8 +128,7 @@ void MEMORY_InitialiseMachine(void)
     readmap[0xD4DF] = ANTIC_Get_NMIST;
     readmap[0xD4EF] = ANTIC_Get_NMIST;
     readmap[0xD4FF] = ANTIC_Get_NMIST;
-    
-    
+        
     for (i=0xe800; i< 0xe8ff; i++) readmap[i] = POKEY_GetByte;
     for (i=0xeb00; i< 0xebff; i++) readmap[i] = POKEY_GetByte;
     for (i=0xc000; i< 0xc0ff; i++) writemap[i] = GTIA_PutByte;
