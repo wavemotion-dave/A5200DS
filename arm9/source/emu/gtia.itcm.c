@@ -80,12 +80,12 @@ UBYTE POTENA __attribute__((section(".dtcm")));
 
 /* Internal GTIA state ----------------------------------------------------- */
 
-int atari_speaker;
-int consol_index = 0;
-UBYTE consol_table[3];
-UBYTE consol_mask;
-UBYTE TRIG[4];
-UBYTE TRIG_latch[4];
+int atari_speaker __attribute__((section(".dtcm")));
+int consol_index __attribute__((section(".dtcm")))= 0;
+UBYTE consol_table[3] __attribute__((section(".dtcm")));
+UBYTE consol_mask __attribute__((section(".dtcm")));
+UBYTE TRIG[4] __attribute__((section(".dtcm")));
+UBYTE TRIG_latch[4] __attribute__((section(".dtcm")));
 
 void set_prior(UBYTE byte);         /* in antic.c */
 
@@ -112,9 +112,9 @@ extern UBYTE missile_gra_enabled;
 extern UBYTE player_flickering;
 extern UBYTE missile_flickering;
 
-static UBYTE *hposp_ptr[4];
-static UBYTE *hposm_ptr[4];
-static ULONG hposp_mask[4];
+static UBYTE *hposp_ptr[4] __attribute__((section(".dtcm")));
+static UBYTE *hposm_ptr[4] __attribute__((section(".dtcm")));
+static ULONG hposp_mask[4] __attribute__((section(".dtcm")));
 
 static ULONG grafp_lookup[4][256];
 static ULONG *grafp_ptr[4];
@@ -133,8 +133,8 @@ bit 6 - Missile 2
 bit 7 - Missile 3
 */
 
-UBYTE pm_scanline[ATARI_WIDTH / 2 + 8]; /* there's a byte for every *pair* of pixels */
-UBYTE pm_dirty = TRUE;
+UBYTE pm_scanline[ATARI_WIDTH / 2 + 8] __attribute__((section(".dtcm"))); /* there's a byte for every *pair* of pixels */
+UBYTE pm_dirty __attribute__((section(".dtcm"))) = TRUE;
 
 #define C_PM0   0x01
 #define C_PM1   0x02
@@ -720,140 +720,11 @@ void GTIA_PutByte(UWORD addr, UBYTE byte)
 
 /* State ------------------------------------------------------------------- */
 
-#ifndef BASIC
-
 void GTIAStateSave(void)
 {
-    int next_console_value = 7;
-
-    SaveUBYTE(&HPOSP0, 1);
-    SaveUBYTE(&HPOSP1, 1);
-    SaveUBYTE(&HPOSP2, 1);
-    SaveUBYTE(&HPOSP3, 1);
-    SaveUBYTE(&HPOSM0, 1);
-    SaveUBYTE(&HPOSM1, 1);
-    SaveUBYTE(&HPOSM2, 1);
-    SaveUBYTE(&HPOSM3, 1);
-    SaveUBYTE(&PF0PM, 1);
-    SaveUBYTE(&PF1PM, 1);
-    SaveUBYTE(&PF2PM, 1);
-    SaveUBYTE(&PF3PM, 1);
-    SaveUBYTE(&M0PL, 1);
-    SaveUBYTE(&M1PL, 1);
-    SaveUBYTE(&M2PL, 1);
-    SaveUBYTE(&M3PL, 1);
-    SaveUBYTE(&P0PL, 1);
-    SaveUBYTE(&P1PL, 1);
-    SaveUBYTE(&P2PL, 1);
-    SaveUBYTE(&P3PL, 1);
-    SaveUBYTE(&SIZEP0, 1);
-    SaveUBYTE(&SIZEP1, 1);
-    SaveUBYTE(&SIZEP2, 1);
-    SaveUBYTE(&SIZEP3, 1);
-    SaveUBYTE(&SIZEM, 1);
-    SaveUBYTE(&GRAFP0, 1);
-    SaveUBYTE(&GRAFP1, 1);
-    SaveUBYTE(&GRAFP2, 1);
-    SaveUBYTE(&GRAFP3, 1);
-    SaveUBYTE(&GRAFM, 1);
-    SaveUBYTE(&COLPM0, 1);
-    SaveUBYTE(&COLPM1, 1);
-    SaveUBYTE(&COLPM2, 1);
-    SaveUBYTE(&COLPM3, 1);
-    SaveUBYTE(&COLPF0, 1);
-    SaveUBYTE(&COLPF1, 1);
-    SaveUBYTE(&COLPF2, 1);
-    SaveUBYTE(&COLPF3, 1);
-    SaveUBYTE(&COLBK, 1);
-    SaveUBYTE(&PRIOR, 1);
-    SaveUBYTE(&VDELAY, 1);
-    SaveUBYTE(&GRACTL, 1);
-
-    SaveUBYTE(&consol_mask, 1);
-    SaveINT(&atari_speaker, 1);
-    SaveINT(&next_console_value, 1);
 }
 
 void GTIAStateRead(void)
 {
-    int next_console_value; /* ignored */
-
-    ReadUBYTE(&HPOSP0, 1);
-    ReadUBYTE(&HPOSP1, 1);
-    ReadUBYTE(&HPOSP2, 1);
-    ReadUBYTE(&HPOSP3, 1);
-    ReadUBYTE(&HPOSM0, 1);
-    ReadUBYTE(&HPOSM1, 1);
-    ReadUBYTE(&HPOSM2, 1);
-    ReadUBYTE(&HPOSM3, 1);
-    ReadUBYTE(&PF0PM, 1);
-    ReadUBYTE(&PF1PM, 1);
-    ReadUBYTE(&PF2PM, 1);
-    ReadUBYTE(&PF3PM, 1);
-    ReadUBYTE(&M0PL, 1);
-    ReadUBYTE(&M1PL, 1);
-    ReadUBYTE(&M2PL, 1);
-    ReadUBYTE(&M3PL, 1);
-    ReadUBYTE(&P0PL, 1);
-    ReadUBYTE(&P1PL, 1);
-    ReadUBYTE(&P2PL, 1);
-    ReadUBYTE(&P3PL, 1);
-    ReadUBYTE(&SIZEP0, 1);
-    ReadUBYTE(&SIZEP1, 1);
-    ReadUBYTE(&SIZEP2, 1);
-    ReadUBYTE(&SIZEP3, 1);
-    ReadUBYTE(&SIZEM, 1);
-    ReadUBYTE(&GRAFP0, 1);
-    ReadUBYTE(&GRAFP1, 1);
-    ReadUBYTE(&GRAFP2, 1);
-    ReadUBYTE(&GRAFP3, 1);
-    ReadUBYTE(&GRAFM, 1);
-    ReadUBYTE(&COLPM0, 1);
-    ReadUBYTE(&COLPM1, 1);
-    ReadUBYTE(&COLPM2, 1);
-    ReadUBYTE(&COLPM3, 1);
-    ReadUBYTE(&COLPF0, 1);
-    ReadUBYTE(&COLPF1, 1);
-    ReadUBYTE(&COLPF2, 1);
-    ReadUBYTE(&COLPF3, 1);
-    ReadUBYTE(&COLBK, 1);
-    ReadUBYTE(&PRIOR, 1);
-    ReadUBYTE(&VDELAY, 1);
-    ReadUBYTE(&GRACTL, 1);
-
-    ReadUBYTE(&consol_mask, 1);
-    ReadINT(&atari_speaker, 1);
-    ReadINT(&next_console_value, 1);
-
-    GTIA_PutByte(_HPOSP0, HPOSP0);
-    GTIA_PutByte(_HPOSP1, HPOSP1);
-    GTIA_PutByte(_HPOSP2, HPOSP2);
-    GTIA_PutByte(_HPOSP3, HPOSP3);
-    GTIA_PutByte(_HPOSM0, HPOSM0);
-    GTIA_PutByte(_HPOSM1, HPOSM1);
-    GTIA_PutByte(_HPOSM2, HPOSM2);
-    GTIA_PutByte(_HPOSM3, HPOSM3);
-    GTIA_PutByte(_SIZEP0, SIZEP0);
-    GTIA_PutByte(_SIZEP1, SIZEP1);
-    GTIA_PutByte(_SIZEP2, SIZEP2);
-    GTIA_PutByte(_SIZEP3, SIZEP3);
-    GTIA_PutByte(_SIZEM, SIZEM);
-    GTIA_PutByte(_GRAFP0, GRAFP0);
-    GTIA_PutByte(_GRAFP1, GRAFP1);
-    GTIA_PutByte(_GRAFP2, GRAFP2);
-    GTIA_PutByte(_GRAFP3, GRAFP3);
-    GTIA_PutByte(_GRAFM, GRAFM);
-    GTIA_PutByte(_COLPM0, COLPM0);
-    GTIA_PutByte(_COLPM1, COLPM1);
-    GTIA_PutByte(_COLPM2, COLPM2);
-    GTIA_PutByte(_COLPM3, COLPM3);
-    GTIA_PutByte(_COLPF0, COLPF0);
-    GTIA_PutByte(_COLPF1, COLPF1);
-    GTIA_PutByte(_COLPF2, COLPF2);
-    GTIA_PutByte(_COLPF3, COLPF3);
-    GTIA_PutByte(_COLBK, COLBK);
-    GTIA_PutByte(_PRIOR, PRIOR);
-    GTIA_PutByte(_GRACTL, GRACTL);
 }
 
-#endif /* BASIC */
