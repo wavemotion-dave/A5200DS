@@ -529,7 +529,7 @@ static const UBYTE *pm_lookup_ptr;
 #define PL_3c	18	/* 0x3c */
 #define PL_3e	19	/* 0x3e */
 
-static const UBYTE prior_to_pm_lookup[64] = {
+static UBYTE prior_to_pm_lookup[64] = {
 	PL_00, PL_00, PL_00, PL_00, PL_00, PL_05, PL_00, PL_05,
 	PL_00, PL_00, PL_00, PL_00, PL_05, PL_05, PL_05, PL_05,
 	PL_10, PL_11, PL_12, PL_13, PL_14, PL_15, PL_14, PL_15,
@@ -541,7 +541,7 @@ static const UBYTE prior_to_pm_lookup[64] = {
 };
 
 static void init_pm_lookup(void) {
-	static const UBYTE pm_lookup_template[10][16] = {
+	static UBYTE pm_lookup_template[10][16] = {
 		/* PL_20 */
 		{ L_BAK, L_PM0, L_PM1, L_PM01, L_PM2, L_PM0, L_PM1, L_PM01,
 		L_PM3, L_PM0, L_PM1, L_PM01, L_PM23, L_PM0, L_PM1, L_PM01 },
@@ -574,7 +574,7 @@ static void init_pm_lookup(void) {
 		L_PM25, L_BLACK, L_BLACK, L_BLACK, L_PM25, L_BLACK, L_BLACK, L_BLACK }
 	};
 
-	static const UBYTE multi_to_normal[] = {
+	static UBYTE multi_to_normal[] = {
 		L_BAK,
 		L_PM0, L_PM1, L_PM0,
 		L_PM2, L_PM3, L_PM2,
@@ -888,10 +888,10 @@ static void draw_antic_0_gtia11(void)
 
 /* ANTIC modes ------------------------------------------------------------- */
 
-static const UBYTE gtia_10_lookup[] =
+static UBYTE gtia_10_lookup[] =
 {L_BAK, L_BAK, L_BAK, L_BAK, L_PF0, L_PF1, L_PF2, L_PF3,
  L_BAK, L_BAK, L_BAK, L_BAK, L_PF0, L_PF1, L_PF2, L_PF3};
-static const UBYTE gtia_10_pm[] =
+static UBYTE gtia_10_pm[] =
 {1, 2, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)

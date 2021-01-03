@@ -171,6 +171,7 @@ void dsShowScreenEmu(void) {
   videoSetMode(MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE);
   vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
   vramSetBankB(VRAM_B_MAIN_BG_0x06020000 );
+  vramSetBankD(VRAM_D_MAIN_BG_0x06040000 ); // Not using this for video but for cartridge bank swap area... it's faster!
   bg0 = bgInit(3, BgType_Bmp8, BgSize_B8_512x512, 0,0);
   bg1 = bgInit(2, BgType_Bmp8, BgSize_B8_512x512, 0,0);
 

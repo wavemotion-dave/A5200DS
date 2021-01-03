@@ -201,7 +201,9 @@ static const struct cart_t cart_table[] =
     {"c4ea4997cf906dd20ae474eebe1d2a04",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Dropzone (64k conversion).a52
     {"4e16903c352c8ed75ed9377e72ebe333",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Laser Hawk (64k conversion).a52
     {"a6ed56ea679e6279d0baca2e5cafab78",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // M.U.L.E. (64k conversion).a52
-    {"d9499b29559f8c3bf27391f0b9682ae8",    CART_5200_512,      CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Bosconian (512k conversion).a52 
+    {"d9499b29559f8c3bf27391f0b9682ae8",    CART_5200_512,      CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    220,    32,12,  0x0908},  // Bosconian (512k conversion).a52 
+    {"bb3761de48d39218744d7dbb94553528",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    256,    32,22,  0x0908},  // Time Runner.a52
+    {"150ff18392c270001f10e7934b2af546",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,19,  0x0908},  // Rally (XL Conversion).a52
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   DIGITAL,    2,   6, 220,    256,    240,    32,30,  0x0908},  // End of List
 };
 
@@ -213,6 +215,13 @@ static byte bryan_bank __attribute__((section(".dtcm"))) = 0;
 static byte last_bryan_bank __attribute__((section(".dtcm"))) = 255;
 static UWORD last_bounty_bob_bank __attribute__((section(".dtcm"))) = 65535;
 
+// ---------------------------------------------------------------------------------------------
+// VRAM!! 128k which is enough to store the Bounty Bob stuff and the 64K Megacart banks... 
+// This provides a bit of a speed boost copying to/from the main image RAM (almost 10%)
+// ---------------------------------------------------------------------------------------------
+UBYTE *banked_image = (UBYTE *) 0x06040000;  
+
+
 /* special support of Bounty Bob on Atari5200 */
 ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
 {
@@ -220,7 +229,7 @@ ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
     {
         last_bounty_bob_bank = addr;
         addr -= 0x4ff6;
-        CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
+        CopyROM(0x4000, 0x4fff,  banked_image + (addr * 0x1000));
     }
     return 0;
 }
@@ -231,7 +240,7 @@ ITCM_CODE UBYTE BountyBob2_GetByte(UWORD addr)
     {
         last_bounty_bob_bank = addr;
         addr -= 0x5ff6;
-        CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
+        CopyROM(0x5000, 0x5fff, banked_image + 0x4000 + (addr * 0x1000));
     }
     return 0;
 }
@@ -242,7 +251,7 @@ ITCM_CODE void BountyBob1_PutByte(UWORD addr, UBYTE value)
     {
         last_bounty_bob_bank = addr;
         addr -= 0x4ff6;
-        CopyROM(0x4000, 0x4fff, cart_image + addr * 0x1000);
+        CopyROM(0x4000, 0x4fff,  banked_image + (addr * 0x1000));
     }
 }
 
@@ -252,7 +261,7 @@ ITCM_CODE void BountyBob2_PutByte(UWORD addr, UBYTE value)
     {
         last_bounty_bob_bank = addr;
         addr -= 0x5ff6;
-        CopyROM(0x5000, 0x5fff, cart_image + 0x4000 + addr * 0x1000);
+        CopyROM(0x5000, 0x5fff, banked_image + 0x4000 + (addr * 0x1000));
     }
 }
 
@@ -266,7 +275,7 @@ ITCM_CODE UBYTE Bryan_GetByte64(UWORD addr)
     bryan_bank = (addr & 0x04) ? 1:0;
     if (last_bryan_bank != bryan_bank)
     {
-        CopyROM(0x4000, 0xbfff, cart_image + (0x8000 * bryan_bank));
+        CopyROM(0x4000, 0xbfff, banked_image + (0x8000 * bryan_bank));
         last_bryan_bank = bryan_bank;
     }
     return 0x00;
@@ -277,7 +286,7 @@ ITCM_CODE UBYTE Bryan_GetByte64_reset(UWORD addr)
     bryan_bank = 1;
     if (last_bryan_bank != bryan_bank)
     {
-        CopyROM(0x4000, 0xbfff, cart_image + (0x8000 * bryan_bank));
+        CopyROM(0x4000, 0xbfff, banked_image + (0x8000 * bryan_bank));
         last_bryan_bank = bryan_bank;
     }
     return 0x00;
@@ -318,7 +327,7 @@ ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
 int CART_Insert(const char *filename) {
     FILE *fp;
     int len;
-    
+   
     /* remove currently inserted cart */
     CART_Remove();
 
@@ -421,6 +430,7 @@ void CART_Start(void)
             CopyROM(0x5000, 0x5fff, cart_image + 0x4000);
             CopyROM(0x8000, 0x9fff, cart_image + 0x8000);
             CopyROM(0xa000, 0xbfff, cart_image + 0x8000);
+            for (int i=0x0000; i<0x8000; i++)  banked_image[i] = cart_image[i];
             last_bounty_bob_bank = -1;
             for (int i=0x4ff6; i<=0x4ff9; i++) readmap[i] = BountyBob1_GetByte;
             for (int i=0x5ff6; i<=0x5ff9; i++) readmap[i] = BountyBob2_GetByte;
@@ -429,6 +439,7 @@ void CART_Start(void)
             break;
         case CART_5200_64:
             bryan_bank = 1; last_bryan_bank=1;
+            for (int i=0x0000; i<=0xFFFF; i++)  banked_image[i] = cart_image[i];                
             CopyROM(0x4000, 0xbfff, cart_image + (0x8000 * bryan_bank));
             for (int i=0xbfd0; i<= 0xbfdf; i++) readmap[i] = Bryan_GetByte64;
             for (int i=0xbfe0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte64_reset;

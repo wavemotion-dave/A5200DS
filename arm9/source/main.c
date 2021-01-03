@@ -22,7 +22,8 @@ void irqVBlank(void) {
 }
 
 // Program entry point
-int main(int argc, char **argv) {
+int main(int argc, char **argv) 
+{
   // Init sound
   consoleDemoInit();
   soundEnable();
