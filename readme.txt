@@ -14,13 +14,20 @@ Features :
 
 Missing :
 ---------
-Bounty Bob Strikes Back only runs at about 48FPS... everything else is pretty good.
+Most things are playing fine on a DSi. Some of the more simple 
+games (like Missile Command, Space Invaders, Centipede) will generally
+run fine on the older DS-LITE or DS-PHAT.  Bosconian (512k supercart)
+is too slow to be playable... 
 
 Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V2.3 : 03-Jan-2020 by wavemotion-dave
+  * New and imprmoved DTCM and VRAM usage for faster moving of data around the system... 
+    this results in a 10-15% speed improvement and Bounty Bob Strikes Back is finally playable at 60FPS!
+
 V2.2 : 02-Jan-2020 by wavemotion-dave
   * Fixed launching via command line (so TWL++ integration will work now)
   * Added support for 64k Super Carts (Laswer Hawk, Dropzone, MULE, Berks4, etc)
