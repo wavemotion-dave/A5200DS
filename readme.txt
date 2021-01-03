@@ -260,6 +260,8 @@ Supported Games (with MD5SUM so you can find the right rom)
  950aa1075eaf4ee2b2c2cfcf8f6c25b4     Satans Hollow (Conv).a52
  b610a576cbf26a259da4ec5e38c33f09     Savage Pond (XL Conversion).a52
  467e72c97db63eb59011dd062c965ec9     Scramble.a52
+ 1aadd70705d84299085845989ec614ef     Sea Dragon.a52
+ bd4bb4dd468601a2241233778f328267     Sea Dragon 64.a52
  54aa9130fa0a50ab8a74ed5b9076ff81     Shamus (XL Conversion).a52
  37ec5b9d35ae681934698fea36e99aba     Shamus Case II (XL Conversion).a52
  be75afc33f5da12974900317d824f9b9     Sinistar.a52
