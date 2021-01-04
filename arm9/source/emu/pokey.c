@@ -38,12 +38,12 @@
 int pokeyBufIdx __attribute__((section(".dtcm")))= 0;
 char pokey_buffer[SNDLENGTH] __attribute__((section(".dtcm")));
 
-UBYTE KBCODE;
-UBYTE SERIN;
-UBYTE IRQST;
-UBYTE IRQEN;
-UBYTE SKSTAT;
-UBYTE SKCTLS;
+UBYTE KBCODE __attribute__((section(".dtcm")));
+UBYTE SERIN __attribute__((section(".dtcm")));
+UBYTE IRQST __attribute__((section(".dtcm")));
+UBYTE IRQEN __attribute__((section(".dtcm")));
+UBYTE SKSTAT __attribute__((section(".dtcm")));
+UBYTE SKCTLS __attribute__((section(".dtcm")));
 int DELAYED_SERIN_IRQ;
 int DELAYED_SEROUT_IRQ;
 int DELAYED_XMTDONE_IRQ;

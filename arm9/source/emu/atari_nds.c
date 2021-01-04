@@ -71,7 +71,7 @@ int Atari_Exit(int run_monitor) {
 u32 Atari_PORT(u32 num) {
 	if (num == 0)
 		return (stick1 << 4) | stick0;
-	return 0xff;
+	return (STICK_CENTRE << 4) | STICK_CENTRE;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -82,6 +82,6 @@ u32 Atari_TRIG(u32 num) {
     case 1:
       return trig1;
     default:
-      return 1;
+      return 1; // Not pressed
   }
 }

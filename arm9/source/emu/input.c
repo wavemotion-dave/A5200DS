@@ -66,34 +66,8 @@ int joy_multijoy = 0;
 #define joy_5200_center 114
 #define joy_5200_max    220
 
-int mouse_mode = MOUSE_OFF;
-int mouse_port = 0;
-int mouse_delta_x = 0;
-int mouse_delta_y = 0;
-int mouse_buttons = 0;
-int mouse_speed = 3;
-int mouse_pot_min = 1;
-int mouse_pot_max = 228;
-/* There should be UI or options for light pen/gun offsets.
-   Below are best offsets for different programs:
-   AtariGraphics: H = 0..32, V = 0 (there's calibration in the program)
-   Bug Hunt: H = 44, V = 2
-   Barnyard Blaster: H = 40, V = 0
-   Operation Blood (light gun version): H = 40, V = 4
- */
-int mouse_pen_ofs_h = 42;
-int mouse_pen_ofs_v = 2;
-int mouse_joy_inertia = 10;
-
-#ifndef MOUSE_SHIFT
-#define MOUSE_SHIFT 4
-#endif
-
 static UBYTE STICK[4], OLDSTICK[4];
 static UBYTE TRIG_input[4] = {0,0,0,0};
-
-//static int max_scanline_counter;
-//static int scanline_counter;
 
 void INPUT_Initialise(void) 
 {    
@@ -114,10 +88,8 @@ void INPUT_Frame(void)
     static int last_key_break = 0;
     static UBYTE last_stick[4] = {STICK_CENTRE, STICK_CENTRE, STICK_CENTRE, STICK_CENTRE};
 
-	//scanline_counter = 10000;	/* do nothing in INPUT_Scanline() */
-
 	/* handle keyboard */
-
+    
 	/* In Atari 5200 joystick there's a second fire button, which acts
 	   like the Shift key in 800/XL/XE (bit 3 in SKSTAT) and generates IRQ
 	   like the Break key (bit 7 in IRQST and IRQEN).
@@ -129,7 +101,6 @@ void INPUT_Frame(void)
 	   (this is simply not emulated).
 	   key_code is used for keypad keys and key_shift is used for 2nd button.
 	*/
-	//i = machine_type == MACHINE_5200 ? key_shift : (key_code == AKEY_BREAK);
     i = key_shift;
 	if (i && !last_key_break) {
 		if (IRQEN & 0x80) {
@@ -149,10 +120,36 @@ void INPUT_Frame(void)
 			press_space = 0;
 		}
 		else 
-    {
-			last_key_code = AKEY_NONE;
-		}
+        {
+            last_key_code = AKEY_NONE;
+        }
 	}
+    
+    /* The 5200 has only 4 of the 6 keyboard scan lines connected */
+    /* Pressing one 5200 key is like pressing 4 Atari 800 keys. */
+    /* The LSB (bit 0) and bit 5 are the two missing lines. */
+    /* When debounce is enabled, multiple keys pressed generate
+     * no results. */
+    /* When debounce is disabled, multiple keys pressed generate
+     * results only when in numerical sequence. */
+    /* Thus the LSB being one of the missing lines is important
+     * because that causes events to be generated. */
+    /* Two events are generated every 64 scan lines
+     * but this code only does one every frame. */
+    /* Bit 5 is different for each keypress because it is one
+     * of the missing lines. */
+    static int bit5_5200 = 0;
+    if (bit5_5200) 
+    {
+        key_code &= ~0x20;
+    }
+    bit5_5200 = !bit5_5200;
+    /* 5200 2nd fire button generates CTRL as well */
+    if (key_shift) 
+    {
+        key_code |= AKEY_SHFTCTRL;
+    }
+    
 	if (key_code >= 0) 
     {
         SKSTAT &= ~4;
@@ -168,7 +165,6 @@ void INPUT_Frame(void)
 				else {
 					/* keyboard over-run */
 					SKSTAT &= ~0x40;
-					/* assert(IRQ != 0); */
 				}
 			}
 		}
@@ -180,9 +176,10 @@ void INPUT_Frame(void)
 	STICK[0] = i & 0x0f;
 	STICK[1] = (i >> 4) & 0x0f;
 
-/*	i = Atari_PORT(1);
+    // We don't support the other two sticks, so this will result in both being in the CENTER position...
+	i = Atari_PORT(1);
 	STICK[2] = i & 0x0f;
-	STICK[3] = (i >> 4) & 0x0f;*/
+	STICK[3] = (i >> 4) & 0x0f;
 
   for (i = 0; i < 2; i++) 
   {
