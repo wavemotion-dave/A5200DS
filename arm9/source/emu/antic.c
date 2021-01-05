@@ -84,19 +84,19 @@ int break_ypos = 999;
 
 /* ANTIC Registers --------------------------------------------------------- */
 
-UBYTE DMACTL;
-UBYTE CHACTL;
-UWORD dlist;
-UBYTE HSCROL;
-UBYTE VSCROL;
-UBYTE PMBASE;
-UBYTE CHBASE;
-UBYTE NMIEN;
-UBYTE NMIST;
+UBYTE DMACTL __attribute__((section(".dtcm")));
+UBYTE CHACTL __attribute__((section(".dtcm")));
+UWORD dlist __attribute__((section(".dtcm")));
+UBYTE HSCROL __attribute__((section(".dtcm")));
+UBYTE VSCROL __attribute__((section(".dtcm")));
+UBYTE PMBASE __attribute__((section(".dtcm")));
+UBYTE CHBASE __attribute__((section(".dtcm")));
+UBYTE NMIEN __attribute__((section(".dtcm")));
+UBYTE NMIST __attribute__((section(".dtcm")));
 
 /* ANTIC Memory ------------------------------------------------------------ */
 
-UBYTE ANTIC_memory[52];
+UBYTE ANTIC_memory[52] __attribute__((section(".dtcm")));
 #define ANTIC_margin 4
 /* It's number of bytes in ANTIC_memory, which are never loaded, but may be
    read in wide playfield mode. These bytes are uninitialized, because on
@@ -108,7 +108,7 @@ UBYTE ANTIC_memory[52];
    This allows special optimisations under certain conditions.
    ------------------------------------------------------------------------ */
 
-UWORD *scrn_ptr;
+UWORD *scrn_ptr __attribute__((section(".dtcm")));
 
 
 /* ANTIC Timing --------------------------------------------------------------
@@ -270,11 +270,11 @@ unsigned int screenline_cpu_clock = 0;
 #define GOEOL GO(LINE_C); xpos -= LINE_C; screenline_cpu_clock += LINE_C; UPDATE_DMACTL ypos++
 #define OVERSCREEN_LINE	xpos += DMAR; GOEOL
 
-int xpos = 0;
-int xpos_limit;
-UBYTE wsync_halt = FALSE;
+int xpos __attribute__((section(".dtcm"))) = 0;
+int xpos_limit __attribute__((section(".dtcm")));
+UBYTE wsync_halt __attribute__((section(".dtcm")))= FALSE;
 
-int ypos;						/* Line number - lines 8..247 are on screen */
+int ypos __attribute__((section(".dtcm")));						/* Line number - lines 8..247 are on screen */
 
 /* Timing in first line of modes 2-5
 In these modes ANTIC takes more bytes than cycles. Despite this, it would be
@@ -338,7 +338,7 @@ static int blank_mask;
 
 /* A scanline of AN0 and AN1 signals as transmitted from ANTIC to GTIA.
    In every byte, bit 0 is AN0 and bit 1 is AN1 */
-static UBYTE an_scanline[ATARI_WIDTH / 2 + 8];
+static UBYTE an_scanline[ATARI_WIDTH / 2 + 8] __attribute__((section(".dtcm")));
 
 /* lookup tables */
 static UBYTE blank_lookup[256];
