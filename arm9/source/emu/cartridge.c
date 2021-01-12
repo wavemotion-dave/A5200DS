@@ -150,7 +150,7 @@ static const struct cart_t cart_table[] =
     {"d00dff571bfa57c7ff7880c3ce03b178",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,19},  // Mario Brothers (1983) (Atari).a52
     {"1cd67468d123219201702eadaffd0275",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // Meteorites (USA).a52
     {"bc33c07415b42646cc813845b979d85a",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    244,    32,20},  // Meebzork (1983) (Atari).a52
-    {"84d88bcdeffee1ab880a5575c6aca45e",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,     2,  30, 185,    1,  256,    250,    32,26},  // Millipede (USA) (Proto).a52
+    {"84d88bcdeffee1ab880a5575c6aca45e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    0,  256,    250,    32,22},  // Millipede (USA) (Proto).a52
     {"d859bff796625e980db1840f15dec4b5",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Miner 2049er Starring Bounty Bob (USA).a52
     {"69d472a79f404e49ad2278df3c8a266e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,19},  // Miniature Golf (1983) (Atari).a52
     {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,     2,   6, 220,    1,  256,    256,    32,22},  // Missile Command (USA).a52
