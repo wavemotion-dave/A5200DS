@@ -219,7 +219,7 @@ static const struct cart_t cart_table[] =
     {"a2831487ab0b0b647aa590fb2b834dd9",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,18},  // Star Wars - ROTJ - Death Star Battle (1983) (Parker Bros).a52
     {"865570ff9052c1704f673e6222192336",    CART_5200_4,        CTRL_JOY,   ANALOG,     3,   6, 220,    1,  280,    256,    36,18},  // Super Breakout (USA).a52
     {"dfcd77aec94b532728c3d1fef1da9d85",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    220,    32,10},  // Super Cobra (USA).a52
-    {"d89669f026c34de7f0da2bcb75356e27",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  235,    240,    32,21},  // Super Pac Man Final (5200).a52
+    {"d89669f026c34de7f0da2bcb75356e27",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    235,    32,21},  // Super Pac Man Final (5200).a52
     {"1569b7869bf9e46abd2c991c3b90caa6",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Superfly (XL Conversion).a52
     {"c098a0ce6c7e059264511e650ce47b35",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Tapper (XL Conversion).a52
     {"496b6a002bc7d749c02014f7ec6c303c",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,     2,   6, 220,    1,  256,    256,    32,22},  // Tempest (1983) (Atari) (Prototype) [!].a52
