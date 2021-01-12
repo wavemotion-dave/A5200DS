@@ -801,7 +801,7 @@ void dsMainLoop(void) {
               if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (iTx > 0) iTx--;
               if (iTx > 0) iTx--;
-              key_code = padKey[iTx / 21];
+              key_code = padKey[iTx / 21] + key_code;
               keys_touch = 1;
             }
             else if ((iTx>71) && (iTx<183) && (iTy>7) && (iTy<43)) {     // 72,8 -> 182,42 cartridge slot
@@ -880,8 +880,8 @@ void dsMainLoop(void) {
 
         if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
         if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
-        if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK;
-        if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH;
+        if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK + key_code;
+        if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH + key_code;
         
         static int last_keys = 99;
         if (keys_pressed != last_keys)

@@ -24,6 +24,7 @@ struct cart_t
     int  analog_speed;
     int  digital_min;
     int  digital_max;
+    int  keys_debounced;
     int  scale_x;
     int  scale_y;
     int  offset_x;

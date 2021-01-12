@@ -143,7 +143,12 @@ void INPUT_Frame(void)
     {
         key_code &= ~0x20;
     }
-    bit5_5200 = !bit5_5200;
+    
+    if (myCart.keys_debounced)
+        bit5_5200 = !bit5_5200;
+    else 
+        bit5_5200 = 0;
+    
     /* 5200 2nd fire button generates CTRL as well */
     if (key_shift) 
     {
