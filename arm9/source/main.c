@@ -10,9 +10,8 @@
 #include "a5200utils.h"
 
 extern int bg0, bg1;
-int bg2, bg3;             // BG pointers 
 int bg0s, bg1s, bg2s, bg3s;         // sub BG pointers 
-extern volatile u16 vusCptVBL;             // VBL test
+extern volatile u16 vusCptVBL;      // VBL test
 
 extern int load_os(char *filename );
 

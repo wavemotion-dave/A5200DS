@@ -28,7 +28,6 @@ struct cart_t
     int  scale_y;
     int  offset_x;
     int  offset_y;
-    unsigned short alphaBlend;
 };
 
 extern struct cart_t myCart;

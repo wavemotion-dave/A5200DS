@@ -26,10 +26,9 @@
 FICA5200 a5200romlist[1024];  
 unsigned int counta5200=0, countfiles=0, ucFicAct=0;
 int gTotalAtariFrames = 0;
-int bg0, bg1, bg0b,bg1b;
+int bg0, bg1, bg0b, bg1b, bg2, bg3;
 unsigned int etatEmu;
 
-unsigned char bufVideo[512*512];        // Video buffer
 gamecfg GameConf;                       // Game Config svg
 
 #define  cxBG (myCart.offset_x<<8)
@@ -42,9 +41,6 @@ unsigned char *filebuffer;
 
 signed char sound_buffer[SNDLENGTH];
 signed char *psound_buffer;
-
-int alpha_1 = 8;
-int alpha_2 = 8;
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
@@ -134,22 +130,19 @@ void FadeToColor(unsigned char ucSens, unsigned short ucBG, unsigned char ucScr,
 
 void vblankIntr() 
 {
-  static int sIndex = 0;
-  static const u16 jitter4[] = {
-    0x40, 0x40,		// 0.375, 0.250 
-    0x20, 0xc0,		// 0.125, 0.750
-    0x60, 0x40,		// 0.875, 0.250
-    0xa0, 0xc0,		// 0.625, 0.750
-  };
+    static int sIndex = 0;
+    static const u8 jitter[] = 
+    {
+        0x00, 0x33, 
+        0x88, 0x44
+    };
 
-  REG_BG2PA = xdxBG ; REG_BG2PB = 0; REG_BG2PC =0; REG_BG2PD = ydyBG; 
-  REG_BG3PA = xdxBG;  REG_BG3PB = 0; REG_BG3PC =0; REG_BG3PD = ydyBG; 
-  
-  REG_BG2X = cxBG+jitter4[sIndex++]; 
-  REG_BG2Y = cyBG+jitter4[sIndex++]; 
-  REG_BG3X = cxBG+jitter4[sIndex++]; 
-  REG_BG3Y = cyBG+jitter4[sIndex++]; 
-  sIndex = (sIndex & 7);
+    REG_BG2PA = xdxBG; 
+    REG_BG2PD = ydyBG; 
+
+    REG_BG2X = cxBG+jitter[sIndex++]; 
+    REG_BG2Y = cyBG+jitter[sIndex++]; 
+    sIndex = sIndex & 3;
 }
 
 void dsInitScreenMain(void) 
@@ -170,32 +163,18 @@ void dsInitTimer(void)
 
 void dsShowScreenEmu(void) {
   // Change vram
-  videoSetMode(MODE_5_2D | DISPLAY_BG2_ACTIVE | DISPLAY_BG3_ACTIVE);
+  videoSetMode(MODE_5_2D | DISPLAY_BG2_ACTIVE);
   vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
   vramSetBankB(VRAM_B_MAIN_BG_0x06020000 );
-  vramSetBankD(VRAM_D_MAIN_BG_0x06040000 ); // Not using this for video but for cartridge bank swap area... it's faster!
-  bg0 = bgInit(3, BgType_Bmp8, BgSize_B8_512x512, 0,0);
-  bg1 = bgInit(2, BgType_Bmp8, BgSize_B8_512x512, 0,0);
+  bg2 = bgInit(2, BgType_Bmp8, BgSize_B8_512x512, 0,0);
 
-  REG_BLDCNT = BLEND_ALPHA | BLEND_SRC_BG2 | BLEND_DST_BG3;
-  REG_BLDALPHA = myCart.alphaBlend;
-  alpha_1 =( myCart.alphaBlend >> 8) & 0xFF;
-  alpha_2 =( myCart.alphaBlend >> 0) & 0xFF;
-
-  //bufVideo = BG_GFX;   
   REG_BG2PB = 0;
   REG_BG2PC = 0;
-  REG_BG3PB = 0;
-  REG_BG3PC = 0;
 
   REG_BG2X = cxBG; 
   REG_BG2Y = cyBG; 
-  REG_BG3X = cxBG; 
-  REG_BG3Y = cyBG; 
   REG_BG2PA = xdxBG; 
   REG_BG2PD = ydyBG; 
-  REG_BG3PA = xdxBG; 
-  REG_BG3PD = ydyBG; 
 }
 
 void dsShowScreenMain(void) {
@@ -903,7 +882,6 @@ void dsMainLoop(void) {
         if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
         if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK;
         if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH;
-            
         
         static int last_keys = 99;
         if (keys_pressed != last_keys)
@@ -912,9 +890,15 @@ void dsMainLoop(void) {
           if (myCart.control != CTRL_ROBO)          
           {
             if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
-            //if (keys_pressed & KEY_R) alpha_1 = (alpha_1+1) & 0xF;
-            //if (keys_pressed & KEY_L) alpha_2= (alpha_2+1) & 0xF;
           }
+#if 0            
+            if (keys_pressed & KEY_R) myCart.offset_y++;
+            if (keys_pressed & KEY_L) myCart.offset_y--;
+            if (keys_pressed & KEY_X) if (myCart.scale_y <= 256) myCart.scale_y++;
+            if (keys_pressed & KEY_Y) if (myCart.scale_y >= 192) myCart.scale_y--;
+            debug[0] = myCart.offset_y;
+            debug[1] = myCart.scale_y;
+#endif            
         }
 
         break;

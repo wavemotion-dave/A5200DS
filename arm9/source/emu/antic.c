@@ -2225,7 +2225,7 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 		OVERSCREEN_LINE;
 	} while (ypos < 8);
 
-    scrn_ptr = bgGetGfxPtr(bg0); //(UWORD *) (0x06000000);
+    scrn_ptr = bgGetGfxPtr(bg2);
 	need_dl = TRUE;
 	do {
         POKEY_Scanline();		/* check and generate IRQ */

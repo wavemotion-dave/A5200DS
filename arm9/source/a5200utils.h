@@ -32,10 +32,8 @@ typedef struct {
 
 extern gamecfg GameConf;
 
-extern int bg0, bg1, bg0b,bg1b;
+extern int bg0, bg1, bg0b,bg1b, bg2, bg3;
 extern unsigned int video_height;                  // Actual video height
-//extern unsigned short *bufVideo;   // Video buffer
-extern unsigned char bufVideo[512*512]; 
 extern unsigned int gameCRC;               // crc checksum of file  
 
 extern void FadeToColor(unsigned char ucSens, unsigned short ucBG, unsigned char ucScr, unsigned char valEnd, unsigned char uWait);
