@@ -891,7 +891,7 @@ void dsMainLoop(void) {
           {
             if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
           }
-#if 0            
+#if 0
             if (keys_pressed & KEY_R) myCart.offset_y++;
             if (keys_pressed & KEY_L) myCart.offset_y--;
             if (keys_pressed & KEY_X) if (myCart.scale_y <= 256) myCart.scale_y++;
