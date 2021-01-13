@@ -2,9 +2,10 @@ a5200DS
 --------------------------------------------------------------------------------
 a5200DS is an Atari VCS 5200 console emulator.
 To use this emulator, you must use NTSC compatible roms with a52/bin format. 
-You also need the 5200.bin rom bios to use it (there is a built-in open-source
-replacement BIOS which will work for many games but doesn't have full compatibilty
-so it is still recommended you use 5200.bin). A quick search on atariage website 
+You also need the 5200.rom rom bios in the same folder as A5200DS.NDS to use 
+this emulator properly (there is a built-in open-source replacement BIOS which 
+will work for many games but doesn't have full compatibilty so it is still 
+recommended you use 5200.bin). A quick search on atariage website 
 will help you about that ;-) Do not ask me about such files, I don't have them. 
 
 Features :
