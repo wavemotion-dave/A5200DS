@@ -61,16 +61,16 @@ static const struct cart_t cart_table[] =
     {"315e0bb45f28bb227e92b8c9e00ee8eb",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    228,    32,17},  // Blaster.a52
     {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,18},  // Beamrider (USA).a52
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,25},  // BerZerk (USA).a52
-    {"322cf3f7ff6515e2f363927134146b59",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    252,    32,24},  // Berks4.a52    
+    {"322cf3f7ff6515e2f363927134146b59",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    253,    32,28},  // Berks4.a52    
     {"139229eed18032fdea735fa5360bd551",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // Beef Drop Ultimate SD Edition.a52
     {"d9499b29559f8c3bf27391f0b9682ae8",    CART_5200_512,      CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    217,    32, 8},  // Bosconian (512k conversion).a52 
     {"81790daff7f7646a6c371c056622be9c",    CART_5200_40,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    245,    32,21},  // Bounty Bob Strikes Back (Merged) (Big Five Software) (U).a52
-    {"a074a1ff0a16d1e034ee314b85fa41e9",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    1,  256,    248,    32,18},  // Buck Rogers - Planet of Zoom (USA).a52
+    {"a074a1ff0a16d1e034ee314b85fa41e9",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    1,  256,    256,    32,24},  // Buck Rogers - Planet of Zoom (USA).a52
     {"713feccd8f2722f2e9bdcab98e25a35f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Buried Bucks (XL Conversion).a52
     {"3147ad22f8d5f46b1ef40a39da3a3de1",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Captain Beeble (XL Conversion).a52
     {"79335deb06a1ef532fea8eee8012ecde",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  320,    230,    64,14},  // Capture the Flag.a52
     {"01b978c3faf5d516f300f98c00377532",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,  30, 185,    1,  256,    256,    32,15},  // Carol Shaw's River Raid (USA).a52
-    {"4965b4c8acca64c4fac39a7c0763f611",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // Castle Blast (USA) (Unl).a52
+    {"4965b4c8acca64c4fac39a7c0763f611",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Castle Blast (USA) (Unl).a52
     {"8f4c07a9e0ef2ded720b403810220aaf",    CART_5200_32,       CTRL_JOY,   ANALOG,     4,   6, 220,    1,  256,    240,    32,16},  // Castle Crisis (USA) (Unl).a52
     {"d64a175672b6dba0c0b244c949799e64",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // Caverns of Mars (Conv).a52
     {"1db260d6769bed6bf4731744213097b8",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Caverns Of Mars 2 (Conv).a52    
@@ -90,7 +90,7 @@ static const struct cart_t cart_table[] =
     {"195c23a894c7ac8631757eec661ab1e6",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Crossfire (XL Conversion).a52
     {"cd64cc0b348a634080078206e3111f9a",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Crystal Castles (Final Conversion).a52
     {"7c27d225a13e178610babf331a0759c0",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // David Crane's Pitfall II - Lost Caverns (USA).a52
-    {"27d5f32b0d46d3d80773a2b505f95046",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    1,  256,    240,    32,18},  // Defender (1982) (Atari).a52
+    {"27d5f32b0d46d3d80773a2b505f95046",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    1,  256,    256,    32,23},  // Defender (1982) (Atari).a52
     {"8e280ad05824ef4ca32700716ef8e69a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    244,    32,23},  // Deluxe Invaders.a52
     {"b4af8b555278dec6e2c2329881dc0a15",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,18},  // Demon Attack (XL Conversion).a52
     {"32b2bb28213dbb01b69e003c4b35bb57",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,18},  // Desmonds Dungeon (XL Conversion).a52
@@ -117,8 +117,8 @@ static const struct cart_t cart_table[] =
     {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    238,    32,17},  // Galaxian (1982) (Atari).a52
     {"4012282da62c0d72300294447ef6b9a2",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Gateway to Apshai (XL Conversion).a52
     {"0fdce0dd4014f3188d0ca289f53387d0",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,22},  // Gebelli (XL Conversion).a52
-    {"85fe2492e2945015000272a9fefc06e3",    CART_5200_8,        CTRL_JOY,   ANALOG,     1,   6, 220,    1,  256,    256,    32,24},  // Gorf (1982) (CBS).a52
-    {"a21c545a52d488bfdaf078d786bf4916",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Gorf Converted (1982) (CBS).a52   
+    {"85fe2492e2945015000272a9fefc06e3",    CART_5200_8,        CTRL_JOY,   ANALOG,     1,   6, 220,    1,  256,    250,    32,23},  // Gorf (1982) (CBS).a52
+    {"a21c545a52d488bfdaf078d786bf4916",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,23},  // Gorf Converted (1982) (CBS).a52   
     {"dc271e475b4766e80151f1da5b764e52",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // Gremlins (USA).a52
     {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Gyruss (USA).a52
     {"b7617ac90462ef13f8350e32b8198873",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Gyruss (Autofire Hack).a52    
@@ -182,6 +182,7 @@ static const struct cart_t cart_table[] =
     {"dd4ae6add63452aafe7d4fa752cd78ca",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Popeye (USA).a52
     {"66057fd4b37be2a45bd8c8e6aa12498d",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,25},  // Popeye Arcade Final (Hack).a52
     {"894959d9c5a88c8e1744f7fcbb930065",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    242,    32,20},  // Preppie (XL Conversion).a52
+    {"ccd35e9ea3b3c5824214d88a6d8d8f7e",    CART_5200_8,        CTRL_JOY,   ANALOG,     2,   6, 220,    1,  256,    256,    32,22},  // Pete's Diagnostics (1982) (Atari).a52
     {"ce44d14341fcc5e7e4fb7a04f77ffec9",    CART_5200_8,        CTRL_QBERT, DIGITAL,    2,   6, 220,    1,  256,    246,    32,24},  // Q-bert (USA).a52
     {"9b7d9d874a93332582f34d1420e0f574",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,22},  // QIX (USA).a52
     {"099706cedd068aced7313ffa371d7ec3",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    0,  256,    256,    32,24},  // Quest for Quintana Roo (USA).a52
