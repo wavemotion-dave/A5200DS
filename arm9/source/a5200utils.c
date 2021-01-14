@@ -151,6 +151,7 @@ void dsInitScreenMain(void)
     SetYtrigger(190); //trigger 2 lines before vsync
     irqSet(IRQ_VBLANK, vblankIntr);
     irqEnable(IRQ_VBLANK | IRQ_VCOUNT);
+    vramSetBankB(VRAM_B_MAIN_BG_0x06020000 ); // Not sure what to use this for yet... 128k
     vramSetBankD(VRAM_D_MAIN_BG_0x06040000 ); // Not using this for video but for cartridge bank swap area... it's faster!
     vramSetBankE(VRAM_E_LCD );                // Not using this for video but 64K of faster RAM always useful!  Mapped at 0x06880000
 }
@@ -165,7 +166,6 @@ void dsShowScreenEmu(void) {
   // Change vram
   videoSetMode(MODE_5_2D | DISPLAY_BG2_ACTIVE);
   vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
-  vramSetBankB(VRAM_B_MAIN_BG_0x06020000 );
   bg2 = bgInit(2, BgType_Bmp8, BgSize_B8_512x512, 0,0);
 
   REG_BG2PB = 0;

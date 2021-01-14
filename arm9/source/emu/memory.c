@@ -149,25 +149,6 @@ void MemStateRead(UBYTE SaveVerbose)
 {
 }
 
-#if 0
-void inline CopyFromMem(UWORD from, UBYTE *to, int size)
-{
-    while (--size >= 0) {
-		*to++ = memory[from]; //GetByte(from);
-		from++;
-	}
-}
-
-void inline CopyToMem(const UBYTE *from, UWORD to, int size)
-{
-	while (--size >= 0) {
-		//PutByte(to, *from);
-		memory[to++] = *from++;
-		//to++;
-	}
-}
-#endif
-
 void get_charset(UBYTE *cs)
 {
 	const UBYTE *p;

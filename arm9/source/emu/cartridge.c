@@ -203,8 +203,8 @@ static const struct cart_t cart_table[] =
     {"3748e136c451471cdf58c94b251d925f",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,25},  // Sea Chase.a52
     {"bd4bb4dd468601a2241233778f328267",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    252,    32,24},  // Sea Dragon 64.a52
     {"1aadd70705d84299085845989ec614ef",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    252,    32,24},  // Sea Dragon.a52
-    {"54aa9130fa0a50ab8a74ed5b9076ff81",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Shamus (XL Conversion).a52
-    {"37ec5b9d35ae681934698fea36e99aba",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Shamus Case II (XL Conversion).a52
+    {"54aa9130fa0a50ab8a74ed5b9076ff81",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Shamus (XL Conversion).a52
+    {"37ec5b9d35ae681934698fea36e99aba",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Shamus Case II (XL Conversion).a52
     {"be75afc33f5da12974900317d824f9b9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    252,    32,25},  // Sinistar.a52
     {"6e24e3519458c5cb95a7fd7711131f8d",    CART_5200_EE_16,    CTRL_ROBO,  DIGITAL,    2,   6, 220,    1,  256,    250,    32,20},  // Space Dungeon (USA).a52
     {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    243,    32,20},  // Space Invaders (USA).a52
@@ -352,34 +352,33 @@ ITCM_CODE UBYTE Bryan_GetByte64_reset(UWORD addr)
 // -------------------------------------------------------------
 ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
 {
-    if ((addr & 0xBFC0) == 0xBFC0)
+    if (addr >= 0xBFE0)
     {
-         if (addr >= 0xBFE0)
-         {
-             bryan_bank = 15;
-         }
-         else if (addr >= 0xBFD0)
-         {
-             bryan_bank &= 0x0C;
-             bryan_bank |= ((addr & 0x0C) >> 2);
-         }
-         else if (addr >= 0xBFC0)
-         {
-             bryan_bank &= 0x03;
-             bryan_bank |= ((addr & 0x0C));
-         }
-         if (last_bryan_bank != bryan_bank)
-         {
-            if (bryan_bank >= 12)
-            {
-                u32* dest = (u32*)(memory+0x4000);
-                u32* src = (u32*)(banked_image + (0x8000 * (bryan_bank-12)));
-                for (int i=0; i<(0x8000>>2); i++) *dest++ = *src++;
-            }
-            else
-                CopyROM(0x4000, 0xbfff, cart_image + (0x8000L * bryan_bank));
-            last_bryan_bank = bryan_bank;
-         }
+        bryan_bank = 15;
+    }
+    else if (addr >= 0xBFD0)
+    {
+        bryan_bank &= 0x0C;
+        bryan_bank |= ((addr & 0x0C) >> 2);
+    }
+    else if (addr >= 0xBFC0)
+    {
+        bryan_bank &= 0x03;
+        bryan_bank |= ((addr & 0x0C));
+    }
+    if (last_bryan_bank != bryan_bank)
+    {
+        if (bryan_bank >= 12)
+        {
+            u32* dest = (u32*)(memory+0x4000);
+            u32* src = (u32*)(banked_image + (0x8000 * (bryan_bank-12)));
+            for (int i=0; i<(0x8000>>2); i++) *dest++ = *src++;
+        }
+        else
+        {
+            CopyROM(0x4000, 0xbfff, cart_image + (0x8000L * bryan_bank));
+        }
+        last_bryan_bank = bryan_bank;
     }
     return dGetByte(addr);
 }
