@@ -183,6 +183,7 @@ static const struct cart_t cart_table[] =
     {"66057fd4b37be2a45bd8c8e6aa12498d",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,25},  // Popeye Arcade Final (Hack).a52
     {"894959d9c5a88c8e1744f7fcbb930065",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    242,    32,20},  // Preppie (XL Conversion).a52
     {"ccd35e9ea3b3c5824214d88a6d8d8f7e",    CART_5200_8,        CTRL_JOY,   ANALOG,     2,   6, 220,    1,  256,    256,    32,22},  // Pete's Diagnostics (1982) (Atari).a52
+    {"7830f985faa701bdec47a023b5953cfe",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    0,  256,    256,    32,24},  // Pool (XL Conversion).a52    
     {"ce44d14341fcc5e7e4fb7a04f77ffec9",    CART_5200_8,        CTRL_QBERT, DIGITAL,    2,   6, 220,    1,  256,    246,    32,24},  // Q-bert (USA).a52
     {"9b7d9d874a93332582f34d1420e0f574",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,22},  // QIX (USA).a52
     {"099706cedd068aced7313ffa371d7ec3",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    0,  256,    256,    32,24},  // Quest for Quintana Roo (USA).a52
@@ -240,10 +241,6 @@ static const struct cart_t cart_table[] =
     {"77beee345b4647563e20fd896231bd47",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    246,    32,23},  // Zenji (USA).a52
     {"dc45af8b0996cb6a94188b0be3be2e17",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Zone Ranger (USA).a52
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,30},  // End of List
-    
-//a45cfbfe35f41a6237ead7b4a5301d94  /media/dsb/TWIMENU/roms/new/munchy.bin
-//7830f985faa701bdec47a023b5953cfe  /media/dsb/TWIMENU/roms/new/pool.bin
-//c3fc21b6fa55c0473b8347d0e2d2bee0  /media/dsb/TWIMENU/roms/new/Pooyan.bin
 };
 
 
@@ -255,6 +252,7 @@ static byte cart_image_fixed_buffer[CART_MAX_SIZE] __attribute__ ((aligned (4)))
 static byte bryan_bank __attribute__((section(".dtcm"))) = 0;
 static byte last_bryan_bank __attribute__((section(".dtcm"))) = 255;
 static UWORD last_bounty_bob_bank __attribute__((section(".dtcm"))) = 65535;
+UWORD bosconian_bank __attribute__((section(".dtcm"))) = 0x0000;
 
 // ---------------------------------------------------------------------------------------------
 // VRAM!! 128k which is enough to store the Bounty Bob stuff and the 64K Megacart banks... 
@@ -350,6 +348,8 @@ ITCM_CODE UBYTE Bryan_GetByte64_reset(UWORD addr)
 // Access to $BFD0-BFDF changes lower two bank bits by A2-A3.
 // Access to $BFC0-BFCF changes upper two bank bits by A2-A3.
 // -------------------------------------------------------------
+#ifdef BUILD_BOSCONIAN
+UBYTE *bank_ptr = 0;
 ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
 {
     if (addr >= 0xBFE0)
@@ -361,7 +361,27 @@ ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
         bryan_bank &= 0x0C;
         bryan_bank |= ((addr & 0x0C) >> 2);
     }
-    else if (addr >= 0xBFC0)
+    else
+    {
+        bryan_bank &= 0x03;
+        bryan_bank |= ((addr & 0x0C));
+    }
+    bank_ptr = cart_image + ((bryan_bank * 0x8000) - 0x4000);
+    return dGetByte(addr);
+}
+#else
+ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
+{
+    if (addr >= 0xBFE0)
+    {
+        bryan_bank = 15;
+    }
+    else if (addr >= 0xBFD0)
+    {
+        bryan_bank &= 0x0C;
+        bryan_bank |= ((addr & 0x0C) >> 2);
+    }
+    else // if (addr >= 0xBFC0)
     {
         bryan_bank &= 0x03;
         bryan_bank |= ((addr & 0x0C));
@@ -382,6 +402,7 @@ ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
     }
     return dGetByte(addr);
 }
+#endif
 
 int CART_Insert(const char *filename) {
     FILE *fp;
@@ -447,19 +468,25 @@ int CART_Insert(const char *filename) {
     return CART_BAD_FORMAT;
 }
 
-void CART_Remove(void) {
+void CART_Remove(void) 
+{
+    extern unsigned char pokey_buffer[];
+    extern unsigned char sound_buffer[];
     myCart.type = CART_NONE;
     cart_image = NULL;
-    CART_Start();
+    dFillMem(0x0000, 0, 0xC000);    
+    memset(pokey_buffer, 0x00, SNDLENGTH);
+    memset(sound_buffer, 0x00, SNDLENGTH);        
+    SetROM(0x4000, 0xbfff);     /* Set the entire 32k back to normal ROM */
+    bosconian_bank = 0;
 }
 
 void CART_Start(void) 
 {
     if (machine_type == MACHINE_5200) 
     {        
-        SetROM(0x4ff6, 0x4ff9);     /* disable Bounty Bob bank switching */
-        SetROM(0x5ff6, 0x5ff9);     /* disable Bounty Bob bank switching */
-        SetROM(0xbfc0, 0xbfff);     /* disable 64K/512K bank switching */
+        SetROM(0x4000, 0xbfff);     /* Set the entire 32k back to normal ROM */
+        bosconian_bank = 0;
         
         switch (myCart.type) 
         {
@@ -508,6 +535,10 @@ void CART_Start(void)
             for (int i=0x0000; i<0x40000; i++)  banked_image[i] = cart_image[i+(0x8000*12)]; // We can copy the first (last!) 4 banks into faster ram... it helps...
             CopyROM(0x4000, 0xbfff, cart_image + (0x8000L * (long)bryan_bank));
             for (int i=0xbfc0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte512;
+#ifdef BUILD_BOSCONIAN                
+            bank_ptr = cart_image + ((bryan_bank * 0x8000) - 0x4000);
+            bosconian_bank = 0x4000;
+#endif                
             break;
         default:
             /* clear cartridge area so the 5200 will crash */

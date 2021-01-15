@@ -148,13 +148,3 @@ void MemStateSave(UBYTE SaveVerbose)
 void MemStateRead(UBYTE SaveVerbose) 
 {
 }
-
-void get_charset(UBYTE *cs)
-{
-	const UBYTE *p;
-    p = memory + 0xf800;
-	/* copy font, but change screencode order to ATASCII order */
-	memcpy(cs, p + 0x200, 0x100); /* control chars */
-	memcpy(cs + 0x100, p, 0x200); /* !"#$..., uppercase letters */
-	memcpy(cs + 0x300, p + 0x300, 0x100); /* lowercase letters */
-}

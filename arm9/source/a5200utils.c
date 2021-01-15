@@ -39,8 +39,8 @@ gamecfg GameConf;                       // Game Config svg
 unsigned int atari_pal16[256] = {0};
 unsigned char *filebuffer;
 
-signed char sound_buffer[SNDLENGTH];
-signed char *psound_buffer;
+unsigned char sound_buffer[SNDLENGTH];
+unsigned char *psound_buffer;
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};

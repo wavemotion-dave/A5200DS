@@ -12,7 +12,7 @@
 //#define DIRTYRECT
 #define NODIRTYCOMPARE
 
-//#define PAGED_MEM
+//#define BUILD_BOSCONIAN 1
 
 #define PAGED_ATTRIB 1
 

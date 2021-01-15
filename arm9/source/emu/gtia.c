@@ -21,18 +21,23 @@
  * along with Atari800; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
+#include <nds.h>
 #include "config.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
+#include "atari.h"
 #include "antic.h"
 #include "cassette.h"
 #include "gtia.h"
-#ifndef BASIC
 #include "input.h"
 #include "statesav.h"
-#endif
 #include "pokeysnd.h"
+
+#ifdef BUILD_BOSCONIAN 
+#undef ITCM_CODE
+#define ITCM_CODE
+#endif
 
 extern int debug[];
 
@@ -170,7 +175,7 @@ extern UWORD hires_lookup_l[128];
 extern ULONG lookup_gtia9[16];
 extern ULONG lookup_gtia11[16];
 
-void setup_gtia9_11(void) {
+ITCM_CODE void setup_gtia9_11(void) {
     int i;
     ULONG count9 = 0;
     ULONG count11 = 0;
@@ -184,7 +189,8 @@ void setup_gtia9_11(void) {
 
 /* Initialization ---------------------------------------------------------- */
 
-void GTIA_Initialise(void) {
+ITCM_CODE void GTIA_Initialise(void) 
+{
 #if !defined(BASIC) && !defined(CURSES_BASIC)
     int i;
     for (i = 0; i < 256; i++) {
@@ -219,7 +225,7 @@ void GTIA_Initialise(void) {
 /* Prepare PMG scanline ---------------------------------------------------- */
 
 
-void new_pm_scanline(void)
+ITCM_CODE void new_pm_scanline(void)
 {
 /* Clear if necessary */
     if (pm_dirty) {
@@ -296,7 +302,7 @@ void new_pm_scanline(void)
 
 /* GTIA registers ---------------------------------------------------------- */
 
-void GTIA_Frame(void) 
+ITCM_CODE void GTIA_Frame(void) 
 {
     int consol = key_consol | 0x08;
 
@@ -311,7 +317,7 @@ void GTIA_Frame(void)
     }
 }
 
-UBYTE GTIA_GetByte(UWORD addr)
+ITCM_CODE UBYTE GTIA_GetByte(UWORD addr)
 {
     switch (addr & 0x1f) {
     case _M0PF:
@@ -412,9 +418,8 @@ UBYTE GTIA_GetByte(UWORD addr)
     return 0xf;
 }
 
-//zzzz - Optimize this!!
 #define UPDATE_PM_CYCLE_EXACT {}
-void GTIA_PutByte(UWORD addr, UBYTE byte)
+ITCM_CODE void GTIA_PutByte(UWORD addr, UBYTE byte)
 {
     UWORD cword;
     UWORD cword2;
