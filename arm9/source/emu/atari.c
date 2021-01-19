@@ -77,13 +77,11 @@
 #include "sio.h"
 #include "util.h"
 #if !defined(BASIC) && !defined(CURSES_BASIC)
-//#include "colours.h"
 #include "screen.h"
 #endif
 #ifndef BASIC
 #include "statesav.h"
 #ifndef __PLUS
-//#include "ui.h"
 #endif
 #endif /* BASIC */
 #if defined(SOUND) && !defined(__PLUS)
@@ -108,11 +106,7 @@
 
 #include "global.h"
 
-//JGDATARI_t ATARI;
-
 int machine_type = MACHINE_5200;
-//int ram_size = 64;
-int ram_size = 16;
 int tv_mode = TV_NTSC;
 int disable_basic = TRUE;
 int enable_sio_patch = TRUE;

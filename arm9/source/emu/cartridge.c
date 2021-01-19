@@ -64,6 +64,7 @@ static const struct cart_t cart_table[] =
     {"322cf3f7ff6515e2f363927134146b59",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    253,    32,28},  // Berks4.a52    
     {"139229eed18032fdea735fa5360bd551",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // Beef Drop Ultimate SD Edition.a52
     {"d9499b29559f8c3bf27391f0b9682ae8",    CART_5200_512,      CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    217,    32, 8},  // Bosconian (512k conversion).a52 
+    {"cea3ea765d3626be01ed9b290c9a9bd0",    CART_5200_512,      CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    217,    32, 8},  // Bosconian 1.5f (512k conversion).a52     
     {"81790daff7f7646a6c371c056622be9c",    CART_5200_40,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    245,    32,21},  // Bounty Bob Strikes Back (Merged) (Big Five Software) (U).a52
     {"a074a1ff0a16d1e034ee314b85fa41e9",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    1,  256,    256,    32,24},  // Buck Rogers - Planet of Zoom (USA).a52
     {"713feccd8f2722f2e9bdcab98e25a35f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Buried Bucks (XL Conversion).a52

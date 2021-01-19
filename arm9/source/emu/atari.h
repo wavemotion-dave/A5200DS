@@ -12,7 +12,7 @@
 //#define DIRTYRECT
 #define NODIRTYCOMPARE
 
-//#define BUILD_BOSCONIAN 1
+#define BUILD_BOSCONIAN 1     // Enable this to produce a build that will run fast bankswitching at the expense of 10% slowdown in memory fetches. Renders games like Bosconian fully playable.
 
 #define PAGED_ATTRIB 1
 
@@ -36,13 +36,8 @@
 #define SLONG signed int
 #define UBYTE unsigned char
 #define UWORD unsigned short
-#ifndef WIN32
-/* Windows headers typedef ULONG */
 #define ULONG unsigned int
-#endif
-/* Note: in various parts of the emulator we assume that char is 1 byte
-   and int is 4 bytes. */
-
+/* Note: in various parts of the emulator we assume that char is 1 byte and int is 4 bytes. */
 
 /* Public interface ------------------------------------------------------ */
 
@@ -60,10 +55,7 @@ extern int machine_type;
    The only valid value for MACHINE_5200 is 16. */
 #define RAM_320_RAMBO       320
 #define RAM_320_COMPY_SHOP  321
-extern int ram_size;
 
-/* Always call Atari800_InitialiseMachine() after changing machine_type
-   or ram_size! */
 
 /* Video system. */
 #define TV_PAL 312
