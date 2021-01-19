@@ -18,7 +18,7 @@ Missing :
 Most things are playing fine on a DSi. Some of the more simple 
 games (like Missile Command, Space Invaders, Centipede) will generally
 run fine on the older DS-LITE or DS-PHAT.  Bosconian (512k supercart)
-is too slow to be playable... 
+is too slow to be playable... or is it?
 
 Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
