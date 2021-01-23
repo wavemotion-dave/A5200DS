@@ -53,8 +53,6 @@ extern int debug[];
 #define LCHOP 3			/* do not build lefmost 0..3 characters in wide mode */
 #define RCHOP 3			/* do not build rightmost 0..3 characters in wide mode */
 
-int break_ypos = 999;
-
 #define WRITE_VIDEO(ptr, val)       (*(ptr) = val)
 #define WRITE_VIDEO_LONG(ptr, val)  (*(ptr) = val)
 #define WRITE_VIDEO_BYTE(ptr, val)  (*(ptr) = val)
@@ -257,7 +255,7 @@ These are all cases:
 #define SCR_C	28
 #define VSCOF_C	112
 
-unsigned int screenline_cpu_clock = 0;
+unsigned int screenline_cpu_clock __attribute__((section(".dtcm"))) = 0;
 
 #define UPDATE_DMACTL
 
@@ -290,18 +288,16 @@ contains difference between bytes taken and cycles taken plus before_cycles. */
 
 static UBYTE PENH;
 static UBYTE PENV;
-UBYTE PENH_input = 0x00;
-UBYTE PENV_input = 0xff;
 
 /* Internal ANTIC registers ------------------------------------------------ */
 
-static UWORD screenaddr;		/* Screen Pointer */
-static UBYTE IR;				/* Instruction Register */
-static UBYTE anticmode;			/* Antic mode */
-static UBYTE dctr;				/* Delta Counter */
-static UBYTE lastline;			/* dctr limit */
-static UBYTE need_dl;			/* boolean: fetch DL next line */
-static UBYTE vscrol_off;		/* boolean: displaying line ending VSC */
+static UWORD screenaddr __attribute__((section(".dtcm")));		/* Screen Pointer */
+static UBYTE IR __attribute__((section(".dtcm")));				/* Instruction Register */
+static UBYTE anticmode __attribute__((section(".dtcm")));			/* Antic mode */
+static UBYTE dctr __attribute__((section(".dtcm")));				/* Delta Counter */
+static UBYTE lastline __attribute__((section(".dtcm")));			/* dctr limit */
+static UBYTE need_dl __attribute__((section(".dtcm")));			/* boolean: fetch DL next line */
+static UBYTE vscrol_off __attribute__((section(".dtcm")));		/* boolean: displaying line ending VSC */
 
 /* Pre-computed values for improved performance ---------------------------- */
 
@@ -311,30 +307,30 @@ static UBYTE vscrol_off;		/* boolean: displaying line ending VSC */
 #define SCROLL0 3				/* modes 2,3,4,5,0xd,0xe,0xf with HSC */
 #define SCROLL1 4				/* modes 6,7,0xa,0xb,0xc with HSC */
 #define SCROLL2 5				/* modes 8,9 with HSC */
-static int md;					/* current mode NORMAL0..SCROLL2 */
+static int md __attribute__((section(".dtcm")));					/* current mode NORMAL0..SCROLL2 */
 /* tables for modes NORMAL0..SCROLL2 */
-static int chars_read[6];
-static int chars_displayed[6];
-static int x_min[6];
-static int ch_offset[6];
-static int load_cycles[6];
-static int font_cycles[6];
-static int before_cycles[6];
-static int extra_cycles[6];
+static int chars_read[6] __attribute__((section(".dtcm")));
+static int chars_displayed[6] __attribute__((section(".dtcm")));
+static int x_min[6] __attribute__((section(".dtcm")));
+static int ch_offset[6] __attribute__((section(".dtcm")));
+static int load_cycles[6] __attribute__((section(".dtcm")));
+static int font_cycles[6] __attribute__((section(".dtcm")));
+static int before_cycles[6] __attribute__((section(".dtcm")));
+static int extra_cycles[6] __attribute__((section(".dtcm")));
 
 /* border parameters for current display width */
-static int left_border_chars;
-static int right_border_start;
+static int left_border_chars __attribute__((section(".dtcm")));
+static int right_border_start __attribute__((section(".dtcm")));
 
 #define LBORDER_START (LCHOP * 4)
 #define RBORDER_END ((48 - RCHOP) * 4)
 
 /* set with CHBASE *and* CHACTL - bits 0..2 set if flip on */
-static UWORD chbase_20;			/* CHBASE for 20 character mode */
+static UWORD chbase_20 __attribute__((section(".dtcm")));			/* CHBASE for 20 character mode */
 
 /* set with CHACTL */
-static UBYTE invert_mask;
-static int blank_mask;
+static UBYTE invert_mask __attribute__((section(".dtcm")));
+static int blank_mask __attribute__((section(".dtcm")));
 
 /* A scanline of AN0 and AN1 signals as transmitted from ANTIC to GTIA.
    In every byte, bit 0 is AN0 and bit 1 is AN1 */
@@ -489,16 +485,16 @@ UWORD hires_lookup_l[128] __attribute__((section(".dtcm")));	/* accessed in gtia
 #define PF3PM (*(UBYTE *) &cl_lookup[C_PF3 | C_COLLS])
 #define PF_COLLS(x) (((UBYTE *) &cl_lookup)[(x) + L_COLLS])
 
-static UBYTE singleline;
-UBYTE player_dma_enabled;
-UBYTE player_gra_enabled;
-UBYTE missile_dma_enabled;
-UBYTE missile_gra_enabled;
-UBYTE player_flickering;
-UBYTE missile_flickering;
+static UBYTE singleline __attribute__((section(".dtcm")));
+UBYTE player_dma_enabled __attribute__((section(".dtcm")));
+UBYTE player_gra_enabled __attribute__((section(".dtcm")));
+UBYTE missile_dma_enabled __attribute__((section(".dtcm")));
+UBYTE missile_gra_enabled __attribute__((section(".dtcm")));
+UBYTE player_flickering __attribute__((section(".dtcm")));
+UBYTE missile_flickering __attribute__((section(".dtcm")));
 
-static UWORD pmbase_s;
-static UWORD pmbase_d;
+static UWORD pmbase_s __attribute__((section(".dtcm")));
+static UWORD pmbase_d __attribute__((section(".dtcm")));
 
 extern UBYTE pm_scanline[ATARI_WIDTH / 2 + 8] __attribute__((section(".dtcm")));
 extern UBYTE pm_dirty __attribute__((section(".dtcm")));
@@ -506,7 +502,7 @@ extern UBYTE pm_dirty __attribute__((section(".dtcm")));
 /* PMG lookup tables */
 UBYTE pm_lookup_table[20][256] __attribute__((section(".dtcm")));
 /* current PMG lookup table */
-static const UBYTE *pm_lookup_ptr;
+static const UBYTE *pm_lookup_ptr __attribute__((section(".dtcm")));
 
 #define PL_00	0	/* 0x00,0x01,0x02,0x03,0x04,0x06,0x08,0x09,0x0a,0x0b */
 #define PL_05	1	/* 0x05,0x07,0x0c,0x0d,0x0e,0x0f */
@@ -603,7 +599,7 @@ static void init_pm_lookup(void) {
 	}
 }
 
-static const UBYTE hold_missiles_tab[16] = {
+UBYTE hold_missiles_tab[16] __attribute__((section(".dtcm"))) = {
 	0x00,0x03,0x0c,0x0f,0x30,0x33,0x3c,0x3f,
 	0xc0,0xc3,0xcc,0xcf,0xf0,0xf3,0xfc,0xff};
 
@@ -666,7 +662,7 @@ static void pmg_dma(void) {
 
 /* Artifacting ------------------------------------------------------------ */
 
-int global_artif_mode;
+int global_artif_mode __attribute__((section(".dtcm")));
 
 static ULONG art_lookup_normal[256];
 static ULONG art_lookup_reverse[256];
@@ -888,10 +884,10 @@ static void draw_antic_0_gtia11(void)
 
 /* ANTIC modes ------------------------------------------------------------- */
 
-static UBYTE gtia_10_lookup[] =
+static UBYTE gtia_10_lookup[] __attribute__((section(".dtcm"))) =
 {L_BAK, L_BAK, L_BAK, L_BAK, L_PF0, L_PF1, L_PF2, L_PF3,
  L_BAK, L_BAK, L_BAK, L_BAK, L_PF0, L_PF1, L_PF2, L_PF3};
-static UBYTE gtia_10_pm[] =
+static UBYTE gtia_10_pm[] __attribute__((section(".dtcm"))) =
 {1, 2, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
@@ -2160,7 +2156,7 @@ inline UWORD ANTIC_GetDLWord(UWORD *paddr)
 
 /* Real ANTIC doesn't fetch beginning bytes in HSC
    nor screen+47 in wide playfield. This function does. */
-static void ANTIC_load(void)
+ITCM_CODE static void ANTIC_load(void)
 {
 #ifdef PAGED_MEM
 	UBYTE *ANTIC_memptr = ANTIC_memory + ANTIC_margin;
@@ -2200,17 +2196,17 @@ static void ANTIC_load(void)
 #endif
 }
 
+UBYTE mode_type[32] __attribute__((section(".dtcm"))) = {
+    NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL1, NORMAL1,
+    NORMAL2, NORMAL2, NORMAL1, NORMAL1, NORMAL1, NORMAL0, NORMAL0, NORMAL0,
+    SCROLL0, SCROLL0, SCROLL0, SCROLL0, SCROLL0, SCROLL0, SCROLL1, SCROLL1,
+    SCROLL2, SCROLL2, SCROLL1, SCROLL1, SCROLL1, SCROLL0, SCROLL0, SCROLL0
+};
+UBYTE normal_lastline[16] __attribute__((section(".dtcm"))) = { 0, 0, 7, 9, 7, 15, 7, 15, 7, 3, 3, 1, 0, 1, 0, 0 };
+
 /* This function emulates one frame drawing screen at atari_screen */
 ITCM_CODE void ANTIC_Frame(int draw_display) 
 {
-	static const UBYTE mode_type[32] = {
-		NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL0, NORMAL1, NORMAL1,
-		NORMAL2, NORMAL2, NORMAL1, NORMAL1, NORMAL1, NORMAL0, NORMAL0, NORMAL0,
-		SCROLL0, SCROLL0, SCROLL0, SCROLL0, SCROLL0, SCROLL0, SCROLL1, SCROLL1,
-		SCROLL2, SCROLL2, SCROLL1, SCROLL1, SCROLL1, SCROLL0, SCROLL0, SCROLL0
-	};
-	static const UBYTE normal_lastline[16] =
-		{ 0, 0, 7, 9, 7, 15, 7, 15, 7, 3, 3, 1, 0, 1, 0, 0 };
 	UBYTE vscrol_flag = FALSE;
 	UBYTE no_jvb = TRUE;
 	UBYTE need_load;
@@ -2439,7 +2435,7 @@ ITCM_CODE UBYTE ANTIC_Get_NMIST(UWORD addr)
 }
 
 // In theory not used anymore... as valid address combos should map into above functions for slight speed improvement...
-UBYTE ANTIC_GetByte(UWORD addr)
+ITCM_CODE UBYTE ANTIC_GetByte(UWORD addr)
 {
 	switch (addr & 0xf) 
     {

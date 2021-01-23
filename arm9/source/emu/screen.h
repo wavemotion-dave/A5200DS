@@ -3,11 +3,6 @@
 
 #include "atari.h"  /* UBYTE */
 
-#ifdef DIRTYRECT
-#ifndef CLIENTUPDATE
-extern UBYTE *screen_dirty;
-#endif
-#endif
 void entire_screen_dirty(void);
 
 extern UWORD *atari_screen;

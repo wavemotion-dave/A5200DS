@@ -48,6 +48,7 @@ static const struct cart_t cart_table[] =
     {"45f8841269313736489180c8ec3e9588",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,18},  // Activision Decathlon, The (USA).a52
     {"4b1aecab0e2f9c90e514cb0a506e3a5f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    252,    32,22},  // Adventure II-a.a52
     {"e2f6085028eb8cf24ad7b50ca4ef640f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    252,    32,22},  // Adventure II-b.a52
+    {"b48dd725b5d024ef0a5a797fb5acefc6",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Alien Swarm (XL Conversion).a52
     {"9e6d04dc20cbd6d3cdb722e420dea203",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,17},  // ANALOG Multicart (XL Conversion).a52
     {"737717ff4f8402ed5b02e4bf866bbbe3",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,17},  // ANALOG Multicart V2 (XL Conversion).a52
     {"77c6b647746bb1413c5566378ef25eec",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,24},  // Archon (XL Conversion).a52
@@ -58,7 +59,9 @@ static const struct cart_t cart_table[] =
     {"96b424d0bb0339f4edfe8095fe275d62",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    242,    32,26},  // Batty Builders (XL Conversion).a52
     {"8123393ae9635f6bc15ddc3380b04328",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,24},  // Blueprint (1982) (CBS).a52    
     {"17e5c03b4fcada48d4c2529afcfe3a70",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // BCs Quest For Tires (XL Conversion).a52
+    {"96ec5b299b203c88f98100b57af6838d",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    238,    32,24},  // Biscuits From Hell.bin
     {"315e0bb45f28bb227e92b8c9e00ee8eb",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    228,    32,17},  // Blaster.a52
+    {"992f62ccfda4c92ef113af1dd96d8f55",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,24},  // BlowSub.a52    
     {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,18},  // Beamrider (USA).a52
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,25},  // BerZerk (USA).a52
     {"322cf3f7ff6515e2f363927134146b59",    CART_5200_64,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    253,    32,28},  // Berks4.a52    
@@ -90,6 +93,7 @@ static const struct cart_t cart_table[] =
     {"4c034f3db0489726abd401550a402c32",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,19},  // COSMI (XL Conversion).a52
     {"195c23a894c7ac8631757eec661ab1e6",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Crossfire (XL Conversion).a52
     {"cd64cc0b348a634080078206e3111f9a",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Crystal Castles (Final Conversion).a52
+    {"c24be906c9d79f4eab391fd583332a4c",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Curse of the Lost Miner.a52
     {"7c27d225a13e178610babf331a0759c0",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // David Crane's Pitfall II - Lost Caverns (USA).a52
     {"27d5f32b0d46d3d80773a2b505f95046",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,  30, 185,    1,  256,    256,    32,23},  // Defender (1982) (Atari).a52
     {"8e280ad05824ef4ca32700716ef8e69a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    244,    32,23},  // Deluxe Invaders.a52
@@ -111,10 +115,13 @@ static const struct cart_t cart_table[] =
     {"5789a45479d9769d4662a15f349d83ed",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  15, 200,    1,  256,    256,    32,24},  // Fairy Force (homebrew).a52
     {"4b6c878758f4d4de7f9650296db76d2e",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,26},  // Fast Eddie (XL Conversion).a52
     {"5cf2837752ef8dfa3a6962a28fc0077b",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,26},  // Falcon (XL Conversion).a52
+    {"6b58f0f3175a2d6796c35afafe6b245d",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    244,    32,21},  // Floyd The Droid (XL Conversion).a52
     {"14bd9a0423eafc3090333af916cfbce6",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,25},  // Frisky Tom (USA) (Proto).a52
+    {"c717ebc92233d206f262d15258e3184d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,25},  // Frisky Tom (USA) (Hack).a52
     {"05a086fe4cc3ad16d39c3bc45eb9c26f",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,26},  // Fort Apocalypse (XL Conversion).a52
     {"2c89c9444f99fd7ac83f88278e6772c6",    CART_5200_8,        CTRL_FROG,  DIGITAL,    2,   6, 220,    1,  256,    239,    32,16},  // Frogger (1983) (Parker Bros).a52
     {"d8636222c993ca71ca0904c8d89c4411",    CART_5200_EE_16,    CTRL_FROG,  DIGITAL,    2,   6, 220,    1,  256,    230,    32,14},  // Frogger II - Threeedeep! (USA).a52
+    {"98113c00a7c82c83ee893d8e9352aa7a",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    238,    32,15},  // Galactic_Chase.a52
     {"3ace7c591a88af22bac0c559bbb08f03",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    238,    32,17},  // Galaxian (1982) (Atari).a52
     {"4012282da62c0d72300294447ef6b9a2",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Gateway to Apshai (XL Conversion).a52
     {"0fdce0dd4014f3188d0ca289f53387d0",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,22},  // Gebelli (XL Conversion).a52
@@ -124,6 +131,7 @@ static const struct cart_t cart_table[] =
     {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Gyruss (USA).a52
     {"b7617ac90462ef13f8350e32b8198873",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Gyruss (Autofire Hack).a52    
     {"f8f0e0a6dc2ffee41b2a2dd736cba4cd",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // H.E.R.O. (USA).a52
+    {"0f6407d83115a78a182f323e5ef76384",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Heavy Metal.a52
     {"d824f6ee24f8bc412468268395a76159",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Ixion (XL Conversion).a52
     {"936db7c08e6b4b902c585a529cb15fc5",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,20},  // James Bond 007 (USA).a52
     {"082846d3a43aab4672fe98252eb1b6f9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Jawbreaker (XL Conversion).a52
@@ -230,6 +238,7 @@ static const struct cart_t cart_table[] =
     {"bb3761de48d39218744d7dbb94553528",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Time Runner (XL Conversion).a52
     {"3f4d175927f891642e5c9f8a197c7d89",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Time Runner 32k (BIOS Patched).a52
     {"bf4f25d64b364dd53fbd63562ea1bcda",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Turmoil (XL Conversion).a52
+    {"ae76668cf509a13872ccd874ac47206b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Tutankahman.a52
     {"3649bfd2008161b9825f386dbaff88da",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    0,  256,    240,    32,19},  // Up'n Down (XL Conversion).a52
     {"556a66d6737f0f793821e702547bc051",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Vanguard (USA).a52
     {"560b68b7f83077444a57ebe9f932905a",    CART_5200_NS_16,    CTRL_SWAP,  DIGITAL,    2,   6, 220,    1,  256,    256,    32,18},  // Wizard of Wor (USA).a52
@@ -350,7 +359,7 @@ ITCM_CODE UBYTE Bryan_GetByte64_reset(UWORD addr)
 // Access to $BFC0-BFCF changes upper two bank bits by A2-A3.
 // -------------------------------------------------------------
 #ifdef BUILD_BOSCONIAN
-UBYTE *bank_ptr = 0;
+UBYTE *bank_ptr __attribute__((section(".dtcm"))) = 0;
 ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
 {
     if (addr >= 0xBFE0)

@@ -39,8 +39,6 @@
 #define ITCM_CODE
 #endif
 
-extern int debug[];
-
 /* GTIA Registers ---------------------------------------------------------- */
 
 UBYTE M0PL   __attribute__((section(".dtcm"))); 
@@ -97,10 +95,10 @@ void set_prior(UBYTE byte);         /* in antic.c */
 /* Player/Missile stuff ---------------------------------------------------- */
 
 /* change to 0x00 to disable collisions */
-UBYTE collisions_mask_missile_playfield = 0x0f;
-UBYTE collisions_mask_player_playfield = 0x0f;
-UBYTE collisions_mask_missile_player = 0x0f;
-UBYTE collisions_mask_player_player = 0x0f;
+UBYTE collisions_mask_missile_playfield __attribute__((section(".dtcm")))= 0x0f;
+UBYTE collisions_mask_player_playfield __attribute__((section(".dtcm")))= 0x0f;
+UBYTE collisions_mask_missile_player __attribute__((section(".dtcm")))= 0x0f;
+UBYTE collisions_mask_player_player __attribute__((section(".dtcm")))= 0x0f;
 
 #define P1PL_T P1PL
 #define P2PL_T P2PL
@@ -110,7 +108,7 @@ UBYTE collisions_mask_player_player = 0x0f;
 #define M2PL_T M2PL
 #define M3PL_T M3PL
 
-extern UBYTE player_dma_enabled;
+extern UBYTE player_dma_enabled ;
 extern UBYTE missile_dma_enabled;
 extern UBYTE player_gra_enabled;
 extern UBYTE missile_gra_enabled;
@@ -121,11 +119,11 @@ static UBYTE *hposp_ptr[4] __attribute__((section(".dtcm")));
 static UBYTE *hposm_ptr[4] __attribute__((section(".dtcm")));
 static ULONG hposp_mask[4] __attribute__((section(".dtcm")));
 
-static ULONG grafp_lookup[4][256];
-static ULONG *grafp_ptr[4];
-static int global_sizem[4];
+static ULONG *grafp_ptr[4] __attribute__((section(".dtcm")));
+static int global_sizem[4] __attribute__((section(".dtcm")));
+static UBYTE PM_Width[4] __attribute__((section(".dtcm"))) = {1, 2, 1, 4};
 
-static const UBYTE PM_Width[4] = {1, 2, 1, 4};
+static ULONG grafp_lookup[4][256];
 
 /* Meaning of bits in pm_scanline:
 bit 0 - Player 0

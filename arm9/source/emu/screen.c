@@ -43,7 +43,3 @@
 
 UWORD *atari_screen = (UWORD *) (0x06000000);
 
-#ifdef DIRTYRECT
-UBYTE *screen_dirty = NULL;
-#endif
-

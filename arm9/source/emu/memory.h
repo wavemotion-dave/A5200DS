@@ -17,7 +17,7 @@ extern wrfunc writemap[65536];
     extern UWORD bosconian_bank;
     inline UBYTE mem_fetch(UWORD addr)
     {
-        return ((((addr>>1) ^ (addr)) & bosconian_bank)  ? bank_ptr[addr] : memory[addr]);
+        return ((bosconian_bank & ((addr>>1) ^ (addr)))  ? bank_ptr[addr] : memory[addr]);
     }
     #define dGetByte(x)				(mem_fetch(x))
 #else // Normal Build

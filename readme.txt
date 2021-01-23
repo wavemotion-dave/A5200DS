@@ -25,6 +25,10 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V2.6 : 23-Jan-2020 by wavemotion-dave
+  * Squeezed another 2% speedup across the board from memory tweaks. 
+  * Added a few more XL conversions to the compatibility list. 
+
 V2.5 : 12-Jan-2020 by wavemotion-dave
   * Hundreds of small pixel tweaks to get all games looking as good as possible.
 

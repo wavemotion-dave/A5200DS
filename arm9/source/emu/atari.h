@@ -9,7 +9,6 @@
 
 /* Fundamental declarations ---------------------------------------------- */
 
-//#define DIRTYRECT
 #define NODIRTYCOMPARE
 
 //#define BUILD_BOSCONIAN 1     // Enable this to produce a build that will run fast bankswitching at the expense of 10% slowdown in memory fetches. Renders games like Bosconian fully playable.
