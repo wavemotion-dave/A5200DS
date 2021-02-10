@@ -53,6 +53,7 @@ static const struct cart_t cart_table[] =
     {"737717ff4f8402ed5b02e4bf866bbbe3",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,17},  // ANALOG Multicart V2 (XL Conversion).a52
     {"77c6b647746bb1413c5566378ef25eec",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,24},  // Archon (XL Conversion).a52
     {"bae7c1e5eb04e19ef8d0d0b5ce134332",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // Astro Chase (USA).a52
+    {"10cdf2bbb058bb4cc518fd25031f427d",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,18},  // Astro Grover (XL Conversion).a52
     {"d31a3bbb4c99f539f0d2c4e02bec516e",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,19},  // Atlantis (XL Conversion).a52
     {"ec65389cc604b279d69a889725c723e7",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,20},  // Attack of the Mutant Camels (XL Conversion).a52
     {"f5cd178cbea0ae7d8cf65b30cfd04225",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,  30, 185,    1,  256,    256,    32,16},  // Ballblazer (USA).a52
@@ -132,6 +133,7 @@ static const struct cart_t cart_table[] =
     {"b7617ac90462ef13f8350e32b8198873",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Gyruss (Autofire Hack).a52    
     {"f8f0e0a6dc2ffee41b2a2dd736cba4cd",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // H.E.R.O. (USA).a52
     {"0f6407d83115a78a182f323e5ef76384",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Heavy Metal.a52
+    {"0c25803c9175487afce0c9d636133dc1",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    224,    32,13},  // Hyperblast! (XL Conversion).a52
     {"d824f6ee24f8bc412468268395a76159",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Ixion (XL Conversion).a52
     {"936db7c08e6b4b902c585a529cb15fc5",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,20},  // James Bond 007 (USA).a52
     {"082846d3a43aab4672fe98252eb1b6f9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Jawbreaker (XL Conversion).a52
@@ -163,6 +165,7 @@ static const struct cart_t cart_table[] =
     {"d859bff796625e980db1840f15dec4b5",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Miner 2049er Starring Bounty Bob (USA).a52
     {"69d472a79f404e49ad2278df3c8a266e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    0,  256,    240,    32,19},  // Miniature Golf (1983) (Atari).a52
     {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,     2,   6, 220,    1,  256,    256,    32,22},  // Missile Command (USA).a52
+    {"3090673bd3f8c04a92e391bf5540b88b",    CART_5200_32,       CTRL_JOY,   ANALOG,     2,   6, 220,    1,  256,    256,    32,24},  // MC+final.a52
     {"694897cc0d98fcf2f59eef788881f67d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    244,    32,24},  // Montezuma's Revenge featuring Panama Joe (USA).a52
     {"296e5a3a9efd4f89531e9cf0259c903d",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Moon Patrol (USA).a52
     {"2d8e6aa095bf2aee75406ade8b035a50",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,24},  // Moon Patrol Sprite Hack (USA).a52    
@@ -179,7 +182,7 @@ static const struct cart_t cart_table[] =
     {"f1a4d62d9ba965335fa13354a6264623",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,25},  // Pac-Man (USA).a52
     {"e24490c20bf79c933e50c11a89018960",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,25},  // Pac-Man (Fixed Munch V2).a52
     {"43e9af8d8c648515de46b9f4bcd024d7",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    232,    32,14},  // Pacific Coast Hwy (XL Conversion).a52
-    {"57c5b010ec9b5f6313e691bdda94e185",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,19},  // Pastfinder (XL Conversion).a52
+    {"57c5b010ec9b5f6313e691bdda94e185",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    0,  256,    240,    32,19},  // Pastfinder (XL Conversion).a52
     {"a301a449fc20ad345b04932d3ca3ef54",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,24},  // Pengo (USA).a52
     {"b9e727eaef3463d5979ec06fc5bd5048",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Pinhead.a52
     {"ecbd6dd2ab105dd43f98476966bbf26c",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,25},  // Pitfall! (USA).a52 (use classics fix instead)
@@ -206,7 +209,9 @@ static const struct cart_t cart_table[] =
     {"7e683e571cbe7c77f76a1648f906b932",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,16},  // RealSports Tennis (USA).a52
     {"0dc44c5bf0829649b7fec37cb0a8186b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    250,    32,20},  // Rescue on Fractalus! (USA).a52
     {"ddf7834a420f1eaae20a7a6255f80a99",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    220,    32,10},  // Road Runner (USA) (Proto).a52
+    {"86b358c9bca97c2089b929e3b2751908",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Rockball 5200.a52
     {"5dba5b478b7da9fd2c617e41fb5ccd31",    CART_5200_NS_16,    CTRL_ROBO,  DIGITAL,    2,   6, 220,    1,  256,    240,    32,18},  // Robotron 2084 (USA).a52
+    {"b8cbc918cf2bc81f941719b874f13fcb",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    246,    32,24},  // Runner5200.a52
     {"950aa1075eaf4ee2b2c2cfcf8f6c25b4",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    230,    32,16},  // Satans Hollow (Conv).a52
     {"b610a576cbf26a259da4ec5e38c33f09",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Savage Pond (XL Conversion).a52
     {"467e72c97db63eb59011dd062c965ec9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    236,    32,16},  // Scramble.a52
@@ -216,6 +221,7 @@ static const struct cart_t cart_table[] =
     {"54aa9130fa0a50ab8a74ed5b9076ff81",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Shamus (XL Conversion).a52
     {"37ec5b9d35ae681934698fea36e99aba",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Shamus Case II (XL Conversion).a52
     {"be75afc33f5da12974900317d824f9b9",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    252,    32,25},  // Sinistar.a52
+    {"6151575ffb5ceddd26173f709336776b",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,23},  // Slime (XL Conversion).a52
     {"6e24e3519458c5cb95a7fd7711131f8d",    CART_5200_EE_16,    CTRL_ROBO,  DIGITAL,    2,   6, 220,    1,  256,    250,    32,20},  // Space Dungeon (USA).a52
     {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    243,    32,20},  // Space Invaders (USA).a52
     {"802a11dfcba6229cc2f93f0f3aaeb3aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    248,    32,20},  // Space Shuttle - A Journey Into Space (USA).a52
@@ -223,7 +229,8 @@ static const struct cart_t cart_table[] =
     {"cd1c3f732c3432c4a642732182b1ea30",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    244,    32,20},  // Spitfire (1984) (Atari) (Prototype).a52
     {"6208110dc3c0bf7b15b33246f2971b6e",    CART_5200_32,       CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    240,    32,16},  // Spy Hunter (XL Conversion).a52
     {"8378e0f92e9365a6ad42efc9b973724a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    256,    32,22},  // Star Island.a52
-    {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,     3,   6, 220,    0,  256,    250,    32,25},  // Star Raiders (USA).a52
+    {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    3,  30, 185,    0,  256,    250,    32,25},  // Star Raiders (USA).a52
+    {"0fe34d98a055312aba9ea3cb82d3ee2a",    CART_5200_32,       CTRL_JOY,   ANALOG,     3,   6, 220,    0,  256,    250,    32,25},  // Star Raiders 5200(shield2-02)(32K).a52
     {"feacc7a44f9e92d245b2cb2485b48bb6",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,     2,   6, 220,    1,  256,    256,    32,24},  // Star Rider.a52
     {"c959b65be720a03b5479650a3af5a511",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,    2,   6, 220,    1,  256,    244,    32,12},  // Star Trek - Strategic Operations Simulator (USA).a52
     {"00beaa8405c7fb90d86be5bb1b01ea66",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,     2,   6, 220,    1,  256,    250,    32,24},  // Star Wars - The Arcade Game (USA).a52

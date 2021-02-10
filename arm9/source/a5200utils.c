@@ -28,6 +28,8 @@ unsigned int counta5200=0, countfiles=0, ucFicAct=0;
 int gTotalAtariFrames = 0;
 int bg0, bg1, bg0b, bg1b, bg2, bg3;
 unsigned int etatEmu;
+int atari_frames=0;        
+int frame_skip = TRUE;
 
 gamecfg GameConf;                       // Game Config svg
 
@@ -162,7 +164,8 @@ void dsInitTimer(void)
     TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024; 
 }
 
-void dsShowScreenEmu(void) {
+void dsShowScreenEmu(void) 
+{
   // Change vram
   videoSetMode(MODE_5_2D | DISPLAY_BG2_ACTIVE);
   vramSetBankA(VRAM_A_MAIN_BG_0x06000000);
@@ -293,13 +296,14 @@ int load_os(char *filename )
  	return 0;
 } /* end load_os */
 
-void dsLoadGame(char *filename) {
+void dsLoadGame(char *filename) 
+{
   unsigned int index;
   
   // Free buffer if needed
-  TIMER2_CR=0; irqDisable(IRQ_TIMER2); 
-	if (filebuffer != 0)
-		free(filebuffer);
+    TIMER2_CR=0; irqDisable(IRQ_TIMER2); 
+    if (filebuffer != 0)
+        free(filebuffer);
 
     // load card game if ok
     if (Atari800_OpenFile(filename, true, 1, true) != AFILE_ERROR) 
@@ -324,6 +328,11 @@ void dsLoadGame(char *filename) {
       TIMER2_DATA = TIMER_FREQ(SOUND_FREQ);                        
       TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;	     
       irqSet(IRQ_TIMER2, VsoundHandler);                           
+        
+      TIMER0_CR=0;
+      TIMER0_DATA=0;
+      TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
+      atari_frames=0;        
     }
     else dsPrintValue(0,2,0, "UNABLE TO FIND GAME!!");
 }
@@ -435,7 +444,8 @@ void dsDisplayFiles(unsigned int NoDebGame,u32 ucSel) {
   }
 }
 
-unsigned int dsWaitForRom(void) {
+unsigned int dsWaitForRom(void) 
+{
   bool bDone=false, bRet=false;
   u32 ucHaut=0x00, ucBas=0x00,ucSHaut=0x00, ucSBas=0x00,romSelected= 0, firstRomDisplay=0,nbRomPerPage, uNbRSPage, uLenFic=0,ucFlip=0, ucFlop=0;
   char szName[64];
@@ -719,21 +729,27 @@ void dsMainLoop(void) {
         break;
         
       case A5200_PLAYGAME:
-        // 65535 = 1 frame
-        // 1 frame = 1/50 ou 1/60 (0.02 or 0.016)
-        // 656 -> 50 fps et 546 -> 60 fps
+
+        // 32,728.5 ticks = 1 second
+        // 1 frame = 1/50 or 1/60 (0.02 or 0.016)
+        // 655 -> 50 fps and 546 -> 60 fps
         if (!full_speed)
         {
-          while(TIMER0_DATA < 546)
-              ;
+            while(TIMER0_DATA < (546*atari_frames))
+                ;
         }
-        TIMER0_CR=0;
-        TIMER0_DATA=0;
-        TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
 
         // Execute one frame
-        Atari800_Frame(1);
-        
+        Atari800_Frame();
+            
+        if (++atari_frames == 60)
+        {
+            TIMER0_CR=0;
+            TIMER0_DATA=0;
+            TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
+            atari_frames=0;
+        }            
+
         // -------------------------------------------------------------
         // Stuff to do once/second such as FPS display and Debug Data
         // -------------------------------------------------------------
@@ -880,25 +896,28 @@ void dsMainLoop(void) {
 
         if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
         if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
-        if (keys_pressed & KEY_R) key_code = AKEY_5200_ASTERISK + key_code;
-        if (keys_pressed & KEY_L) key_code = AKEY_5200_HASH + key_code;
-        
+
+        if (gTotalAtariFrames & 1)  // Every other frame...
+        {
+            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_UP))   myCart.offset_y++;
+            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_DOWN)) myCart.offset_y--;
+            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_LEFT))  myCart.offset_x++;
+            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_RIGHT)) myCart.offset_x--;
+
+            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_UP))   if (myCart.scale_y <= 256) myCart.scale_y++;
+            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_DOWN)) if (myCart.scale_y >= 192) myCart.scale_y--;
+            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_RIGHT))  if (myCart.scale_x <= 320) myCart.scale_x++;
+            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_LEFT)) if (myCart.scale_x >= 192) myCart.scale_x--;
+        }            
+            
         static int last_keys = 99;
         if (keys_pressed != last_keys)
         {
-          last_keys = keys_pressed;
-          if (myCart.control != CTRL_ROBO)          
-          {
-            if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
-          }
-#if 0
-            if (keys_pressed & KEY_R) myCart.offset_y++;
-            if (keys_pressed & KEY_L) myCart.offset_y--;
-            if (keys_pressed & KEY_X) if (myCart.scale_y <= 256) myCart.scale_y++;
-            if (keys_pressed & KEY_Y) if (myCart.scale_y >= 192) myCart.scale_y--;
-            debug[0] = myCart.offset_y;
-            debug[1] = myCart.scale_y;
-#endif            
+            last_keys = keys_pressed;
+            if (myCart.control != CTRL_ROBO)          
+            {
+                if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
+            }
         }
 
         break;
@@ -912,11 +931,10 @@ int a52Filescmp (const void *c1, const void *c2) {
   FICA5200 *p1 = (FICA5200 *) c1;
   FICA5200 *p2 = (FICA5200 *) c2;
   
-  return strcmp (p1->filename, p2->filename);
+  return strcasecmp (p1->filename, p2->filename);
 }
 
 void a52FindFiles(void) {
-	struct stat statbuf;
   DIR *pdir;
   struct dirent *pent;
   char filenametmp[255];
@@ -927,11 +945,11 @@ void a52FindFiles(void) {
 
   if (pdir) {
 
-    while (((pent=readdir(pdir))!=NULL)) {
-      stat(pent->d_name,&statbuf);
-
+    while (((pent=readdir(pdir))!=NULL)) 
+    {
       strcpy(filenametmp,pent->d_name);
-      if(S_ISDIR(statbuf.st_mode)) {
+      if (pent->d_type == DT_DIR)
+      {
         if (!( (filenametmp[0] == '.') && (strlen(filenametmp) == 1))) {
           a5200romlist[counta5200].directory = true;
           strcpy(a5200romlist[counta5200].filename,filenametmp);

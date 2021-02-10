@@ -430,14 +430,15 @@ int Atari800_Exit(int run_monitor) {
 	return restart;
 }
 
-void Atari800_Frame(unsigned int refresh_rate) 
+extern int gTotalAtariFrames;
+extern int frame_skip;
+void Atari800_Frame(void)
 {
 	INPUT_Frame();
 	GTIA_Frame();
-    ANTIC_Frame(TRUE);
+    ANTIC_Frame((frame_skip ? (gTotalAtariFrames&3) : TRUE));
     POKEY_Frame();
     
-    extern int gTotalAtariFrames;
     gTotalAtariFrames++;
 }
 

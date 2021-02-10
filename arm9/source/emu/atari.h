@@ -131,8 +131,7 @@ extern int enable_sio_patch;
 int Atari800_Initialise(void);
 
 /* Emulates one frame (1/50sec for PAL, 1/60sec for NTSC). */
-//void Atari800_Frame(void);
-void Atari800_Frame(unsigned int refresh_rate);
+void Atari800_Frame(void);
 
 /* Reboots the emulated Atari. */
 void Coldstart(void);

@@ -20,14 +20,17 @@ void irqVBlank(void) {
   vusCptVBL++;
 }
 
+extern int frame_skip;
 // Program entry point
 int main(int argc, char **argv) 
 {
+  char *bios_filename = "5200.rom";
   // Init sound
   consoleDemoInit();
   soundEnable();
   lcdMainOnTop();
 
+  frame_skip = (isDSiMode() ? FALSE:TRUE);   // For older DS models, we skip frames to get full speed...
   // Init Fat
 	if (!fatInitDefault()) {
 		iprintf("Unable to initialize libfat!\n");
@@ -35,16 +38,20 @@ int main(int argc, char **argv)
 	}
 
   // Init Timer
-	dsInitTimer();
+  dsInitTimer();
   dsInstallSoundEmuFIFO();
   
+  if (keysCurrent() & KEY_R)
+  {
+       bios_filename = "XYZZY.~01"; // Won't be found... Altria bios instead...
+  }
   // Intro and main screen
   intro_logo();  
   dsInitScreenMain();
   etatEmu = A5200_MENUINIT;
 
   // 
-  if (!load_os("5200.rom")) 
+  if (!load_os(bios_filename)) 
   {
       //load rom file via args if a rom path is supplied
       if(argc > 1) 
