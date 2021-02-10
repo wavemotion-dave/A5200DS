@@ -25,6 +25,11 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V2.7 : 10-Feb-2020 by wavemotion-dave
+  * Improved FPS timing. 
+  * Added screen scaling (using L/R Shoulder Buttons) from XEGS
+  * Added Frame Skip for DS-LITE/PHAT to gain speed!
+
 V2.6 : 23-Jan-2020 by wavemotion-dave
   * Squeezed another 2% speedup across the board from memory tweaks. 
   * Added a few more XL conversions to the compatibility list. 
