@@ -416,7 +416,7 @@ void dsDisplayFiles(unsigned int NoDebGame,u32 ucSel) {
   unsigned short dmaVal = *(bgGetMapPtr(bg1b) +31*32);
   dmaFillWords(dmaVal | (dmaVal<<16),(void*) (bgGetMapPtr(bg1b)),32*24*2);
   countfiles ? sprintf(szName,"%04d/%04d GAMES",(int)(1+ucSel+NoDebGame),countfiles) : sprintf(szName,"%04d/%04d FOLDERS",(int)(1+ucSel+NoDebGame),counta5200);
-  dsPrintValue(16-strlen(szName)/2,3,0,szName);
+  dsPrintValue(23-strlen(szName)/2,1,0,szName);
   dsPrintValue(31,5,0,(char *) (NoDebGame>0 ? "<" : " "));
   dsPrintValue(31,22,0,(char *) (NoDebGame+14<counta5200 ? ">" : " "));
   sprintf(szName,"%s","A TO SELECT A GAME, B TO GO BACK");
@@ -430,9 +430,9 @@ void dsDisplayFiles(unsigned int NoDebGame,u32 ucSel) {
       if (maxLen>29) szName[29]='\0';
       if (a5200romlist[ucGame].directory) 
       {
-        a5200romlist[ucGame].filename[29] = 0;
-        sprintf(szName,"[%s]",a5200romlist[ucGame].filename);
-        sprintf(szName2,"%-29s",szName);
+        char szName3[36];
+        sprintf(szName3,"[%s]",szName);
+        sprintf(szName2,"%-29s",szName3);
         dsPrintValue(0,5+ucBcl,(ucSel == ucBcl ? 1 :  0),szName2);
       }
       else 
@@ -930,7 +930,14 @@ void dsMainLoop(void) {
 int a52Filescmp (const void *c1, const void *c2) {
   FICA5200 *p1 = (FICA5200 *) c1;
   FICA5200 *p2 = (FICA5200 *) c2;
-  
+  if (p1->filename[0] == '.' && p2->filename[0] != '.')
+      return -1;
+  if (p2->filename[0] == '.' && p1->filename[0] != '.')
+      return 1;
+  if (p1->directory && !(p2->directory))
+      return -1;
+  if (p2->directory && !(p1->directory))
+      return 1;
   return strcasecmp (p1->filename, p2->filename);
 }
 
