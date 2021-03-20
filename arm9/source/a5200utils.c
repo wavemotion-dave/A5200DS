@@ -369,7 +369,7 @@ bool dsWaitOnQuit(void) {
   dmaFillWords(dmaVal | (dmaVal<<16),(void*) bgGetMapPtr(bg1b),32*24*2);
   
   strcpy(szName,"Quit A5200DS ?");
-  dsPrintValue(17,2,0,szName);
+  dsPrintValue(4,2,0,szName);
   sprintf(szName,"%s","A TO CONFIRM, B TO GO BACK");
   dsPrintValue(16-strlen(szName)/2,23,0,szName);
       
