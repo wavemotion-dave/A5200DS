@@ -416,7 +416,7 @@ void dsDisplayFiles(unsigned int NoDebGame,u32 ucSel) {
   unsigned short dmaVal = *(bgGetMapPtr(bg1b) +31*32);
   dmaFillWords(dmaVal | (dmaVal<<16),(void*) (bgGetMapPtr(bg1b)),32*24*2);
   countfiles ? sprintf(szName,"%04d/%04d GAMES",(int)(1+ucSel+NoDebGame),countfiles) : sprintf(szName,"%04d/%04d FOLDERS",(int)(1+ucSel+NoDebGame),counta5200);
-  dsPrintValue(23-strlen(szName)/2,1,0,szName);
+  dsPrintValue(2,1,0,szName);
   dsPrintValue(31,5,0,(char *) (NoDebGame>0 ? "<" : " "));
   dsPrintValue(31,22,0,(char *) (NoDebGame+14<counta5200 ? ">" : " "));
   sprintf(szName,"%s","A TO SELECT A GAME, B TO GO BACK");
@@ -981,5 +981,13 @@ void a52FindFiles(void) {
     closedir(pdir);
   }
   if (counta5200)
+  {
     qsort (a5200romlist, counta5200, sizeof (FICA5200), a52Filescmp);
+  }
+  else  // Failsafe... always provide a back directory...
+  {
+    a5200romlist[counta5200].directory = true;
+    strcpy(a5200romlist[counta5200].filename,"..");
+    counta5200 = 1;
+  }
 }

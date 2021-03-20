@@ -25,27 +25,31 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
-V2.7 : 10-Feb-2020 by wavemotion-dave
+V2.8 : 20-Mar-2021 by wavemotion-dave
+  * A fresh coat of paint for the logo and file selection.
+  * A few minor bugs fixed and cleanup as time permitted.
+
+V2.7 : 10-Feb-2021 by wavemotion-dave
   * Improved FPS timing. 
   * Added screen scaling (using L/R Shoulder Buttons) from XEGS
   * Added Frame Skip for DS-LITE/PHAT to gain speed!
 
-V2.6 : 23-Jan-2020 by wavemotion-dave
+V2.6 : 23-Jan-2021 by wavemotion-dave
   * Squeezed another 2% speedup across the board from memory tweaks. 
   * Added a few more XL conversions to the compatibility list. 
 
-V2.5 : 12-Jan-2020 by wavemotion-dave
+V2.5 : 12-Jan-2021 by wavemotion-dave
   * Hundreds of small pixel tweaks to get all games looking as good as possible.
 
-V2.4 : 09-Jan-2020 by wavemotion-dave
+V2.4 : 09-Jan-2021 by wavemotion-dave
   * More XL Conversions added to the comatibility table.
   * More speed tweaks especially in bank switching rendering virtually all games playable at full speed.
 
-V2.3 : 03-Jan-2020 by wavemotion-dave
+V2.3 : 03-Jan-2021 by wavemotion-dave
   * New and imprmoved DTCM and VRAM usage for faster moving of data around the system... 
     this results in a 10-15% speed improvement and Bounty Bob Strikes Back is finally playable at 60FPS!
 
-V2.2 : 02-Jan-2020 by wavemotion-dave
+V2.2 : 02-Jan-2021 by wavemotion-dave
   * Fixed launching via command line (so TWL++ integration will work now)
   * Added support for 64k Super Carts (Laswer Hawk, Dropzone, MULE, Berks4, etc)
   * Added support for 512k Super Carts (Bosconian... though it runs really slowly)
