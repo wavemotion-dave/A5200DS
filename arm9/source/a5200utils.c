@@ -12,6 +12,7 @@
 #include "atari.h"
 #include "global.h"
 #include "cartridge.h"
+#include "highscore.h"
 #include "input.h"
 #include "emu/pia.h"
 
@@ -19,7 +20,6 @@
 #include "bgBottom.h"
 #include "bgTop.h"
 #include "bgFileSel.h"
-#include "bgCardSel.h"
 
 #include "altirra_5200_os.h"
 
@@ -32,6 +32,8 @@ int atari_frames=0;
 int frame_skip = TRUE;
 
 gamecfg GameConf;                       // Game Config svg
+
+int lcd_swap_counter = 0;
 
 #define  cxBG (myCart.offset_x<<8)
 #define  cyBG (myCart.offset_y<<8)
@@ -100,6 +102,15 @@ void VsoundHandler(void)
   }
   sound_buffer[sound_idx] = lastSample;
   sound_idx = (sound_idx+1) & (SNDLENGTH-1);
+}
+
+void restore_bottom_screen(void)
+{
+  decompress(bgBottomTiles, bgGetGfxPtr(bg0b), LZ77Vram);
+  decompress(bgBottomMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
+  dmaCopy((void *) bgBottomPal,(u16*) BG_PALETTE_SUB,256*2);
+  unsigned short dmaVal = *(bgGetMapPtr(bg1b) +31*32);
+  dmaFillWords(dmaVal | (dmaVal<<16),(void*) bgGetMapPtr(bg1b),32*24*2);
 }
 
 // Color fading effect
@@ -541,6 +552,7 @@ unsigned int dsWaitForRom(void)
         if (firstRomDisplay>nbRomPerPage) { firstRomDisplay -= nbRomPerPage; }
         else { firstRomDisplay = 0; }
         if (ucFicAct == 0) romSelected = 0;
+        if (romSelected > ucFicAct) romSelected = ucFicAct;
         ucSHaut=0x01;
         dsDisplayFiles(firstRomDisplay,romSelected);
       }
@@ -603,12 +615,7 @@ unsigned int dsWaitForRom(void)
     swiWaitForVBlank();
   }
   
-  decompress(bgBottomTiles, bgGetGfxPtr(bg0b), LZ77Vram);
-  decompress(bgBottomMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
-  dmaCopy((void *) bgBottomPal,(u16*) BG_PALETTE_SUB,256*2);
-  dmaVal = *(bgGetMapPtr(bg1b) +31*32);
-  dmaFillWords(dmaVal | (dmaVal<<16),(void*) bgGetMapPtr(bg1b),32*24*2);
-  
+  restore_bottom_screen();  
   return bRet;
 }
 
@@ -759,6 +766,7 @@ void dsMainLoop(void) {
             TIMER1_DATA = 0;
             TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;
         
+            if (!full_speed && (gTotalAtariFrames > 60)) gTotalAtariFrames--;   // We tend to overshoot... 
             if (showFps) { siprintf(fpsbuf,"%03d",gTotalAtariFrames); dsPrintValue(0,0,0, fpsbuf); } // Show FPS
             DumpDebugData();
             gTotalAtariFrames = 0;
@@ -782,7 +790,7 @@ void dsMainLoop(void) {
             touchRead(&touch);
             iTx = touch.px;
             iTy = touch.py;
-            if ((iTx>206) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
+            if ((iTx>211) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
               irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
@@ -796,17 +804,21 @@ void dsMainLoop(void) {
                    keys_touch = 1;
                }
             }
-            else if ((iTx>120) && (iTx<160) && (iTy>112) && (iTy<130))  { //pause
+            else if ((iTx>160) && (iTx<200) && (iTy>112) && (iTy<130))  { //highscore
+              highscore_display();
+              restore_bottom_screen();
+            }
+            else if ((iTx>115) && (iTx<150) && (iTy>112) && (iTy<130))  { //pause
               if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_PAUSE + key_code;
               keys_touch = 1;
             }
-            else if ((iTx>65) && (iTx<108) && (iTy>112) && (iTy<130))  { //reset
+            else if ((iTx>64) && (iTx<105) && (iTy>112) && (iTy<130))  { //reset
               if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_RESET + key_code;
               keys_touch = 1;
             }
-            else if ((iTx>10) && (iTx<50) && (iTy>112) && (iTy<130))  { //start
+            else if ((iTx>8) && (iTx<54) && (iTy>112) && (iTy<130))  { //start
               if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_START + key_code;
               keys_touch = 1;
@@ -820,7 +832,7 @@ void dsMainLoop(void) {
               key_code = padKey[iTx / 21] + key_code;
               keys_touch = 1;
             }
-            else if ((iTx>71) && (iTx<183) && (iTy>7) && (iTy<43)) {     // 72,8 -> 182,42 cartridge slot
+            else if ((iTx>70) && (iTx<185) && (iTy>7) && (iTy<50)) {     // 72,8 -> 182,42 cartridge slot
               irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
               // Find files in current directory and show it 
               a52FindFiles();
@@ -908,6 +920,14 @@ void dsMainLoop(void) {
             if ((keys_pressed & KEY_L) && (keys_pressed & KEY_DOWN)) if (myCart.scale_y >= 192) myCart.scale_y--;
             if ((keys_pressed & KEY_L) && (keys_pressed & KEY_RIGHT))  if (myCart.scale_x <= 320) myCart.scale_x++;
             if ((keys_pressed & KEY_L) && (keys_pressed & KEY_LEFT)) if (myCart.scale_x >= 192) myCart.scale_x--;
+            
+            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_L))
+            {
+                if (++lcd_swap_counter == 15)
+                {
+                    if (keys_pressed & KEY_A)   {lcdSwap();}
+                }
+            } else lcd_swap_counter = 0;
         }            
             
         static int last_keys = 99;

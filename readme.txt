@@ -25,6 +25,10 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V2.9 : 22-July-2021 by wavemotion-dave
+  * High Score support added!
+  * Added swap LCD functionality with L+R+A (hold for 1 sec)
+
 V2.8 : 20-Mar-2021 by wavemotion-dave
   * A fresh coat of paint for the logo and file selection.
   * A few minor bugs fixed and cleanup as time permitted.
@@ -138,6 +142,8 @@ Controls :
  * L      : # button (often changes game selection)
  * START  : START button
  * SELECT : Pause button
+ * L/R + UP/DN used for scaling
+ * L+R+A hold for 1 sec - swap LCD screens
  
  Use stylus on buttons for other actions on bottom screen.
 

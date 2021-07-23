@@ -8,6 +8,7 @@
 #include "intro.h"
 #include "atari.h"
 #include "a5200utils.h"
+#include "highscore.h"
 
 extern int bg0, bg1;
 int bg0s, bg1s, bg2s, bg3s;         // sub BG pointers 
@@ -40,6 +41,7 @@ int main(int argc, char **argv)
   // Init Timer
   dsInitTimer();
   dsInstallSoundEmuFIFO();
+  highscore_init();
   
   if (keysCurrent() & KEY_R)
   {
