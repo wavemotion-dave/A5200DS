@@ -278,7 +278,7 @@ UWORD bosconian_bank __attribute__((section(".dtcm"))) = 0x0000;
 UBYTE *banked_image = (UBYTE *) 0x06040000;  
 
 /* special support of Bounty Bob on Atari5200 */
-ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
+UBYTE BountyBob1_GetByte(UWORD addr)
 {
     if (addr != last_bounty_bob_bank)
     {
@@ -292,7 +292,7 @@ ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
     return 0;
 }
 
-ITCM_CODE UBYTE BountyBob2_GetByte(UWORD addr)
+UBYTE BountyBob2_GetByte(UWORD addr)
 {
     if (addr != last_bounty_bob_bank)
     {
@@ -305,7 +305,7 @@ ITCM_CODE UBYTE BountyBob2_GetByte(UWORD addr)
     return 0;
 }
 
-ITCM_CODE void BountyBob1_PutByte(UWORD addr, UBYTE value)
+void BountyBob1_PutByte(UWORD addr, UBYTE value)
 {
     if (addr != last_bounty_bob_bank)
     {
@@ -317,7 +317,7 @@ ITCM_CODE void BountyBob1_PutByte(UWORD addr, UBYTE value)
     }
 }
 
-ITCM_CODE void BountyBob2_PutByte(UWORD addr, UBYTE value)
+void BountyBob2_PutByte(UWORD addr, UBYTE value)
 {
     if (addr != last_bounty_bob_bank)
     {
