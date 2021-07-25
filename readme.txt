@@ -25,6 +25,9 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V3.0 : xxx
+  * Bosconian Build enabled by default!
+
 V2.9 : 22-July-2021 by wavemotion-dave
   * High Score support added!
   * Added swap LCD functionality with L+R+A (hold for 1 sec)

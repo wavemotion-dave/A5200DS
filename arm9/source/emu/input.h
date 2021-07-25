@@ -1,6 +1,15 @@
 #ifndef _A5200_INPUT_H_
 #define _A5200_INPUT_H_
 
+// Analog Speed Values...
+#define ANA_SLOWEST 0
+#define ANA_SLOWER  1
+#define ANA_NORMAL  2
+#define ANA_FAST    3
+#define ANA_FASTER  4
+#define ANA_FASTEST 5
+
+
 /* key_code values */
 #define AKEY_NONE -1
 

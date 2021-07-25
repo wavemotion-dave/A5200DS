@@ -81,14 +81,27 @@ void INPUT_Initialise(void)
 
 extern int trig0, trig1;
 
+UBYTE anlaog_speed_map[6][2] =
+{
+    {1,1},   
+    {1,2},   
+    {2,2},   
+    {2,3},   
+    {3,3},
+    {3,4}
+};
+
 void INPUT_Frame(void) 
 {
+    static int input_frame=0;
     int i;
     static int last_key_code = AKEY_NONE;
     static int last_key_break = 0;
     static UBYTE last_stick[4] = {STICK_CENTRE, STICK_CENTRE, STICK_CENTRE, STICK_CENTRE};
 
 	/* handle keyboard */
+    
+    input_frame++;
     
 	/* In Atari 5200 joystick there's a second fire button, which acts
 	   like the Shift key in 800/XL/XE (bit 3 in SKSTAT) and generates IRQ
@@ -214,30 +227,35 @@ void INPUT_Frame(void)
 	// handle analog joysticks in Atari 5200 
 	for (i = 0; i < 2; i++)
     {
-      if ((STICK[i] & (STICK_CENTRE ^ STICK_LEFT)) == 0) {	
-        if (myCart.use_analog) {
-          if (PCPOT_input[2 * i] >joy_5200_min) PCPOT_input[2 * i] -= myCart.analog_speed;
+      if ((STICK[i] & (STICK_CENTRE ^ STICK_LEFT)) == 0) 
+      {          
+        if (myCart.use_analog) 
+        {
+          if (PCPOT_input[2 * i] >joy_5200_min) PCPOT_input[2 * i] -= anlaog_speed_map[myCart.analog_speed][input_frame & 1];
           if (PCPOT_input[2 * i] <=joy_5200_min) PCPOT_input[2 * i]= joy_5200_min; 
         }
         else
           PCPOT_input[2 * i]= myCart.digital_min; 
       }
-      else if ((STICK[i] & (STICK_CENTRE ^ STICK_RIGHT)) == 0) {
-        if (myCart.use_analog) {
-          if (PCPOT_input[2 * i] <joy_5200_max) PCPOT_input[2 * i] += myCart.analog_speed;
+      else if ((STICK[i] & (STICK_CENTRE ^ STICK_RIGHT)) == 0) 
+      {
+        if (myCart.use_analog) 
+        {
+          if (PCPOT_input[2 * i] <joy_5200_max) PCPOT_input[2 * i] += anlaog_speed_map[myCart.analog_speed][input_frame & 1];
           if (PCPOT_input[2 * i] >=joy_5200_max) PCPOT_input[2 * i]= joy_5200_max; 
         }
         else
           PCPOT_input[2 * i]= myCart.digital_max; 
       }
-      else {
+      else 
+      {
         if (!myCart.use_analog) PCPOT_input[2 * i] = joy_5200_center;  
       }
         
         
       if ((STICK[i] & (STICK_CENTRE ^ STICK_FORWARD)) == 0) {
         if (myCart.use_analog) {
-          if (PCPOT_input[2 * i +1] >joy_5200_min) PCPOT_input[2 * i +1] -= myCart.analog_speed;
+          if (PCPOT_input[2 * i +1] >joy_5200_min) PCPOT_input[2 * i +1] -= anlaog_speed_map[myCart.analog_speed][input_frame & 1];
           if (PCPOT_input[2 * i +1] <=joy_5200_min) PCPOT_input[2 * i +1]= joy_5200_min; 
         }
         else {
@@ -246,7 +264,7 @@ void INPUT_Frame(void)
       }
       else if ((STICK[i] & (STICK_CENTRE ^ STICK_BACK)) == 0) {
         if (myCart.use_analog) {
-          if (PCPOT_input[2 * i +1] <joy_5200_max) PCPOT_input[2 * i +1] += myCart.analog_speed;
+          if (PCPOT_input[2 * i +1] <joy_5200_max) PCPOT_input[2 * i +1] += anlaog_speed_map[myCart.analog_speed][input_frame & 1];
           if (PCPOT_input[2 * i +1] >=joy_5200_max) PCPOT_input[2 * i +1]= joy_5200_max; 
         }
         else

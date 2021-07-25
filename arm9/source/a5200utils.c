@@ -48,42 +48,48 @@ unsigned char *psound_buffer;
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
-//#define DEBUG_DUMP
+char DEBUG_DUMP = 0;
 
 static void DumpDebugData(void)
 {
-#ifdef DEBUG_DUMP
-    char dbgbuf[32];
-    for (int i=0; i<MAX_DEBUG; i++)
+    if (DEBUG_DUMP)
     {
-        int idx=0;
-        int val = debug[i];
-        if (val < 0)
+        char dbgbuf[32];
+        sprintf(dbgbuf, "Cart.offset_x:   %03d", myCart.offset_x);      dsPrintValue(1,2,0, dbgbuf);
+        sprintf(dbgbuf, "Cart.offset_y:   %03d", myCart.offset_y);      dsPrintValue(1,3,0, dbgbuf);
+        sprintf(dbgbuf, "Cart.scale_x:    %03d", myCart.scale_x);       dsPrintValue(1,4,0, dbgbuf);
+        sprintf(dbgbuf, "Cart.scale_y:    %03d", myCart.scale_y);       dsPrintValue(1,5,0, dbgbuf);
+
+        for (int i=0; i<MAX_DEBUG; i++)
         {
-            dbgbuf[idx++] = '-';
-            val = val * -1;
+            int idx=0;
+            int val = debug[i];
+            if (val < 0)
+            {
+                dbgbuf[idx++] = '-';
+                val = val * -1;
+            }
+            else
+            {
+                dbgbuf[idx++] = '0' + (int)val/10000000;
+            }
+            val = val % 10000000;
+            dbgbuf[idx++] = '0' + (int)val/1000000;
+            val = val % 1000000;
+            dbgbuf[idx++] = '0' + (int)val/100000;
+            val = val % 100000;
+            dbgbuf[idx++] = '0' + (int)val/10000;
+            val = val % 10000;
+            dbgbuf[idx++] = '0' + (int)val/1000;
+            val= val % 1000;
+            dbgbuf[idx++] = '0' + (int)val/100;
+            val = val % 100;
+            dbgbuf[idx++] = '0' + (int)val/10;
+            dbgbuf[idx++] = '0' + (int)val%10;
+            dbgbuf[idx++] = 0;
+            dsPrintValue(0,7+i,0, dbgbuf);
         }
-        else
-        {
-            dbgbuf[idx++] = '0' + (int)val/10000000;
-        }
-        val = val % 10000000;
-        dbgbuf[idx++] = '0' + (int)val/1000000;
-        val = val % 1000000;
-        dbgbuf[idx++] = '0' + (int)val/100000;
-        val = val % 100000;
-        dbgbuf[idx++] = '0' + (int)val/10000;
-        val = val % 10000;
-        dbgbuf[idx++] = '0' + (int)val/1000;
-        val= val % 1000;
-        dbgbuf[idx++] = '0' + (int)val/100;
-        val = val % 100;
-        dbgbuf[idx++] = '0' + (int)val/10;
-        dbgbuf[idx++] = '0' + (int)val%10;
-        dbgbuf[idx++] = 0;
-        dsPrintValue(0,3+i,0, dbgbuf);
     }
-#endif
 }
 
 void VsoundHandler(void) 
@@ -569,12 +575,16 @@ unsigned int dsWaitForRom(void)
       while (keysCurrent() & KEY_B);
     }
 
-    if (keysCurrent() & KEY_A) {
-      if (!a5200romlist[ucFicAct].directory) {
+    if (keysCurrent() & KEY_A)
+    {
+      if (!a5200romlist[ucFicAct].directory) 
+      {
+        if (keysCurrent() & KEY_X) DEBUG_DUMP=1; else DEBUG_DUMP=0;
         bRet=true;
         bDone=true;
       }
-      else {
+      else 
+      {
         chdir(a5200romlist[ucFicAct].filename);
         a52FindFiles();
         ucFicAct = 0;
@@ -592,6 +602,8 @@ unsigned int dsWaitForRom(void)
         while (keysCurrent() & KEY_A);
       }
     }
+      
+      
     // Scroll la selection courante
     if (strlen(a5200romlist[ucFicAct].filename) > 29) {
       ucFlip++;
