@@ -111,20 +111,17 @@ void VsoundClear(void)
 
 void VsoundHandler(void) 
 {
-  extern unsigned char pokey_buffer[];
-  extern u16 pokeyBufIdx;
+    extern unsigned char pokey_buffer[];
+    extern u16 pokeyBufIdx;
   
-  // If there is a fresh sample... 
-  if (myPokeyBufIdx != pokeyBufIdx)
-  {
-      *aptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
-      myPokeyBufIdx = (myPokeyBufIdx+1) & (SNDLENGTH-1);
-      if (myPokeyBufIdx != pokeyBufIdx)
-      {
-          *bptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
-          myPokeyBufIdx = (myPokeyBufIdx+1) & (SNDLENGTH-1);
-      } else *bptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
-  }
+    // If there is a fresh sample... 
+    if (myPokeyBufIdx != pokeyBufIdx)
+    {
+        u16 sample = sampleExtender[pokey_buffer[myPokeyBufIdx]];
+        *aptr = sample;
+        *bptr = sample;
+         myPokeyBufIdx = (myPokeyBufIdx+1) & (SNDLENGTH-1);
+    }
 }
 
 void restore_bottom_screen(void)
@@ -371,7 +368,7 @@ void dsLoadGame(char *filename)
         atari_pal16[index] = index;
       }
       
-      TIMER2_DATA = TIMER_FREQ((SOUND_FREQ/2)+20);  // keep this a little faster than our Pokey sound generation 
+      TIMER2_DATA = TIMER_FREQ(SOUND_FREQ+5);  // keep this a little faster than our Pokey sound generation 
       TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;	     
       irqSet(IRQ_TIMER2, VsoundHandler);
         
