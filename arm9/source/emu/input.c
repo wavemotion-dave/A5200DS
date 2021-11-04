@@ -44,6 +44,7 @@
 #include "input_win.h"
 #endif
 
+extern int debug[];
 #ifdef DREAMCAST
 extern int Atari_POT(int);
 #else
@@ -231,8 +232,9 @@ void INPUT_Frame(void)
       {          
         if (myCart.use_analog) 
         {
-          if (PCPOT_input[2 * i] >joy_5200_min) PCPOT_input[2 * i] -= anlaog_speed_map[myCart.analog_speed][input_frame & 1];
-          if (PCPOT_input[2 * i] <=joy_5200_min) PCPOT_input[2 * i]= joy_5200_min; 
+          if (PCPOT_input[2 * i] >myCart.digital_min) PCPOT_input[2 * i] -= anlaog_speed_map[myCart.analog_speed][input_frame & 1];
+          if (PCPOT_input[2 * i] <=myCart.digital_min) PCPOT_input[2 * i]= myCart.digital_min; 
+          debug[0] = PCPOT_input[2 * i];            
         }
         else
           PCPOT_input[2 * i]= myCart.digital_min; 
@@ -241,8 +243,9 @@ void INPUT_Frame(void)
       {
         if (myCart.use_analog) 
         {
-          if (PCPOT_input[2 * i] <joy_5200_max) PCPOT_input[2 * i] += anlaog_speed_map[myCart.analog_speed][input_frame & 1];
-          if (PCPOT_input[2 * i] >=joy_5200_max) PCPOT_input[2 * i]= joy_5200_max; 
+          if (PCPOT_input[2 * i] <myCart.digital_max) PCPOT_input[2 * i] += anlaog_speed_map[myCart.analog_speed][input_frame & 1];
+          if (PCPOT_input[2 * i] >=myCart.digital_max) PCPOT_input[2 * i]= myCart.digital_max; 
+          debug[0] = PCPOT_input[2 * i];            
         }
         else
           PCPOT_input[2 * i]= myCart.digital_max; 
@@ -253,24 +256,30 @@ void INPUT_Frame(void)
       }
         
         
-      if ((STICK[i] & (STICK_CENTRE ^ STICK_FORWARD)) == 0) {
-        if (myCart.use_analog) {
-          if (PCPOT_input[2 * i +1] >joy_5200_min) PCPOT_input[2 * i +1] -= anlaog_speed_map[myCart.analog_speed][input_frame & 1];
-          if (PCPOT_input[2 * i +1] <=joy_5200_min) PCPOT_input[2 * i +1]= joy_5200_min; 
+      if ((STICK[i] & (STICK_CENTRE ^ STICK_FORWARD)) == 0) 
+      {
+        if (myCart.use_analog) 
+        {
+          if (PCPOT_input[2 * i +1] >myCart.digital_min) PCPOT_input[2 * i +1] -= anlaog_speed_map[myCart.analog_speed][input_frame & 1];
+          if (PCPOT_input[2 * i +1] <=myCart.digital_min) PCPOT_input[2 * i +1]= myCart.digital_min; 
+          debug[1] = PCPOT_input[2 * i +1];
         }
-        else {
+        else 
           PCPOT_input[2 * i +1]= myCart.digital_min;
-        }
       }
-      else if ((STICK[i] & (STICK_CENTRE ^ STICK_BACK)) == 0) {
-        if (myCart.use_analog) {
-          if (PCPOT_input[2 * i +1] <joy_5200_max) PCPOT_input[2 * i +1] += anlaog_speed_map[myCart.analog_speed][input_frame & 1];
-          if (PCPOT_input[2 * i +1] >=joy_5200_max) PCPOT_input[2 * i +1]= joy_5200_max; 
+      else if ((STICK[i] & (STICK_CENTRE ^ STICK_BACK)) == 0) 
+      {
+        if (myCart.use_analog) 
+        {
+          if (PCPOT_input[2 * i +1] <myCart.digital_max) PCPOT_input[2 * i +1] += anlaog_speed_map[myCart.analog_speed][input_frame & 1];
+          if (PCPOT_input[2 * i +1] >=myCart.digital_max) PCPOT_input[2 * i +1]= myCart.digital_max; 
+          debug[1] = PCPOT_input[2 * i +1];
         }
         else
           PCPOT_input[2 * i +1]= myCart.digital_max;
       }
-      else {
+      else 
+      {
         if (!myCart.use_analog) PCPOT_input[2 * i + 1] = joy_5200_center;
       }
 	}

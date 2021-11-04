@@ -166,7 +166,7 @@ static const struct cart_t cart_table[] =
     {"84d88bcdeffee1ab880a5575c6aca45e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    0,  256,    250,    32,22},  // Millipede (USA) (Proto).a52
     {"d859bff796625e980db1840f15dec4b5",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    256,    32,24},  // Miner 2049er Starring Bounty Bob (USA).a52
     {"69d472a79f404e49ad2278df3c8a266e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0,  256,    240,    32,19},  // Miniature Golf (1983) (Atari).a52
-    {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,      ANA_SLOWER,   6, 220,    1,  256,    256,    32,22},  // Missile Command (USA).a52
+    {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,      ANA_SLOWER,  20, 185,    1,  256,    256,    32,24},  // Missile Command (USA).a52
     {"3090673bd3f8c04a92e391bf5540b88b",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_SLOWER,   6, 220,    1,  256,    256,    32,24},  // MC+final.a52
     {"694897cc0d98fcf2f59eef788881f67d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    244,    32,24},  // Montezuma's Revenge featuring Panama Joe (USA).a52
     {"296e5a3a9efd4f89531e9cf0259c903d",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    256,    32,24},  // Moon Patrol (USA).a52
@@ -261,7 +261,6 @@ static const struct cart_t cart_table[] =
     {"dc45af8b0996cb6a94188b0be3be2e17",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    256,    32,22},  // Zone Ranger (USA).a52
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    240,    32,30},  // End of List
 };
-
 
 
 UBYTE *cart_image = NULL;       /* For cartridge memory */
@@ -495,7 +494,7 @@ void CART_Remove(void)
     cart_image = NULL;
     dFillMem(0x0000, 0, 0xC000);    
     memset(pokey_buffer, 0x00, SNDLENGTH);
-    memset(sound_buffer, 0x00, SNDLENGTH);        
+    memset(sound_buffer, 0x00, SNDLENGTH);
     SetROM(0x4000, 0xbfff);     /* Set the entire 32k back to normal ROM */
     bosconian_bank = 0;
 }
@@ -535,7 +534,7 @@ void CART_Start(void)
             CopyROM(0x5000, 0x5fff, cart_image + 0x4000);
             CopyROM(0x8000, 0x9fff, cart_image + 0x8000);
             CopyROM(0xa000, 0xbfff, cart_image + 0x8000);
-            for (int i=0x0000; i<0x8000; i++)  banked_image[i] = cart_image[i];
+            memcpy(banked_image, cart_image, 0x8000);
             last_bounty_bob_bank = -1;
             for (int i=0x4ff6; i<=0x4ff9; i++) readmap[i] = BountyBob1_GetByte;
             for (int i=0x5ff6; i<=0x5ff9; i++) readmap[i] = BountyBob2_GetByte;
@@ -544,14 +543,14 @@ void CART_Start(void)
             break;
         case CART_5200_64:
             bryan_bank = 1; last_bryan_bank=1;
-            for (int i=0x0000; i<=0xFFFF; i++)  banked_image[i] = cart_image[i];                
+            memcpy(banked_image, cart_image, 0x10000);
             CopyROM(0x4000, 0xbfff, cart_image + (0x8000 * bryan_bank));
             for (int i=0xbfd0; i<= 0xbfdf; i++) readmap[i] = Bryan_GetByte64;
             for (int i=0xbfe0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte64_reset;
             break;
         case CART_5200_512:
             bryan_bank = 15; last_bryan_bank=15;
-            for (int i=0x0000; i<0x40000; i++)  banked_image[i] = cart_image[i+(0x8000*12)]; // We can copy the first (last!) 4 banks into faster ram... it helps...
+            memcpy(banked_image, cart_image+(0x8000*12), 0x40000);    
             CopyROM(0x4000, 0xbfff, cart_image + (0x8000L * (long)bryan_bank));
             for (int i=0xbfc0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte512;
 #ifdef BUILD_BOSCONIAN                

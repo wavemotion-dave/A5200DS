@@ -21,7 +21,7 @@
  * along with Atari800; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
+#include <string.h>
 #include "config.h"
 #include "atari.h"
 #include "cpu.h"
@@ -35,7 +35,7 @@
 #include "antic.h"
 #include "cassette.h"
 
-int pokeyBufIdx __attribute__((section(".dtcm")))= 0;
+unsigned short pokeyBufIdx __attribute__((section(".dtcm")))= 0;
 char pokey_buffer[SNDLENGTH] __attribute__((section(".dtcm")));
 
 UBYTE KBCODE __attribute__((section(".dtcm")));
@@ -401,6 +401,12 @@ void Update_Counter(int chan_mask)
 		if (DivNMax[CHAN4] < LINE_C)
 			DivNMax[CHAN4] = LINE_C;
 	}
+}
+
+void PokeyClearBuffer(void)
+{
+   memset(pokey_buffer, 0x00, SNDLENGTH);   
+   pokeyBufIdx = 0;
 }
 
 void POKEYStateSave(void)

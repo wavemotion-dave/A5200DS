@@ -2,16 +2,19 @@ a5200DS
 --------------------------------------------------------------------------------
 a5200DS is an Atari VCS 5200 console emulator.
 To use this emulator, you must use NTSC compatible roms with a52/bin format. 
-You also need the 5200.rom rom bios in the same folder as A5200DS.NDS to use 
-this emulator properly (there is a built-in open-source replacement BIOS which 
-will work for many games but doesn't have full compatibilty so it is still 
-recommended you use 5200.bin). A quick search on atariage website 
-will help you about that ;-) Do not ask me about such files, I don't have them. 
+You also need the 5200.rom rom bios in the same folder as A5200DS.NDS (alternate
+locations it can be: /roms/bios or /data/bios) to use this emulator properly 
+(there is a built-in open-source replacement BIOS which will work for some 
+games but doesn't have full compatibilty so it is still strongly recommended 
+you use 5200.bin). A quick search on atariage website will help you about that.
+Do not ask me about such files, I don't have them. 
 
 Features :
 ----------
  Most things you should expect from an emulator. 
  Most games run at full speed on a DSi or above.
+ For the DS-LITE/PHAT many games will play but there may
+ be some lag in sound/speed for the more complex games.
 
 Missing :
 ---------
@@ -25,8 +28,9 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
-V3.0 : xxx
-  * Bosconian Build enabled by default!
+V3.0 : 04-Nov-2021
+  * New sound core to eliminate zingers.
+  * 5200.rom bios can be in /roms/bios or /data/bios 
 
 V2.9 : 22-July-2021 by wavemotion-dave
   * High Score support added!

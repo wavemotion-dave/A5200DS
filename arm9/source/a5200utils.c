@@ -43,8 +43,9 @@ int lcd_swap_counter = 0;
 unsigned int atari_pal16[256] = {0};
 unsigned char *filebuffer;
 
-unsigned char sound_buffer[SNDLENGTH];
-unsigned char *psound_buffer;
+unsigned char sound_buffer[SNDLENGTH] __attribute__ ((aligned (4))) = {0};
+u16* aptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[0] + 0xA000000); 
+u16* bptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[2] + 0xA000000);
 
 #define MAX_DEBUG 5
 int debug[MAX_DEBUG]={0};
@@ -92,22 +93,38 @@ static void DumpDebugData(void)
     }
 }
 
+u16 sound_idx           __attribute__((section(".dtcm"))) = 0;
+u16 myPokeyBufIdx       __attribute__((section(".dtcm"))) = 0;
+u8  lastSample          __attribute__((section(".dtcm"))) = 0;
+u16 sampleExtender[256] __attribute__((section(".dtcm"))) = {0};
+
+void VsoundClear(void)
+{
+    extern void PokeyClearBuffer(void);
+    
+    PokeyClearBuffer();   
+    memset(sound_buffer, 0x00, SNDLENGTH);
+    lastSample = 0x00;
+    myPokeyBufIdx = 0;
+    sound_idx = 0;
+}
+
 void VsoundHandler(void) 
 {
-  static unsigned int sound_idx = 0;
   extern unsigned char pokey_buffer[];
-  extern int pokeyBufIdx;
-  static int myPokeyBufIdx=0;
-  static unsigned char lastSample = 0;
+  extern u16 pokeyBufIdx;
   
   // If there is a fresh sample... 
   if (myPokeyBufIdx != pokeyBufIdx)
   {
-      lastSample = pokey_buffer[myPokeyBufIdx];
+      *aptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
       myPokeyBufIdx = (myPokeyBufIdx+1) & (SNDLENGTH-1);
+      if (myPokeyBufIdx != pokeyBufIdx)
+      {
+          *bptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
+          myPokeyBufIdx = (myPokeyBufIdx+1) & (SNDLENGTH-1);
+      } else *bptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
   }
-  sound_buffer[sound_idx] = lastSample;
-  sound_idx = (sound_idx+1) & (SNDLENGTH-1);
 }
 
 void restore_bottom_screen(void)
@@ -296,10 +313,23 @@ byte palette_data[PALETTE_SIZE] = {
 0xFF,0xD4,0x61,0xFF,0xDD,0x69,0xFF,0xE6,0x79,0xFF,0xEA,0x98
 };
 
-
+char filetmp[256];
 int load_os(char *filename ) 
 {
   FILE *romfile = fopen(filename, "rb");
+    
+  if (romfile == NULL)
+  {
+      sprintf(filetmp, "/roms/bios/%s", filename);
+      romfile = fopen(filetmp, "rb");
+  }
+    
+  if (romfile == NULL)
+  {
+      sprintf(filetmp, "/data/bios/%s", filename);
+      romfile = fopen(filetmp, "rb");
+  }
+      
   if (romfile == NULL)
   {
      memcpy(atari_os, ROM_altirra_5200_os, 0x800);    // No 5200.rom found... use open source Altirra OS instead
@@ -341,10 +371,9 @@ void dsLoadGame(char *filename)
         atari_pal16[index] = index;
       }
       
-      psound_buffer=sound_buffer;
-      TIMER2_DATA = TIMER_FREQ(SOUND_FREQ);                        
+      TIMER2_DATA = TIMER_FREQ((SOUND_FREQ/2)+20);  // keep this a little faster than our Pokey sound generation 
       TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;	     
-      irqSet(IRQ_TIMER2, VsoundHandler);                           
+      irqSet(IRQ_TIMER2, VsoundHandler);
         
       TIMER0_CR=0;
       TIMER0_DATA=0;
@@ -697,15 +726,32 @@ void dsPrintValue(int x, int y, unsigned int isSelect, char *pchStr)
 //---------------------------------------------------------------------------------
 void dsInstallSoundEmuFIFO(void) 
 {
+    // We are going to use the 16-bit sound engine so we need to scale up our 8-bit values...
+    for (int i=0; i<256; i++)
+    {
+        sampleExtender[i] = (i << 8);
+    }
+    
+    if (isDSiMode())
+    {
+        aptr = (u16*) ((u32)&sound_buffer[0] + 0xA000000); 
+        bptr = (u16*) ((u32)&sound_buffer[2] + 0xA000000);
+    }
+    else
+    {
+        aptr = (u16*) ((u32)&sound_buffer[0] + 0x00400000);
+        bptr = (u16*) ((u32)&sound_buffer[2] + 0x00400000);
+    }
+        
     FifoMessage msg;
     msg.SoundPlay.data = &sound_buffer;
-    msg.SoundPlay.freq = SOUND_FREQ;
+    msg.SoundPlay.freq = SOUND_FREQ*2;
     msg.SoundPlay.volume = 127;
     msg.SoundPlay.pan = 64;
     msg.SoundPlay.loop = 1;
-    msg.SoundPlay.format = ((1)<<4) | SoundFormat_8Bit;
+    msg.SoundPlay.format = ((1)<<4) | SoundFormat_16Bit;
     msg.SoundPlay.loopPoint = 0;
-    msg.SoundPlay.dataSize = SNDLENGTH >> 2;
+    msg.SoundPlay.dataSize = 4 >> 2;
     msg.type = EMUARM7_PLAY_SND;
     fifoSendDatamsg(FIFO_USER_01, sizeof(msg), (u8*)&msg);
 }
@@ -742,9 +788,18 @@ void dsMainLoop(void) {
         break;
         
       case A5200_PLAYINIT:
+        irqDisable(IRQ_TIMER2);  
         dsShowScreenEmu();
+        VsoundClear();
+        swiWaitForVBlank();swiWaitForVBlank();
         irqEnable(IRQ_TIMER2);  
+        fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
         etatEmu = A5200_PLAYGAME;
+        atari_frames=0;
+        TIMER0_DATA=0;
+        TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
+        TIMER1_DATA=0;
+        TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;  
         break;
         
       case A5200_PLAYGAME:
@@ -803,10 +858,11 @@ void dsMainLoop(void) {
             iTx = touch.px;
             iTy = touch.py;
             if ((iTx>211) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
-              irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
+              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME); 
+                
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
-              else { irqEnable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME); }
+              else { fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);}
             }
             else if ((iTx>240) && (iTx<256) && (iTy>0) && (iTy<20))  { // Full Speed Toggle ... upper corner...
                if (keys_touch == 0)
@@ -817,8 +873,10 @@ void dsMainLoop(void) {
                }
             }
             else if ((iTx>160) && (iTx<200) && (iTy>112) && (iTy<130))  { //highscore
+              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
               highscore_display();
               restore_bottom_screen();
+              fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
             }
             else if ((iTx>115) && (iTx<150) && (iTy>112) && (iTy<130))  { //pause
               if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
@@ -845,13 +903,20 @@ void dsMainLoop(void) {
               keys_touch = 1;
             }
             else if ((iTx>70) && (iTx<185) && (iTy>7) && (iTy<50)) {     // 72,8 -> 182,42 cartridge slot
-              irqDisable(IRQ_TIMER2); fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
+              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
               // Find files in current directory and show it 
               a52FindFiles();
               romSel=dsWaitForRom();
-              if (romSel) { etatEmu=A5200_PLAYINIT; dsLoadGame(a5200romlist[ucFicAct].filename); if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");}
-              else { irqEnable(IRQ_TIMER2); }
-              fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
+              if (romSel) 
+              { 
+                  etatEmu=A5200_PLAYINIT; 
+                  dsLoadGame(a5200romlist[ucFicAct].filename); 
+                  if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
+              }
+              else
+              {
+                fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME); 
+              }
             }
         }
         else
