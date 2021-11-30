@@ -39,8 +39,6 @@ int main(int argc, char **argv)
 	}
 
   // Init Timer
-  dsInitTimer();
-  dsInstallSoundEmuFIFO();
   highscore_init();
   
   if (keysCurrent() & KEY_R)
@@ -62,6 +60,11 @@ int main(int argc, char **argv)
         dsLoadGame(argv[1]);
         Atari800_Initialise();
         etatEmu = A5200_PLAYINIT;
+      }
+      else
+      {
+        chdir("/roms");    // Try to start in roms area... doesn't matter if it fails
+        chdir("a5200");    // And try to start in the subdir /a5200... doesn't matter if it fails.
       }
     // Main loop of emulation
     dsMainLoop();

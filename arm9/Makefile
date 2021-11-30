@@ -14,10 +14,10 @@ include $(DEVKITARM)/ds_rules
 # DATA is a list of directories containing binary files
 # all directories are relative to this makefile
 #---------------------------------------------------------------------------------
-BUILD		  :=	build
+BUILD		:=	build
 SOURCES		:=	source/emu source  
 INCLUDES	:=	source/emu source
-DATA		  := data
+DATA		:= data
 GRAPHICS	:=	gfx
 
 #---------------------------------------------------------------------------------
@@ -26,10 +26,7 @@ GRAPHICS	:=	gfx
 #ARCH	:=	-mthumb -mthumb-interwork
 ARCH	:=	
 
-#CFLAGS	:=	-g -Wall -O2 -march=armv5te -mtune=arm946e-s -fomit-frame-pointer -ffast-math $(ARCH)
-CFLAGS	:= -Wall -Ofast -march=armv5te -mtune=arm946e-s -fomit-frame-pointer -ffast-math $(ARCH) -finline-functions -falign-functions=4 -falign-labels=4 -falign-loops=4 -falign-jumps=4
-#CFLAGS	:= -Wall -O3 -march=armv5te -mtune=arm946e-s -fsigned-char -funroll-loops -ffast-math -fomit-frame-pointer -fno-strength-reduce -finline-functions
-
+CFLAGS	:= -Wall -O3 -march=armv5te -mtune=arm946e-s -fomit-frame-pointer -ffast-math $(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM9
 CXXFLAGS	:=	$(CFLAGS) -fno-rtti -fno-exceptions
@@ -43,7 +40,7 @@ LDFLAGS	=	-specs=ds_arm9.specs $(ARCH) -Wl,-Map,$(notdir $*.map)
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lfat -lnds9
+LIBS	:=	-lfat -lnds9 -lmm9
  
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

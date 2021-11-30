@@ -28,6 +28,10 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V3.1 : 30-Nov-2021
+  * Switched to maxmod audio library for improved sound.
+  * Try to start in /roms or /roms/a5200 if possible
+
 V3.0 : 04-Nov-2021
   * New sound core to eliminate zingers.
   * 5200.rom bios can be in /roms/bios or /data/bios 
