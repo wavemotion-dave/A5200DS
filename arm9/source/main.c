@@ -39,6 +39,8 @@ int main(int argc, char **argv)
 	}
 
   // Init Timer
+  dsInitTimer();
+  dsInstallSoundEmuFIFO();
   highscore_init();
   
   if (keysCurrent() & KEY_R)

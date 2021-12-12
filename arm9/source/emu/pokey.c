@@ -21,7 +21,6 @@
  * along with Atari800; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include <maxmod9.h>
 #include <string.h>
 #include "config.h"
 #include "atari.h"
@@ -297,8 +296,9 @@ void POKEY_Frame(void)
  ***************************************************************************/
 void POKEY_Scanline(void) 
 {
-    mmStreamUpdate();
-    
+    Pokey_process(&pokey_buffer[pokeyBufIdx], 1);	// Each scanline, compute 1 output samples. This corresponds to a 15720Khz output sample rate if running at 60FPS (good enough)
+    pokeyBufIdx = (pokeyBufIdx+1) & (SNDLENGTH-1);
+
     if (pot_scanline < 228)
 		pot_scanline++;
   

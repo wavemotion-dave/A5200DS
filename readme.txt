@@ -28,6 +28,9 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 --------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V3.2 : 12-Dec-2021
+  * Reverted back to ARM7 SoundLib (a few games missing key sounds)
+  
 V3.1 : 30-Nov-2021
   * Switched to maxmod audio library for improved sound.
   * Try to start in /roms or /roms/a5200 if possible

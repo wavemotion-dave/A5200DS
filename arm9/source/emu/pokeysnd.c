@@ -370,21 +370,21 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 /* Outputs: the buffer will be filled with n bytes of audio - no return val  */
 /*                                                                           */
 /*****************************************************************************/
-u8 lastSample=0;
 void Pokey_process(void *sndbuffer, unsigned sndn)
 {
-	char *buffer = (char*) sndbuffer;
-	uint16 n = sndn;
-    uint32 *div_n_ptr;
-    uint8 *samp_cnt_w_ptr;
-    uint32 event_min;
-    uint8 next_event;
-    int16 cur_val;
-    uint8 *out_ptr;
-    uint8 audc;
-    uint8 toggle;
-    uint8 *vol_ptr;  
+	register char *buffer = (char  *) sndbuffer;
+	register uint16 n = sndn;
 
+	register uint32 *div_n_ptr;
+	register uint8 *samp_cnt_w_ptr;
+	register uint32 event_min;
+	register uint8 next_event;
+	register unsigned char cur_val;		/* otherwise we'll simplify as 8-bit unsigned */
+	register uint8 *out_ptr;
+	register uint8 audc;
+	register uint8 toggle;
+	register uint8 *vol_ptr;
+  
 	/* set a pointer to the whole portion of the samp_n_cnt */
 	samp_cnt_w_ptr = ((uint8 *) (&Samp_n_cnt[0]) + 1);
 
@@ -423,49 +423,50 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 
 		div_n_ptr = Div_n_cnt;
 
-        /* Though I could have used a loop here, this is faster */
-        if (*div_n_ptr <= event_min) {
-            event_min = *div_n_ptr;
-            next_event = CHAN1;
-        }
-        div_n_ptr++;
-        if (*div_n_ptr <= event_min) {
-            event_min = *div_n_ptr;
-            next_event = CHAN2;
-        }
-        div_n_ptr++;
-        if (*div_n_ptr <= event_min) {
-            event_min = *div_n_ptr;
-            next_event = CHAN3;
-        }
-        div_n_ptr++;
-        if (*div_n_ptr <= event_min) {
-            event_min = *div_n_ptr;
-            next_event = CHAN4;
-        }
-        div_n_ptr++;
+    /* Though I could have used a loop here, this is faster */
+    if (*div_n_ptr <= event_min) {
+        event_min = *div_n_ptr;
+        next_event = CHAN1;
+    }
+    div_n_ptr++;
+    if (*div_n_ptr <= event_min) {
+        event_min = *div_n_ptr;
+        next_event = CHAN2;
+    }
+    div_n_ptr++;
+    if (*div_n_ptr <= event_min) {
+        event_min = *div_n_ptr;
+        next_event = CHAN3;
+    }
+    div_n_ptr++;
+    if (*div_n_ptr <= event_min) {
+        event_min = *div_n_ptr;
+        next_event = CHAN4;
+    }
+    div_n_ptr++;
 
-        /* if the next event is a channel change */
-        if (next_event != SAMPLE) 
-        {
-          /* shift the polynomial counters */
+		/* if the next event is a channel change */
+		if (next_event != SAMPLE) {
+			/* shift the polynomial counters */
 
-          /* decrement all counters by the smallest count found */
-          /* again, no loop for efficiency */
-          div_n_ptr--;
-          *div_n_ptr -= event_min;
-          div_n_ptr--;
-          *div_n_ptr -= event_min;
-          div_n_ptr--;
-          *div_n_ptr -= event_min;
-          div_n_ptr--;
-          *div_n_ptr -= event_min;
+      /* decrement all counters by the smallest count found */
+      /* again, no loop for efficiency */
+      div_n_ptr--;
+      *div_n_ptr -= event_min;
+      div_n_ptr--;
+      *div_n_ptr -= event_min;
+      div_n_ptr--;
+      *div_n_ptr -= event_min;
+      div_n_ptr--;
+      *div_n_ptr -= event_min;
 
 			WRITE_U32(samp_cnt_w_ptr, READ_U32(samp_cnt_w_ptr) - event_min);
 
 			/* since the polynomials require a mod (%) function which is
 			   division, I don't adjust the polynomials on the SAMPLE events,
-			   only the CHAN events.  I have to keep track of the change, though. */
+			   only the CHAN events.  I have to keep track of the change,
+			   though. */
+
 			P4 = (P4 + event_min) % POLY4_SIZE;
 			P5 = (P5 + event_min) % POLY5_SIZE;
 			P9 = (P9 + event_min) % POLY9_SIZE;
@@ -488,8 +489,7 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 			/* much description to explain it here. */
 
 			/* if VOLUME only then nothing to process */
-			if (!(audc & VOL_ONLY)) 
-            {
+			if (!(audc & VOL_ONLY)) {
 				/* if the output is pure or the output is poly5 and the poly5 bit */
 				/* is set */
 				if ((audc & NOTPOLY5) || bit5[P5]) {
@@ -548,29 +548,29 @@ void Pokey_process(void *sndbuffer, unsigned sndn)
 				if (*out_ptr) {
 					/* remove this channel from the signal */
 					cur_val -= AUDV[next_event];
+
 					/* and turn the output off */
 					*out_ptr = 0;
 				}
 				else {
 					/* turn the output on */
 					*out_ptr = 1;
+
 					/* and add it to the output signal */
 					cur_val += AUDV[next_event];
 				}
 			}
 		}
-		else 
-        {
-            /* otherwise we're processing a sample */
-              short iout = (short)cur_val + 128;
-              if(iout > 250) iout=250;
-              if(iout < 0) iout=0;
-              *buffer++ = (u8)iout;
-              lastSample = (u8)iout;
-              *Samp_n_cnt += Samp_n_max;
-              /* and indicate one less byte in the buffer */
-              n--;
-        }
+		else {					/* otherwise we're processing a sample */
+			/* adjust the sample counter - note we're using the 24.8 integer
+			   which includes an 8 bit fraction for accuracy */
+      int iout;
+      iout = cur_val;
+      *buffer++ = (char) ((iout))+128;
+      *Samp_n_cnt += Samp_n_max;
+      /* and indicate one less byte in the buffer */
+      n--;
+		}    
 	}
 }
 

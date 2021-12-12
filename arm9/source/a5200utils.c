@@ -5,7 +5,6 @@
 #include <fat.h>
 #include <dirent.h>
 #include <unistd.h>
-#include <maxmod9.h>
 
 #include "main.h"
 #include "a5200utils.h"
@@ -15,12 +14,9 @@
 #include "cartridge.h"
 #include "highscore.h"
 #include "input.h"
-#include "pokeysnd.h"
 #include "emu/pia.h"
 
-#include "soundbank.h"
-#include "soundbank_bin.h"
-
+#include "clickNoQuit_wav.h"
 #include "bgBottom.h"
 #include "bgTop.h"
 #include "bgFileSel.h"
@@ -34,8 +30,6 @@ int bg0, bg1, bg0b, bg1b, bg2, bg3;
 unsigned int etatEmu;
 int atari_frames=0;        
 int frame_skip = TRUE;
-u8  emuSoundPause   = 1;                // To pause sound output
-u8  bRestartSoundEngine = 0;            // Restart the sound output
 
 gamecfg GameConf;                       // Game Config svg
 
@@ -99,95 +93,38 @@ static void DumpDebugData(void)
     }
 }
 
-// --------------------------------------------------------------------------
-// For pausing the maxmod stream... we force a "mute" sound into the stream
-// --------------------------------------------------------------------------
-void SoundPause(void)
+u16 sound_idx           __attribute__((section(".dtcm"))) = 0;
+u16 myPokeyBufIdx       __attribute__((section(".dtcm"))) = 0;
+u8  lastSample          __attribute__((section(".dtcm"))) = 0;
+u16 sampleExtender[256] __attribute__((section(".dtcm"))) = {0};
+
+void VsoundClear(void)
 {
-    emuSoundPause = 1;
-    mmStreamUpdate();
-    swiWaitForVBlank();swiWaitForVBlank();
-}
-
-// -----------------------------------------------------------------------------------------------
-// MAXMOD streaming setup and handling... We were using the normal ARM7 sound core but it
-// sounded "scratchy" and so with the help of FluBBa, we've swiched over to the maxmod sound
-// core which seems to perform better. we are using manual streaming to force the updates as
-// close to scanline-resolution as possible which helps with volume-only voice sampling.
-// -----------------------------------------------------------------------------------------------
-unsigned short sampleMult = 2;
-mm_ds_system sys;
-mm_stream myStream;
-#define BUFFER_SIZE  (256*sampleMult)
-
-// -------------------------------------------------------------------------------------------
-// maxmod will call this routine when the buffer is half-empty and requests that
-// we fill the sound buffer with more samples. They will request 'len' samples and
-// we will fill exactly that many. If the sound is paused, we fill with 'mute' samples.
-// -------------------------------------------------------------------------------------------
-mm_word OurSoundMixer(mm_word len, mm_addr dest, mm_stream_formats format)
-{
-    extern u8 lastSample;
-    extern void Pokey_process(void *sndbuffer, unsigned sndn);
-    if (emuSoundPause)  // If paused, just "mix" in mute samples... frequency will not change here
-    {
-        // Fill buffer with "mute" sound...
-        memset(dest, lastSample, len);
-    }
-    else
-    {
-        Pokey_process(dest, len);   // Fill the sound buffer with samples!
-    }
-    return  len;
-}
-
-
-// -------------------------------------------------------------------------------------------
-// Setup the maxmod audio stream - this will be a 8-bit Mono PCM output at 31.4KHz which
-// sounds about right for the Atari POKEY chip.  For the DS-LITE we will use half that.
-// -------------------------------------------------------------------------------------------
-void setupStream(void) 
-{
-    static u8 bFirstTime = true;
-    if (bFirstTime)
-    {
-      //----------------------------------------------------------------
-      //  initialize maxmod with our small 2-effect soundbank
-      //----------------------------------------------------------------
-      mmInitDefaultMem((mm_addr)soundbank_bin);
-        
-      mmLoadEffect(SFX_CLICKNOQUIT);
-      mmLoadEffect(SFX_KEYCLICK);
-    }
-    else
-    {        
-        mmStreamClose();        // Close any active stream - we will re-setup
-    }
-    bFirstTime = false;
+    extern void PokeyClearBuffer(void);
     
-  //----------------------------------------------------------------
-  //  open stream
-  //----------------------------------------------------------------
-  myStream.sampling_rate  = SOUND_FREQ;             // sampling rate =
-  myStream.buffer_length  = BUFFER_SIZE;            // buffer length =
-  myStream.callback       = OurSoundMixer;          // set callback function
-  myStream.format         = MM_STREAM_8BIT_MONO;    // format = mono 8-bit
-  myStream.timer          = MM_TIMER3;              // use hardware timer 3 (not really used as we are in manual mode anyway)
-  myStream.manual         = true;                   // use manual filling
-  mmStreamOpen( &myStream );
+    PokeyClearBuffer();   
+    memset(sound_buffer, 0x00, SNDLENGTH);
+    lastSample = 0x00;
+    myPokeyBufIdx = 0;
+    sound_idx = 0;
+}
 
-  //----------------------------------------------------------------
-  //  when using 'automatic' filling, your callback will be triggered
-  //  every time half of the wave buffer is processed.
-  //
-  //  so: 
-  //  25000 (rate)
-  //  ----- = ~21 Hz for a full pass, and ~42hz for half pass
-  //  1200  (length)
-  //----------------------------------------------------------------
-  //  with 'manual' filling, you must call mmStreamUpdate
-  //  periodically (and often enough to avoid buffer underruns)
-  //----------------------------------------------------------------
+void VsoundHandler(void) 
+{
+  extern unsigned char pokey_buffer[];
+  extern u16 pokeyBufIdx;
+  
+  // If there is a fresh sample... 
+  if (myPokeyBufIdx != pokeyBufIdx)
+  {
+      *aptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
+      myPokeyBufIdx = (myPokeyBufIdx+1) & (SNDLENGTH-1);
+      if (myPokeyBufIdx != pokeyBufIdx)
+      {
+          *bptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
+          myPokeyBufIdx = (myPokeyBufIdx+1) & (SNDLENGTH-1);
+      } else *bptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
+  }
 }
 
 void restore_bottom_screen(void)
@@ -235,11 +172,6 @@ void vblankIntr()
         0x00, 0x33, 
         0x88, 0x44
     };
-    
-    if (emuSoundPause)
-    {
-        mmStreamUpdate();
-    }
 
     REG_BG2PA = xdxBG; 
     REG_BG2PD = ydyBG; 
@@ -439,7 +371,9 @@ void dsLoadGame(char *filename)
         atari_pal16[index] = index;
       }
       
-      dsInstallSoundEmuFIFO();
+      TIMER2_DATA = TIMER_FREQ((SOUND_FREQ/2)+20);  // keep this a little faster than our Pokey sound generation 
+      TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;	     
+      irqSet(IRQ_TIMER2, VsoundHandler);
         
       TIMER0_CR=0;
       TIMER0_DATA=0;
@@ -741,7 +675,7 @@ unsigned int dsWaitOnMenu(unsigned int actState) {
       iTx = touch.px;
       iTy = touch.py;
       if ((iTx>206) && (iTx<250) && (iTy>110) && (iTy<129))  { // 207,111  -> 249,128   quit
-        mmEffect(SFX_CLICKNOQUIT);
+        soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
         bDone=dsWaitOnQuit();
         if (bDone) uState=A5200_QUITSTDS;
       }
@@ -792,13 +726,34 @@ void dsPrintValue(int x, int y, unsigned int isSelect, char *pchStr)
 //---------------------------------------------------------------------------------
 void dsInstallSoundEmuFIFO(void) 
 {
-    SoundPause();
-    swiWaitForVBlank();                                 // Wait 2 vertical blanks... Enough for the pause to kick in...
-    sampleMult = (isDSiMode() ? 2:1);                   // For the DSi we can afford doubling the samplerate for better sound
-    Pokey_sound_init(FREQ_17_APPROX, SOUND_FREQ, 1, 0); // Make sure the Atari Emulation side knows our current sound frequency
-    setupStream();                                      // Setup MaxMod Audio Stream
+    // We are going to use the 16-bit sound engine so we need to scale up our 8-bit values...
+    for (int i=0; i<256; i++)
+    {
+        sampleExtender[i] = (i << 8);
+    }
+    
+    if (isDSiMode())
+    {
+        aptr = (u16*) ((u32)&sound_buffer[0] + 0xA000000); 
+        bptr = (u16*) ((u32)&sound_buffer[2] + 0xA000000);
+    }
+    else
+    {
+        aptr = (u16*) ((u32)&sound_buffer[0] + 0x00400000);
+        bptr = (u16*) ((u32)&sound_buffer[2] + 0x00400000);
+    }
         
-    bRestartSoundEngine = true;                         // After we process the first scanline of the new frame, we will start up the audio
+    FifoMessage msg;
+    msg.SoundPlay.data = &sound_buffer;
+    msg.SoundPlay.freq = SOUND_FREQ*2;
+    msg.SoundPlay.volume = 127;
+    msg.SoundPlay.pan = 64;
+    msg.SoundPlay.loop = 1;
+    msg.SoundPlay.format = ((1)<<4) | SoundFormat_16Bit;
+    msg.SoundPlay.loopPoint = 0;
+    msg.SoundPlay.dataSize = 4 >> 2;
+    msg.type = EMUARM7_PLAY_SND;
+    fifoSendDatamsg(FIFO_USER_01, sizeof(msg), (u8*)&msg);
 }
 
 extern u32 trig0, trig1;
@@ -835,7 +790,10 @@ void dsMainLoop(void) {
       case A5200_PLAYINIT:
         irqDisable(IRQ_TIMER2);  
         dsShowScreenEmu();
+        VsoundClear();
         swiWaitForVBlank();swiWaitForVBlank();
+        irqEnable(IRQ_TIMER2);  
+        fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
         etatEmu = A5200_PLAYGAME;
         atari_frames=0;
         TIMER0_DATA=0;
@@ -857,13 +815,6 @@ void dsMainLoop(void) {
 
         // Execute one frame
         Atari800_Frame();
-            
-        // Reset the sound indexes and unpause the sound engine...
-        if (bRestartSoundEngine)
-        {
-            bRestartSoundEngine = 0;
-            emuSoundPause=0;
-        }       
             
         if (++atari_frames == 60)
         {
@@ -907,10 +858,11 @@ void dsMainLoop(void) {
             iTx = touch.px;
             iTy = touch.py;
             if ((iTx>211) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
-              SoundPause();                
-              mmEffect(SFX_CLICKNOQUIT);
+              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME); 
+                
+              soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
-              else { bRestartSoundEngine=true; }
+              else { fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);}
             }
             else if ((iTx>240) && (iTx<256) && (iTy>0) && (iTy<20))  { // Full Speed Toggle ... upper corner...
                if (keys_touch == 0)
@@ -921,37 +873,37 @@ void dsMainLoop(void) {
                }
             }
             else if ((iTx>160) && (iTx<200) && (iTy>112) && (iTy<130))  { //highscore
-              SoundPause();
+              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
               highscore_display();
               restore_bottom_screen();
-              bRestartSoundEngine=true;
+              fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
             }
             else if ((iTx>115) && (iTx<150) && (iTy>112) && (iTy<130))  { //pause
-              if (!keys_touch) mmEffect(SFX_CLICKNOQUIT);
+              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_PAUSE + key_code;
               keys_touch = 1;
             }
             else if ((iTx>64) && (iTx<105) && (iTy>112) && (iTy<130))  { //reset
-              if (!keys_touch) mmEffect(SFX_CLICKNOQUIT);
+              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_RESET + key_code;
               keys_touch = 1;
             }
             else if ((iTx>8) && (iTx<54) && (iTy>112) && (iTy<130))  { //start
-              if (!keys_touch) mmEffect(SFX_CLICKNOQUIT);
+              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               key_code = AKEY_5200_START + key_code;
               keys_touch = 1;
             }
             else if ((iTy>155) && (iTy<185)) 
             { 
               char padKey[] = {AKEY_5200_0,AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_HASH,AKEY_5200_ASTERISK};
-              if (!keys_touch) mmEffect(SFX_CLICKNOQUIT);
+              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (iTx > 0) iTx--;
               if (iTx > 0) iTx--;
               key_code = padKey[iTx / 21] + key_code;
               keys_touch = 1;
             }
             else if ((iTx>70) && (iTx<185) && (iTy>7) && (iTy<50)) {     // 72,8 -> 182,42 cartridge slot
-              SoundPause();
+              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
               // Find files in current directory and show it 
               a52FindFiles();
               romSel=dsWaitForRom();
@@ -961,7 +913,10 @@ void dsMainLoop(void) {
                   dsLoadGame(a5200romlist[ucFicAct].filename); 
                   if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
               }
-              bRestartSoundEngine=true;
+              else
+              {
+                fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME); 
+              }
             }
         }
         else
