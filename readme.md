@@ -28,8 +28,7 @@ Features :
 ----------
 * Most things you should expect from an emulator. 
 *  Most games run at full speed on a DSi or above.
-*  For the DS-LITE/PHAT many games will play but there may
-*  be some lag in sound/speed for the more complex games.
+*  For the DS-LITE/PHAT many games will play but there may be some lag in sound/speed for the more complex games.
 
 Missing :
 ---------
