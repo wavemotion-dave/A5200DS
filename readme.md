@@ -182,7 +182,8 @@ Controls :
 
 --------------------------------------------------------------------------------
 Supported Games (with MD5SUM so you can find the right rom)
-----------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+<code>
  72a91c53bfaa558d863610e3e6d50213       Ant Eater.a52
  c8e90376b7e1b00dcbd4042f50bffb75       Atari 5200 Calibration Cart    
  45f8841269313736489180c8ec3e9588       Activision Decathlon, The (USA).a52
@@ -367,7 +368,7 @@ Supported Games (with MD5SUM so you can find the right rom)
  433d3a2fc9896aa8294271a0204dc7e3       Zaxxon 32k_final.a52
  77beee345b4647563e20fd896231bd47       Zenji (USA).a52
  dc45af8b0996cb6a94188b0be3be2e17       Zone Ranger (USA).a52
-    
+</code>    
 --------------------------------------------------------------------------------
 Original AlekMaul Credits:
 --------------------------------------------------------------------------------
