@@ -44,8 +44,8 @@ History :
 --------------------------------------------------------------------------------
 V3.3 : 30-Apr-2023
   * Improved screen blend so it leaves less visible artifacts.
-  * Improved sound mute so it elimintes most of the little pops.
-  * Built with latest libnds to keep thigns fresh.
+  * Improved sound mute so it eliminates most of the little pops.
+  * Built with latest libnds to keep things fresh.
 
 V3.2 : 12-Dec-2021
   * Reverted back to ARM7 SoundLib (a few games missing key sounds)
