@@ -42,7 +42,7 @@ int bg0, bg1, bg0b, bg1b, bg2, bg3;
 unsigned int etatEmu;
 int atari_frames=0;        
 int frame_skip = TRUE;
-u16 bSoundMute __attribute__((section(".dtcm"))) = false;
+u16 bSoundMute = false;
 
 gamecfg GameConf;                       // Game Config svg
 
@@ -122,7 +122,7 @@ void VsoundClear(void)
     sound_idx = 0;
 }
 
-void VsoundHandler(void) 
+ITCM_CODE void VsoundHandler(void) 
 {
   extern unsigned char pokey_buffer[];
   extern u16 pokeyBufIdx;
@@ -179,7 +179,7 @@ void FadeToColor(unsigned char ucSens, unsigned short ucBG, unsigned char ucScr,
   }
 }
 
-void vblankIntr() 
+ITCM_CODE void vblankIntr() 
 {
     static int sIndex = 0;
     static const u8 jitter[] = 
