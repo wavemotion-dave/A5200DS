@@ -42,7 +42,7 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 History :
 --------------------------------------------------------------------------------
-V3.3 : 30-Apr-2022
+V3.3 : 30-Apr-2023
   * Improved screen blend so it leaves less visible artifacts.
   * Improved sound mute so it elimintes most of the little pops.
   * Built with latest libnds to keep thigns fresh.
@@ -369,7 +369,8 @@ Supported Games (with MD5SUM so you can find the right rom)
  77beee345b4647563e20fd896231bd47       Zenji (USA).a52
  dc45af8b0996cb6a94188b0be3be2e17       Zone Ranger (USA).a52
 </code>    
---------------------------------------------------------------------------------
+
+
 Original AlekMaul Credits:
 --------------------------------------------------------------------------------
 Thanks Wintermute for devkitpro and libnds (http://www.devkitpro.org).
