@@ -127,7 +127,7 @@ void VsoundHandler(void)
   extern unsigned char pokey_buffer[];
   extern u16 pokeyBufIdx;
   
-  if (bSoundMute) return;
+  if (bSoundMute) {*bptr = *aptr; return;}
   
   // If there is a fresh sample... 
   if (myPokeyBufIdx != pokeyBufIdx)
@@ -138,7 +138,7 @@ void VsoundHandler(void)
       {
           *bptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
           myPokeyBufIdx = (myPokeyBufIdx+1) & (SNDLENGTH-1);
-      } else *bptr = sampleExtender[pokey_buffer[myPokeyBufIdx]];
+      } else *bptr = *aptr;
   }
 }
 
