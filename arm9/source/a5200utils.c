@@ -1,3 +1,15 @@
+// =====================================================================================
+// Copyright (c) 2021-2023 Dave Bernazzani (wavemotion-dave)
+//
+// Copying and distribution of this emulator, its source code and associated 
+// readme files, with or without modification, are permitted in any medium without 
+// royalty provided this copyright notice is used and both alekmaul and wavemotion-dave 
+// are thanked profusely.
+//
+// The a5200ds emulator is offered as-is, without any warranty.
+//
+// Please see the README.md file as it contains much useful info.
+// =====================================================================================
 #include <nds.h>
 #include <nds/fifomessages.h>
 
@@ -30,6 +42,7 @@ int bg0, bg1, bg0b, bg1b, bg2, bg3;
 unsigned int etatEmu;
 int atari_frames=0;        
 int frame_skip = TRUE;
+u16 bSoundMute __attribute__((section(".dtcm"))) = false;
 
 gamecfg GameConf;                       // Game Config svg
 
@@ -113,6 +126,8 @@ void VsoundHandler(void)
 {
   extern unsigned char pokey_buffer[];
   extern u16 pokeyBufIdx;
+  
+  if (bSoundMute) return;
   
   // If there is a fresh sample... 
   if (myPokeyBufIdx != pokeyBufIdx)
@@ -212,6 +227,8 @@ void dsShowScreenEmu(void)
   REG_BG2Y = cyBG; 
   REG_BG2PA = xdxBG; 
   REG_BG2PD = ydyBG; 
+    
+  REG_BLDCNT=0; REG_BLDCNT_SUB=0; REG_BLDY=0; REG_BLDY_SUB=0;
 }
 
 void dsShowScreenMain(void) {
@@ -793,7 +810,7 @@ void dsMainLoop(void) {
         VsoundClear();
         swiWaitForVBlank();swiWaitForVBlank();
         irqEnable(IRQ_TIMER2);  
-        fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
+        bSoundMute = false;
         etatEmu = A5200_PLAYGAME;
         atari_frames=0;
         TIMER0_DATA=0;
@@ -858,11 +875,11 @@ void dsMainLoop(void) {
             iTx = touch.px;
             iTy = touch.py;
             if ((iTx>211) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
-              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME); 
+              bSoundMute = true;
                 
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
-              else { fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);}
+              else { bSoundMute = false;}
             }
             else if ((iTx>240) && (iTx<256) && (iTy>0) && (iTy<20))  { // Full Speed Toggle ... upper corner...
                if (keys_touch == 0)
@@ -873,10 +890,10 @@ void dsMainLoop(void) {
                }
             }
             else if ((iTx>160) && (iTx<200) && (iTy>112) && (iTy<130))  { //highscore
-              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
+              bSoundMute = true;
               highscore_display();
               restore_bottom_screen();
-              fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME);
+              bSoundMute = false;
             }
             else if ((iTx>115) && (iTx<150) && (iTy>112) && (iTy<130))  { //pause
               if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
@@ -903,19 +920,16 @@ void dsMainLoop(void) {
               keys_touch = 1;
             }
             else if ((iTx>70) && (iTx<185) && (iTy>7) && (iTy<50)) {     // 72,8 -> 182,42 cartridge slot
-              fifoSendValue32(FIFO_USER_01,(1<<16) | (0) | SOUND_SET_VOLUME);
+              bSoundMute = true;
               // Find files in current directory and show it 
               a52FindFiles();
               romSel=dsWaitForRom();
+              bSoundMute = false;
               if (romSel) 
               { 
                   etatEmu=A5200_PLAYINIT; 
                   dsLoadGame(a5200romlist[ucFicAct].filename); 
                   if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
-              }
-              else
-              {
-                fifoSendValue32(FIFO_USER_01,(1<<16) | (127) | SOUND_SET_VOLUME); 
               }
             }
         }

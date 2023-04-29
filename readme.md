@@ -1,6 +1,7 @@
-a5200DS
---------------------------------------------------------------------------------
-a5200DS is an Atari VCS 5200 console emulator.
+# a5200ds
+
+a5200ds is an Atari VCS 5200 console emulator.
+
 To use this emulator, you must use NTSC compatible roms with a52/bin format. 
 You also need the 5200.rom rom bios in the same folder as A5200DS.NDS (alternate
 locations it can be: /roms/bios or /data/bios) to use this emulator properly 
@@ -9,12 +10,26 @@ games but doesn't have full compatibilty so it is still strongly recommended
 you use 5200.bin). A quick search on atariage website will help you about that.
 Do not ask me about such files, I don't have them. 
 
+Copyright :
+-----------------------
+a5200ds is Copyright (c) 2021-2023 Dave Bernazzani (wavemotion-dave)
+
+This program is built upon alekmaul's magnificent efforts from circa 2011. He was 
+kind enough to grant me permission to update this emulator for the modern era.
+
+As long as there is no commercial use (i.e. no profit is made), copying and distribution 
+of this emulator, its source code and associated readme files, with or without modification, 
+are permitted in any medium without royalty provided this copyright notice is used 
+and both alekmaul and wavemotion-dave are thanked profusely.
+
+The a5200ds emulator is offered as-is, without any warranty.
+
 Features :
 ----------
- Most things you should expect from an emulator. 
- Most games run at full speed on a DSi or above.
- For the DS-LITE/PHAT many games will play but there may
- be some lag in sound/speed for the more complex games.
+* Most things you should expect from an emulator. 
+*  Most games run at full speed on a DSi or above.
+*  For the DS-LITE/PHAT many games will play but there may
+*  be some lag in sound/speed for the more complex games.
 
 Missing :
 ---------
@@ -25,9 +40,13 @@ is too slow to be playable... or is it?
 
 Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
---------------------------------------------------------------------------------
 History :
 --------------------------------------------------------------------------------
+V3.3 : 30-Apr-2022
+  * Improved screen blend so it leaves less visible artifacts.
+  * Improved sound mute so it elimintes most of the little pops.
+  * Built with latest libnds to keep thigns fresh.
+
 V3.2 : 12-Dec-2021
   * Reverted back to ARM7 SoundLib (a few games missing key sounds)
   
@@ -350,7 +369,7 @@ Supported Games (with MD5SUM so you can find the right rom)
  dc45af8b0996cb6a94188b0be3be2e17       Zone Ranger (USA).a52
     
 --------------------------------------------------------------------------------
-Credits:
+Original AlekMaul Credits:
 --------------------------------------------------------------------------------
 Thanks Wintermute for devkitpro and libnds (http://www.devkitpro.org).
 Atari800 team for source code (http://atari800.sourceforge.net/)
