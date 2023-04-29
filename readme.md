@@ -27,8 +27,8 @@ The a5200ds emulator is offered as-is, without any warranty.
 Features :
 ----------
 * Most things you should expect from an emulator. 
-*  Most games run at full speed on a DSi or above.
-*  For the DS-LITE/PHAT many games will play but there may be some lag in sound/speed for the more complex games.
+* Most games run at full speed on a DSi or above.
+* For the DS-LITE/PHAT many games will play but there may be some lag in sound/speed for the more complex games.
 
 Missing :
 ---------
@@ -36,6 +36,8 @@ Most things are playing fine on a DSi. Some of the more simple
 games (like Missile Command, Space Invaders, Centipede) will generally
 run fine on the older DS-LITE or DS-PHAT.  Bosconian (512k supercart)
 is too slow to be playable... or is it?
+
+Sound is passable. I'm not super pleased with the fidelity but it's come a long way.
 
 Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
