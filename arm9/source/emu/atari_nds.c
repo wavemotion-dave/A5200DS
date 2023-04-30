@@ -21,7 +21,6 @@
 #include "cpu.h"
 #include "input.h"
 #include "sound.h"
-#include "rt-config.h"	/* for refresh_rate */
 
 u32 trig0 = 1;
 u32 trig1 = 1;

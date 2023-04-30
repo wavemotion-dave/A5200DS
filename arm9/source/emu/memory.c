@@ -33,7 +33,6 @@
 #include "cartridge.h"
 #include "gtia.h"
 #include "memory.h"
-#include "pbi.h"
 #include "pia.h"
 #include "pokeysnd.h"
 #include "util.h"
