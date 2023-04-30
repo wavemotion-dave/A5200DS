@@ -7,8 +7,8 @@ You also need the 5200.rom rom bios in the same folder as A5200DS.NDS (alternate
 locations it can be: /roms/bios or /data/bios) to use this emulator properly 
 (there is a built-in open-source replacement BIOS which will work for some 
 games but doesn't have full compatibilty so it is still strongly recommended 
-you use 5200.bin). A quick search on atariage website will help you about that.
-Do not ask me about such files, I don't have them. 
+you use 5200.bin). A quick search on google will help you about that.
+Do not ask me about such files - you will be ignored.
 
 Copyright :
 -----------------------
@@ -30,12 +30,16 @@ Features :
 * Most games run at full speed on a DSi or above.
 * For the DS-LITE/PHAT many games will play but there may be some lag in sound/speed for the more complex games.
 
+Two Flavors :
+----------
+* The normal a5200ds.nds file will run on an original DS (Lite/Phat) as well as the DSi (or 2DS, 3DS / XL/LL).
+* The special a5200dsi.nds file is optmized to run bankswitching on a DSi and will be 10-15% slower when running in standard DS mode. This build will run the mighty Bosconian port (128K AtariMax version) at full speed.
+
 Missing :
 ---------
 Most things are playing fine on a DSi. Some of the more simple 
 games (like Missile Command, Space Invaders, Centipede) will generally
-run fine on the older DS-LITE or DS-PHAT.  Bosconian (512k supercart)
-is too slow to be playable... or is it?
+run fine on the older DS-LITE or DS-PHAT.  Bosconian (128k AtariMax SD Supercart) is too slow to be playable... or is it?
 
 Sound is passable. I'm not super pleased with the fidelity but it's come a long way.
 
@@ -43,6 +47,12 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 History :
 --------------------------------------------------------------------------------
+V3.4 : TBD
+  * Another frame or two of performance from memory optmizations.
+  * Removed lots of obsoleted code to streamline the build.
+  * Added a new DSi special build that will finally run Bosconian at full speed with speech as long as you are in DSi (2x CPU) mode.
+  * Added tweaks and support for latest homebrew carts like Rob-N-Banks.
+  
 V3.3 : 30-Apr-2023
   * Improved screen blend so it leaves less visible artifacts.
   * Improved sound mute so it eliminates most of the little pops.
