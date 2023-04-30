@@ -70,7 +70,6 @@
 #include "pia.h"
 #include "platform.h"
 #include "pokeysnd.h"
-#include "rtime.h"
 #include "util.h"
 #if !defined(BASIC) && !defined(CURSES_BASIC)
 #endif
@@ -350,7 +349,6 @@ int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly
 }
 
 int Atari800_Initialise(void) {
-	RTIME_Initialise();
 
 	INPUT_Initialise();
 

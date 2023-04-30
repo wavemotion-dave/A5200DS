@@ -35,7 +35,6 @@
 #include "cartridge.h"
 #include "memory.h"
 #include "pia.h"
-#include "rtime.h"
 #include "util.h"
 #include "input.h"
 
