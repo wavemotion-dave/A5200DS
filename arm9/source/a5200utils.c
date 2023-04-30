@@ -22,7 +22,6 @@
 #include "a5200utils.h"
 
 #include "atari.h"
-#include "global.h"
 #include "cartridge.h"
 #include "highscore.h"
 #include "input.h"
