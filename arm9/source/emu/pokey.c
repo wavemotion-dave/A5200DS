@@ -132,7 +132,7 @@ ITCM_CODE UBYTE POKEY_GetByte(UWORD addr)
 		byte = IRQST;
 		break;
 	case _SKSTAT:
-		byte = 0;
+		byte = SKSTAT;
 		break;
 	}
 
