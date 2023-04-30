@@ -128,15 +128,9 @@ void INPUT_Frame(void)
 	if (key_shift)
 		SKSTAT &= ~8;
 
-	if (key_code < 0) {
-		if (press_space) {
-			key_code = AKEY_SPACE;
-			press_space = 0;
-		}
-		else 
-        {
-            last_key_code = AKEY_NONE;
-        }
+	if (key_code < 0) 
+    {
+        last_key_code = AKEY_NONE;
 	}
     
     /* The 5200 has only 4 of the 6 keyboard scan lines connected */

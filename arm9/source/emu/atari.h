@@ -11,7 +11,7 @@
 
 #define NODIRTYCOMPARE
 
-//#define BUILD_BOSCONIAN 1     // Enable this to produce a build that will run fast bankswitching at the expense of 10% slowdown in memory fetches. Renders games like Bosconian fully playable.
+//#define BUILD_BOSCONIAN 1     // Enable this to produce a build that will run fast bankswitching at the expense of 15% slowdown in memory fetches. Renders games like Bosconian fully playable.
 
 #define PAGED_ATTRIB 1
 
@@ -46,14 +46,6 @@
 #define MACHINE_XLXE  2
 #define MACHINE_5200  3
 extern int machine_type;
-
-/* RAM size in kilobytes.
-   Valid values for MACHINE_OSA and MACHINE_OSB are: 16, 48, 52.
-   Valid values for MACHINE_XLXE are: 16, 64, 128, 192, RAM_320_RAMBO,
-   RAM_320_COMPY_SHOP, 576, 1088.
-   The only valid value for MACHINE_5200 is 16. */
-#define RAM_320_RAMBO       320
-#define RAM_320_COMPY_SHOP  321
 
 
 /* Video system. */

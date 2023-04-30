@@ -231,21 +231,16 @@ void Coldstart(void) {
 	   and Start key (boot from cassette) */
 	consol_index = 2;
 	consol_table[2] = 0x0f;
-	if (disable_basic && !loading_basic) {
-		/* hold Option during reboot */
-		consol_table[2] &= ~CONSOL_OPTION;
-	}
-	if (hold_start) {
-		/* hold Start during reboot */
-		consol_table[2] &= ~CONSOL_START;
-	}
+    
+    /* hold Option during reboot */
+    consol_table[2] &= ~CONSOL_OPTION;
+
 	consol_table[1] = consol_table[2];
 }
 
 int Atari800_InitialiseMachine(void) {
 	Atari800_ClearAllEsc();
 	MEMORY_InitialiseMachine();
-	Device_UpdatePatches();
 	return TRUE;
 }
 
@@ -343,23 +338,8 @@ int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly
   
 	int type = Atari800_DetectFileType(filename);
 
-	switch (type) {
-    case AFILE_ATR:
-    case AFILE_XFD:
-    case AFILE_ATR_GZ:
-    case AFILE_XFD_GZ:
-    case AFILE_DCM:
-      if (!SIO_Mount(diskno, filename, readonly))
-        return AFILE_ERROR;
-      if (reboot)
-        Coldstart();
-      break;
-    case AFILE_XEX:
-    case AFILE_BAS:
-    case AFILE_LST:
-      if (!BIN_loader(filename))
-        return AFILE_ERROR;
-      break;
+	switch (type) 
+    {
     case AFILE_CART:
     case AFILE_ROM:
       if (CART_Insert(filename) != 0) {
@@ -368,22 +348,7 @@ int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly
       if (reboot)
         Coldstart();
       break;
-    case AFILE_CAS:
-    case AFILE_BOOT_TAPE:
-      if (!CASSETTE_Insert(filename))
-        return AFILE_ERROR;
-      if (reboot) {
-        hold_start = TRUE;
-        Coldstart();
-      }
-      break;
-    case AFILE_STATE:
-    case AFILE_STATE_GZ:
-      if (!ReadAtariState(filename, "rb"))
-        return AFILE_ERROR;
-      /* Don't press Option */
-      consol_table[1] = consol_table[2] = 0xf;
-      break;
+            
     default:
       break;
 	}
@@ -391,10 +356,7 @@ int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly
 }
 
 int Atari800_Initialise(void) {
-    Device_Initialise();
 	RTIME_Initialise();
-	SIO_Initialise ();
-	CASSETTE_Initialise();
 
 	INPUT_Initialise();
 
@@ -422,11 +384,6 @@ UNALIGNED_STAT_DEF(memory_write_aligned_word_stat)
 int Atari800_Exit(int run_monitor) {
 	int restart;
 	restart = Atari_Exit(run_monitor);
-#ifndef __PLUS
-	if (!restart) {
-		SIO_Exit();	/* umount disks, so temporary files are deleted */
-	}
-#endif /* __PLUS */
 	return restart;
 }
 

@@ -135,7 +135,7 @@ ITCM_CODE UBYTE POKEY_GetByte(UWORD addr)
 		byte = IRQST;
 		break;
 	case _SKSTAT:
-		byte = SKSTAT + (CASSETTE_IOLineStatus() << 4);
+		byte = 0;
 		break;
 	}
 
@@ -206,7 +206,7 @@ ITCM_CODE void POKEY_PutByte(UWORD addr, UBYTE byte)
 		IRQST |= ~byte & 0xf7;	/* Reset disabled IRQs except XMTDONE */
 		if (IRQEN & 0x20) {
 			SLONG delay;
-			delay = CASSETTE_GetInputIRQDelay();
+			delay = 0;
 			if (delay > 0)
 				DELAYED_SERIN_IRQ = delay;
 		}

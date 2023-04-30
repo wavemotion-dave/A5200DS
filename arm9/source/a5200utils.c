@@ -805,8 +805,8 @@ void dsMainLoop(void) {
         break;
         
       case A5200_MENUSHOW:
-          etatEmu =  dsWaitOnMenu(A5200_MENUSHOW);
-          Atari800_Initialise();
+        etatEmu =  dsWaitOnMenu(A5200_MENUSHOW);
+        Atari800_Initialise();
         break;
         
       case A5200_PLAYINIT:
@@ -880,8 +880,7 @@ void dsMainLoop(void) {
             iTx = touch.px;
             iTy = touch.py;
             if ((iTx>211) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
-              bSoundMute = true;
-                
+              bSoundMute = true;                
               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
               else { bSoundMute = false;}

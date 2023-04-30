@@ -59,7 +59,7 @@ static const struct cart_t cart_table[] =
     {"ec65389cc604b279d69a889725c723e7",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    256,    32,20},  // Attack of the Mutant Camels (XL Conversion).a52
     {"f5cd178cbea0ae7d8cf65b30cfd04225",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    1,  256,    256,    32,16},  // Ballblazer (USA).a52
     {"96b424d0bb0339f4edfe8095fe275d62",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    242,    32,26},  // Batty Builders (XL Conversion).a52
-    {"8123393ae9635f6bc15ddc3380b04328",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    248,    32,24},  // Blueprint (1982) (CBS).a52    
+    {"8123393ae9635f6bc15ddc3380b04328",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    252,    32,24},  // Blueprint (1982) (CBS).a52    
     {"17e5c03b4fcada48d4c2529afcfe3a70",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    256,    32,24},  // BCs Quest For Tires (XL Conversion).a52
     {"96ec5b299b203c88f98100b57af6838d",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    238,    32,24},  // Biscuits From Hell.bin
     {"315e0bb45f28bb227e92b8c9e00ee8eb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    228,    32,17},  // Blaster.a52
