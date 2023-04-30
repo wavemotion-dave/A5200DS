@@ -33,13 +33,14 @@ Features :
 Two Flavors :
 ----------
 * The normal a5200ds.nds file will run on an original DS (Lite/Phat) as well as the DSi (or 2DS, 3DS / XL/LL).
-* The special a5200dsi.nds file is optmized to run bankswitching on a DSi and will be 10-15% slower when running in standard DS mode. This build will run the mighty Bosconian port (128K AtariMax version) at full speed.
+* The special a5200dsi.nds file is optmized to run bankswitching on a DSi and will be 10-15% slower when running in standard DS mode. This build will run the mighty Bosconian port (128K AtariMax version) at full speed with the new bankswitch handling.
 
 Missing :
 ---------
-Most things are playing fine on a DSi. Some of the more simple 
-games (like Missile Command, Space Invaders, Centipede) will generally
-run fine on the older DS-LITE or DS-PHAT.  Bosconian (128k AtariMax SD Supercart) is too slow to be playable... or is it?
+Most things are playing fine on a DSi. Most of the original commercial games (like Missile Command, Space Invaders, Centipede) will generally
+run fine on the older DS-LITE or DS-PHAT.  Bosconian (128k AtariMax SD Supercart) is too slow to be playable... or is it? If you have a DSi or 
+above and are running with Unlaunch or Twilight Menu++ (both of which will unlock the faster 2X CPU of the DSi), you can try the special a5200dsi.nds
+build to make Bosconian (and everything else) run smoothly.
 
 Sound is passable. I'm not super pleased with the fidelity but it's come a long way.
 
