@@ -10,7 +10,7 @@ include $(DEVKITARM)/ds_rules
 export TARGET		:=	A5200DS
 export TOPDIR		:=	$(CURDIR)
 
-VERSION=3.3b
+VERSION=3.3c
 
 ICON 		:= -b $(CURDIR)/logo.bmp "A5200DS $(VERSION);wavemotion-dave;http://https://github.com/wavemotion-dave/A5200DS"
 
