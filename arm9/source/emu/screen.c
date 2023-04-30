@@ -36,7 +36,6 @@
 #include "antic.h"
 #include "atari.h"
 #include "screen.h"
-#include "sio.h"
 
 #define ATARI_VISIBLE_WIDTH 336
 #define ATARI_LEFT_MARGIN 24

@@ -60,11 +60,8 @@
 
 #include "antic.h"
 #include "atari.h"
-#include "binload.h"
 #include "cartridge.h"
-#include "cassette.h"
 #include "cpu.h"
-#include "devices.h"
 #include "gtia.h"
 
 #include "input.h"
@@ -74,7 +71,6 @@
 #include "platform.h"
 #include "pokeysnd.h"
 #include "rtime.h"
-#include "sio.h"
 #include "util.h"
 #if !defined(BASIC) && !defined(CURSES_BASIC)
 #include "screen.h"

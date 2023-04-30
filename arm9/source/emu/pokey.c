@@ -29,12 +29,10 @@
 #include "pia.h"
 #include "pokey.h"
 #include "gtia.h"
-#include "sio.h"
 #include "input.h"
 #include "statesav.h"
 #include "pokeysnd.h"
 #include "antic.h"
-#include "cassette.h"
 
 unsigned short pokeyBufIdx __attribute__((section(".dtcm")))= 0;
 char pokey_buffer[SNDLENGTH] __attribute__((section(".dtcm")));

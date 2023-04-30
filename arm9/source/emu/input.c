@@ -26,12 +26,10 @@
 #include <string.h>
 #include "antic.h"
 #include "atari.h"
-#include "cassette.h"
 #include "cartridge.h"
 #include "cpu.h"
 #include "gtia.h"
 #include "input.h"
-//#include "log.h"
 #include "memory.h"
 #include "pia.h"
 #include "platform.h"

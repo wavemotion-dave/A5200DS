@@ -28,7 +28,6 @@
 #include "cpu.h"
 #include "memory.h"
 #include "pia.h"
-#include "sio.h"
 
 #ifndef BASIC
 #include "input.h"

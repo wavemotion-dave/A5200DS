@@ -28,7 +28,6 @@
 #include <string.h>
 #include "atari.h"
 #include "antic.h"
-#include "cassette.h"
 #include "gtia.h"
 #include "input.h"
 #include "statesav.h"
