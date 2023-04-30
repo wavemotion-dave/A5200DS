@@ -886,7 +886,7 @@ static UBYTE gtia_10_lookup[] __attribute__((section(".dtcm"))) =
 static UBYTE gtia_10_pm[] __attribute__((section(".dtcm"))) =
 {1, 2, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-ITCM_CODE static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
+static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
 {
 	int i = ((const UBYTE *) t_pm_scanline_ptr - pm_scanline) & ~1;
 	while (i < right_border_start) {
@@ -918,7 +918,7 @@ ITCM_CODE static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
 	do_border();
 }
 
-ITCM_CODE static void draw_an_gtia10(const ULONG *t_pm_scanline_ptr)
+static void draw_an_gtia10(const ULONG *t_pm_scanline_ptr)
 {
 	int i = ((const UBYTE *) t_pm_scanline_ptr - pm_scanline) | 1;
 	UWORD lookup_gtia10[16];
@@ -1282,7 +1282,7 @@ static void draw_antic_2_gtia11(int nchars, const UBYTE *ANTIC_memptr, UWORD *pt
 	do_border_gtia11();
 }
 
-static void draw_antic_4(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_antic_4(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
 	INIT_BACKGROUND_8
 #ifdef PAGED_MEM
@@ -2415,17 +2415,17 @@ ITCM_CODE UBYTE ANTIC_Get_VCOUNT(UWORD addr)
     return (ypos + 1) >> 1;
 }
 
-ITCM_CODE UBYTE ANTIC_Get_PENH(UWORD addr)
+UBYTE ANTIC_Get_PENH(UWORD addr)
 {
     return PENH;
 }
 
-ITCM_CODE UBYTE ANTIC_Get_PENV(UWORD addr)
+UBYTE ANTIC_Get_PENV(UWORD addr)
 {
     return PENV;
 }
 
-ITCM_CODE UBYTE ANTIC_Get_NMIST(UWORD addr)
+UBYTE ANTIC_Get_NMIST(UWORD addr)
 {
     return NMIST;
 }

@@ -32,11 +32,6 @@
 #include "input.h"
 #include "pokeysnd.h"
 
-#ifdef BUILD_BOSCONIAN 
-#undef ITCM_CODE
-#define ITCM_CODE
-#endif
-
 /* GTIA Registers ---------------------------------------------------------- */
 
 UBYTE M0PL   __attribute__((section(".dtcm"))); 
@@ -171,7 +166,7 @@ extern UWORD hires_lookup_l[128];
 extern ULONG lookup_gtia9[16];
 extern ULONG lookup_gtia11[16];
 
-ITCM_CODE void setup_gtia9_11(void) {
+void setup_gtia9_11(void) {
     int i;
     ULONG count9 = 0;
     ULONG count11 = 0;

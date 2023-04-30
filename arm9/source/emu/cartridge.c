@@ -64,8 +64,8 @@ static const struct cart_t cart_table[] =
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    256,    32,25},  // BerZerk (USA).a52
     {"322cf3f7ff6515e2f363927134146b59",    CART_5200_64,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    253,    32,28},  // Berks4.a52    
     {"139229eed18032fdea735fa5360bd551",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    240,    32,16},  // Beef Drop Ultimate SD Edition.a52
-    {"d9499b29559f8c3bf27391f0b9682ae8",    CART_5200_512,      CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    217,    32, 8},  // Bosconian (512k conversion).a52 
-    {"cea3ea765d3626be01ed9b290c9a9bd0",    CART_5200_512,      CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    217,    32, 8},  // Bosconian 1.5f (512k conversion).a52     
+    {"bcff0c4f8edb7726497fc6716d4bded7",    CART_5200_128,      CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    217,    32, 8},  // Bosconian (128k AtariMaxSD conversion).a52 
+    {"417e6d5523b700d5c753f0a9a4121710",    CART_5200_128,      CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    217,    32, 8},  // Bosconian 1.5f (128k AtariMaxSD conversion).a52     
     {"81790daff7f7646a6c371c056622be9c",    CART_5200_40,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    245,    32,21},  // Bounty Bob Strikes Back (Merged) (Big Five Software) (U).a52
     {"a074a1ff0a16d1e034ee314b85fa41e9",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    1,  256,    256,    32,24},  // Buck Rogers - Planet of Zoom (USA).a52
     {"713feccd8f2722f2e9bdcab98e25a35f",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  256,    256,    32,24},  // Buried Bucks (XL Conversion).a52
@@ -261,15 +261,15 @@ static const struct cart_t cart_table[] =
 };
 
 
-UBYTE *cart_image = NULL;       /* For cartridge memory */
-char cart_filename[FILENAME_MAX];
-struct cart_t myCart __attribute__((section(".dtcm"))) = {"", CART_5200_32, CTRL_JOY, 0,0,0,0};
-static byte cart_image_fixed_buffer[CART_MAX_SIZE] __attribute__ ((aligned (4)));;
-static byte bryan_bank __attribute__((section(".dtcm"))) = 0;
-static byte last_bryan_bank __attribute__((section(".dtcm"))) = 255;
-static UWORD last_bounty_bob_bank __attribute__((section(".dtcm"))) = 65535;
-UWORD bosconian_bank __attribute__((section(".dtcm"))) = 0x0000;
-
+UBYTE          *cart_image = NULL;       /* For cartridge memory */
+char            cart_filename[FILENAME_MAX];
+struct cart_t   myCart __attribute__((section(".dtcm"))) = {"", CART_5200_32, CTRL_JOY, 0,0,0,0};
+static byte     cart_image_fixed_buffer[CART_MAX_SIZE] __attribute__ ((aligned (4)));;
+static byte     bryan_bank __attribute__((section(".dtcm"))) = 0;
+static byte     last_bryan_bank __attribute__((section(".dtcm"))) = 255;
+static UWORD    last_bounty_bob_bank __attribute__((section(".dtcm"))) = 65535;
+static UWORD    last_bounty_bob_bank2 __attribute__((section(".dtcm"))) = 65535;
+UWORD           bosconian_bank __attribute__((section(".dtcm"))) = 0x0000;
 
 
 /* Rewinds the stream to its beginning. */
@@ -289,7 +289,7 @@ int Util_flen(FILE *fp)
 
 // ---------------------------------------------------------------------------------------------
 // VRAM!! 256K block which is enough to store the Bounty Bob stuff and the 64K Megacart 
-// banks and most of the mighty Bosconian 512K ROM.
+// banks and most of the mighty Bosconian 128K ROM.
 // This provides a bit of a speed boost copying to/from the main image RAM (almost 10%)
 // ---------------------------------------------------------------------------------------------
 UBYTE *banked_image __attribute__((section(".dtcm")))= (UBYTE *) 0x06860000;  
@@ -311,9 +311,9 @@ ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
 
 ITCM_CODE UBYTE BountyBob2_GetByte(UWORD addr)
 {
-    if (addr != last_bounty_bob_bank)
+    if (addr != last_bounty_bob_bank2)
     {
-        last_bounty_bob_bank = addr;
+        last_bounty_bob_bank2 = addr;
         addr -= 0x5ff6;
         u32* dest = (u32*)(memory+0x5000);
         u32* src = (u32*)(banked_image + 0x4000 + (addr * 0x1000));
@@ -336,9 +336,9 @@ ITCM_CODE void BountyBob1_PutByte(UWORD addr, UBYTE value)
 
 ITCM_CODE void BountyBob2_PutByte(UWORD addr, UBYTE value)
 {
-    if (addr != last_bounty_bob_bank)
+    if (addr != last_bounty_bob_bank2)
     {
-        last_bounty_bob_bank = addr;
+        last_bounty_bob_bank2 = addr;
         addr -= 0x5ff6;
         u32* dest = (u32*)(memory+0x5000);
         u32* src = (u32*)(banked_image + 0x4000 + (addr * 0x1000));
@@ -378,65 +378,45 @@ ITCM_CODE UBYTE Bryan_GetByte64_reset(UWORD addr)
 }
 
 // -------------------------------------------------------------
-// Access to $BFE0-BFFF resets to home bank 1.
+// Access to $BFE0-BFFF resets to home bank 3.
 // Access to $BFD0-BFDF changes lower two bank bits by A2-A3.
 // Access to $BFC0-BFCF changes upper two bank bits by A2-A3.
 // -------------------------------------------------------------
 #ifdef BUILD_BOSCONIAN
 UBYTE *bank_ptr __attribute__((section(".dtcm"))) = 0;
-ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
+ITCM_CODE UBYTE Bryan_GetByte128(UWORD addr)
 {
     if (addr >= 0xBFE0)
     {
-        bryan_bank = 15;
-    }
-    else if (addr >= 0xBFD0)
-    {
-        bryan_bank &= 0x0C;
-        bryan_bank |= ((addr & 0x0C) >> 2);
+        bryan_bank = 3;
     }
     else
     {
-        bryan_bank &= 0x03;
-        bryan_bank |= ((addr & 0x0C));
+        bryan_bank = ((addr & 0x0C) >> 2);
     }
     bank_ptr = cart_image + ((bryan_bank * 0x8000) - 0x4000);
     return dGetByte(addr);
 }
 #else
-ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
+ITCM_CODE UBYTE Bryan_GetByte128(UWORD addr)
 {
     if (addr >= 0xBFE0)
     {
-        bryan_bank = 15;
+        bryan_bank = 3;
     }
-    else if (addr >= 0xBFD0)
+    else
     {
-        bryan_bank &= 0x0C;
-        bryan_bank |= ((addr & 0x0C) >> 2);
+        bryan_bank = ((addr & 0x0C) >> 2);
     }
-    else // if (addr >= 0xBFC0)
-    {
-        bryan_bank &= 0x03;
-        bryan_bank |= ((addr & 0x0C));
-    }
+    
     if (last_bryan_bank != bryan_bank)
     {
-        if (bryan_bank >= 8)
-        {
-            u32* dest = (u32*)(memory+0x4000);
-            u32* src = (u32*)(banked_image + (0x8000 * (bryan_bank-8)));
-            for (int i=0; i<(0x8000>>2); i++)
-            {
-                *dest++ = *src++;
-            }
-        }
-        else
-        {
-            CopyROM(0x4000, 0xbfff, cart_image + (0x8000L * bryan_bank));
-        }
+        u32* dest = (u32*)(memory+0x4000);
+        u32* src = (u32*)(banked_image + (0x8000 * (bryan_bank)));
+        for (int i=0; i<(0x8000>>2); i++) { *dest++ = *src++; }
         last_bryan_bank = bryan_bank;
     }
+    
     return dGetByte(addr);
 }
 #endif
@@ -456,50 +436,54 @@ int CART_Insert(const char *filename) {
     /* check file length */
     len = Util_flen(fp);
     Util_rewind(fp);
-
-    /* Save Filename for state save */
-    strcpy(cart_filename, filename);
-
-    memcpy(&myCart, &cart_table[0], sizeof(myCart));
-
-    /* we used a fixed cart memory buffer... it's big enough! */
-    cart_image = (UBYTE *) cart_image_fixed_buffer;
-    fread(cart_image, 1, len, fp);
-    fclose(fp);
     
-    /* find cart type */
-    myCart.type = CART_NONE;
-    myCart.control = CTRL_JOY;
-    int len_kb = len >> 10; /* number of kilobytes */
-    if (len_kb == 4)  myCart.type =  CART_5200_4;
-    if (len_kb == 8)  myCart.type =  CART_5200_8;
-    if (len_kb == 16) myCart.type =  CART_5200_NS_16;
-    if (len_kb == 32) myCart.type =  CART_5200_32;
-    if (len_kb == 40) myCart.type =  CART_5200_40;
-    if (len_kb == 64) myCart.type =  CART_5200_64;
-    if (len_kb >= 128) myCart.type =  CART_5200_512;
-
-    // --------------------------------------------
-    // Go grab the MD5 sum and see if we find 
-    // it in our master table of games...
-    // --------------------------------------------
-    char md5[33];
-    hash_Compute(cart_image, len, (byte*)md5);
-    int idx=0;
-    while (cart_table[idx].type != CART_NONE)
+    /* limit length of cart */
+    if (len <= CART_MAX_SIZE)
     {
-        if (strncasecmp(cart_table[idx].md5, md5,32) == 0)
+        /* Save Filename for state save */
+        strcpy(cart_filename, filename);
+
+        memcpy(&myCart, &cart_table[0], sizeof(myCart));
+
+        /* we used a fixed cart memory buffer... it's big enough! */
+        cart_image = (UBYTE *) cart_image_fixed_buffer;
+        fread(cart_image, 1, len, fp);
+        fclose(fp);
+
+        /* find cart type */
+        myCart.type = CART_NONE;
+        myCart.control = CTRL_JOY;
+        int len_kb = len >> 10; /* number of kilobytes */
+        if (len_kb == 4)  myCart.type =  CART_5200_4;
+        if (len_kb == 8)  myCart.type =  CART_5200_8;
+        if (len_kb == 16) myCart.type =  CART_5200_NS_16;
+        if (len_kb == 32) myCart.type =  CART_5200_32;
+        if (len_kb == 40) myCart.type =  CART_5200_40;
+        if (len_kb == 64) myCart.type =  CART_5200_64;
+        if (len_kb == 128) myCart.type = CART_5200_128;
+
+        // --------------------------------------------
+        // Go grab the MD5 sum and see if we find 
+        // it in our master table of games...
+        // --------------------------------------------
+        static char md5[33];
+        hash_Compute(cart_image, len, (byte*)md5);
+        int idx=0;
+        while (cart_table[idx].type != CART_NONE)
         {
-            memcpy(&myCart, &cart_table[idx], sizeof(myCart));
-            break;   
+            if (strncasecmp(cart_table[idx].md5, md5,32) == 0)
+            {
+                memcpy(&myCart, &cart_table[idx], sizeof(myCart));
+                break;   
+            }
+            idx++;
         }
-        idx++;
-    }
 
-    if (myCart.type != CART_NONE) 
-    {
-        CART_Start();
-        return 0;   
+        if (myCart.type != CART_NONE) 
+        {
+            CART_Start();
+            return 0;   
+        }
     }
     cart_image = NULL;
     return CART_BAD_FORMAT;
@@ -555,6 +539,7 @@ void CART_Start(void)
             CopyROM(0xa000, 0xbfff, cart_image + 0x8000);
             memcpy(banked_image, cart_image, 0x8000);
             last_bounty_bob_bank = -1;
+            last_bounty_bob_bank2 = -1;
             for (int i=0x4ff6; i<=0x4ff9; i++) readmap[i] = BountyBob1_GetByte;
             for (int i=0x5ff6; i<=0x5ff9; i++) readmap[i] = BountyBob2_GetByte;
             for (int i=0x4ff6; i<=0x4ff9; i++) writemap[i] = BountyBob1_PutByte;
@@ -567,11 +552,11 @@ void CART_Start(void)
             for (int i=0xbfd0; i<= 0xbfdf; i++) readmap[i] = Bryan_GetByte64;
             for (int i=0xbfe0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte64_reset;
             break;
-        case CART_5200_512:
-            bryan_bank = 15; last_bryan_bank=15;
-            memcpy(banked_image, cart_image+(0x8000*8), 0x40000);    
+        case CART_5200_128:
+            bryan_bank = 3; last_bryan_bank=3;
+            memcpy(banked_image, cart_image, 0x20000);    
             CopyROM(0x4000, 0xbfff, cart_image + (0x8000L * (long)bryan_bank));
-            for (int i=0xbfc0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte512;
+            for (int i=0xbfc0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte128;
 #ifdef BUILD_BOSCONIAN                
             bank_ptr = cart_image + ((bryan_bank * 0x8000) - 0x4000);
             bosconian_bank = 0x4000;
@@ -585,10 +570,3 @@ void CART_Start(void)
     }
 }
 
-void CARTStateRead(void)
-{
-}
-
-void CARTStateSave(void)
-{
-}

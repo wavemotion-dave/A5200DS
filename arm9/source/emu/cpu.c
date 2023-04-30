@@ -284,7 +284,11 @@ static UBYTE cycles[256] __attribute__((section(".dtcm"))) =
 };
 
 /* 6502 emulation routine */
+#ifdef BUILD_BOSCONIAN
+void GO(int limit)
+#else
 ITCM_CODE void GO(int limit)
+#endif    
 {
 #define OPCODE_ALIAS(code)	opcode_##code:
 #define DONE				goto next;
