@@ -35,7 +35,6 @@
 #include "memory.h"
 #include "pia.h"
 #include "pokeysnd.h"
-#include "util.h"
 
 rdfunc readmap[65536]   __attribute__ ((aligned (16)));
 wrfunc writemap[65536]  __attribute__ ((aligned (16)));

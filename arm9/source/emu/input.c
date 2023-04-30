@@ -34,14 +34,10 @@
 #include "pia.h"
 #include "platform.h"
 #include "pokeysnd.h"
-#include "util.h"
 
 extern int debug[];
-#ifdef DREAMCAST
-extern int Atari_POT(int);
-#else
 #define Atari_POT(x) 228
-#endif
+
 
 extern UBYTE PCPOT_input[8];
 

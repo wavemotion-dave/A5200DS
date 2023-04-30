@@ -35,7 +35,6 @@
 #include "cartridge.h"
 #include "memory.h"
 #include "pia.h"
-#include "util.h"
 #include "input.h"
 
 static const struct cart_t cart_table[] = 

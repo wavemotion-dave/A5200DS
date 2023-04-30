@@ -42,7 +42,6 @@
 #include "gtia.h"
 #include "memory.h"
 #include "pokeysnd.h"
-#include "util.h"
 #include "input.h"
 
 extern int debug[];

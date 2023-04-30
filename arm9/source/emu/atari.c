@@ -70,7 +70,6 @@
 #include "pia.h"
 #include "platform.h"
 #include "pokeysnd.h"
-#include "util.h"
 #if !defined(BASIC) && !defined(CURSES_BASIC)
 #endif
 #ifndef BASIC
