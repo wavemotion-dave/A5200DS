@@ -40,12 +40,10 @@
 #include "atari.h"
 #include "cpu.h"
 #include "gtia.h"
-#include "screen.h"
 #include "memory.h"
 #include "pokeysnd.h"
 #include "util.h"
 #include "input.h"
-#include "screen.h"
 
 extern int debug[];
 

@@ -73,7 +73,6 @@
 #include "rtime.h"
 #include "util.h"
 #if !defined(BASIC) && !defined(CURSES_BASIC)
-#include "screen.h"
 #endif
 #ifndef BASIC
 #ifndef __PLUS
