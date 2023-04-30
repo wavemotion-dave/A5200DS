@@ -271,6 +271,23 @@ static byte last_bryan_bank __attribute__((section(".dtcm"))) = 255;
 static UWORD last_bounty_bob_bank __attribute__((section(".dtcm"))) = 65535;
 UWORD bosconian_bank __attribute__((section(".dtcm"))) = 0x0000;
 
+
+
+/* Rewinds the stream to its beginning. */
+#ifdef HAVE_REWIND
+#define Util_rewind(fp) rewind(fp)
+#else
+#define Util_rewind(fp) fseek(fp, 0, SEEK_SET)
+#endif
+
+/* Returns the length of an open stream.
+   May change the current position. */
+int Util_flen(FILE *fp)
+{
+	fseek(fp, 0, SEEK_END);
+	return (int) ftell(fp);
+}
+
 // ---------------------------------------------------------------------------------------------
 // VRAM!! 256K block which is enough to store the Bounty Bob stuff and the 64K Megacart 
 // banks and most of the mighty Bosconian 512K ROM.

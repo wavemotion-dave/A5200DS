@@ -50,5 +50,6 @@ extern struct cart_t myCart;
 int CART_Insert(const char *filename);
 void CART_Remove(void);
 void CART_Start(void);
+int Util_flen(FILE *fp);
 
 #endif /* _CARTRIDGE_H_ */
