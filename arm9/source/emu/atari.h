@@ -3,9 +3,7 @@
 
 #include "config.h"
 #include <stdio.h> /* FILENAME_MAX */
-#ifdef WIN32
-#include <windows.h>
-#endif
+
 
 /* Fundamental declarations ---------------------------------------------- */
 
@@ -41,23 +39,13 @@
 /* Public interface ------------------------------------------------------ */
 
 /* Machine type. */
-#define MACHINE_OSA   0
-#define MACHINE_OSB   1
-#define MACHINE_XLXE  2
 #define MACHINE_5200  3
 extern int machine_type;
-
 
 /* Video system. */
 #define TV_PAL 312
 #define TV_NTSC 262
 extern int tv_mode;
-
-/* TRUE to disable Atari BASIC when booting Atari (hold Option in XL/XE). */
-extern int disable_basic;
-
-/* TRUE to enable patched (fast) Serial I/O. */
-extern int enable_sio_patch;
 
 /* Dimensions of atari_screen.
    atari_screen is ATARI_WIDTH * ATARI_HEIGHT bytes.
@@ -80,44 +68,11 @@ extern int enable_sio_patch;
 #define AKEY_SELECT                -11
 #define AKEY_OPTION                -12
 
-/* Menu codes for Alt+letter shortcuts.
-   Store in alt_function and put AKEY_UI in key_code. */
-#define MENU_DISK             0
-#define MENU_CARTRIDGE        1
-#define MENU_RUN              2
-#define MENU_SYSTEM           3
-#define MENU_SOUND            4
-#define MENU_SOUND_RECORDING  5
-#define MENU_DISPLAY          6
-#define MENU_SETTINGS         7
-#define MENU_SAVESTATE        8
-#define MENU_LOADSTATE        9
-#define MENU_PCX              10
-#define MENU_PCXI             11
-#define MENU_BACK             12
-#define MENU_RESETW           13
-#define MENU_RESETC           14
-#define MENU_MONITOR          15
-#define MENU_ABOUT            16
-#define MENU_EXIT             17
-#define MENU_CASSETTE         18
 
 /* File types returned by Atari800_DetectFileType() and Atari800_OpenFile(). */
 #define AFILE_ERROR      0
-#define AFILE_ATR        1
-#define AFILE_XFD        2
-#define AFILE_ATR_GZ     3
-#define AFILE_XFD_GZ     4
-#define AFILE_DCM        5
-#define AFILE_XEX        6
-#define AFILE_BAS        7
-#define AFILE_LST        8
 #define AFILE_CART       9
 #define AFILE_ROM        10
-#define AFILE_CAS        11
-#define AFILE_BOOT_TAPE  12
-#define AFILE_STATE      13
-#define AFILE_STATE_GZ   14
 
 /* Initializes Atari800 emulation core. */
 int Atari800_Initialise(void);
@@ -163,23 +118,6 @@ int Atari800_Exit(int run_monitor);
 /* Private interface ----------------------------------------------------- */
 /* Don't use outside the emulation core! */
 
-/* ATR format header */
-struct ATR_Header {
-	unsigned char magic1;
-	unsigned char magic2;
-	unsigned char seccountlo;
-	unsigned char seccounthi;
-	unsigned char secsizelo;
-	unsigned char secsizehi;
-	unsigned char hiseccountlo;
-	unsigned char hiseccounthi;
-	unsigned char gash[7];
-	unsigned char writeprotect;
-};
-
-/* First two bytes of an ATR file. */
-#define MAGIC1  0x96
-#define MAGIC2  0x02
 
 /* Current clock cycle in a scanline.
    Normally 0 <= xpos && xpos < LINE_C, but in some cases xpos >= LINE_C,
@@ -217,68 +155,6 @@ extern unsigned int screenline_cpu_clock;
 #define UNALIGNED_PUT_LONG(ptr, value, stat_arr) (*(ULONG *) (ptr) = (value))
 
 
-/* Escape codes used to mark places in 6502 code that must
-   be handled specially by the emulator. An escape sequence
-   is an illegal 6502 opcode 0xF2 or 0xD2 followed
-   by one of these escape codes: */
-enum ESCAPE {
-
-	/* SIO patch. */
-	ESC_SIOV,
-
-	/* stdio-based handlers for the BASIC version
-	   and handlers for Atari Basic loader. */
-	ESC_EHOPEN,
-	ESC_EHCLOS,
-	ESC_EHREAD,
-	ESC_EHWRIT,
-	ESC_EHSTAT,
-	ESC_EHSPEC,
-
-	ESC_KHOPEN,
-	ESC_KHCLOS,
-	ESC_KHREAD,
-	ESC_KHWRIT,
-	ESC_KHSTAT,
-	ESC_KHSPEC,
-
-	/* Atari executable loader. */
-	ESC_BINLOADER_CONT,
-
-	/* Cassette emulation. */
-	ESC_COPENLOAD = 0xa8,
-	ESC_COPENSAVE = 0xa9,
-
-	/* Printer. */
-	ESC_PHOPEN = 0xb0,
-	ESC_PHCLOS = 0xb1,
-	ESC_PHREAD = 0xb2,
-	ESC_PHWRIT = 0xb3,
-	ESC_PHSTAT = 0xb4,
-	ESC_PHSPEC = 0xb5,
-	ESC_PHINIT = 0xb6,
-
-#ifdef R_IO_DEVICE
-	/* R: device. */
-	ESC_ROPEN = 0xd0,
-	ESC_RCLOS = 0xd1,
-	ESC_RREAD = 0xd2,
-	ESC_RWRIT = 0xd3,
-	ESC_RSTAT = 0xd4,
-	ESC_RSPEC = 0xd5,
-	ESC_RINIT = 0xd6,
-#endif
-
-	/* H: device. */
-	ESC_HHOPEN = 0xc0,
-	ESC_HHCLOS = 0xc1,
-	ESC_HHREAD = 0xc2,
-	ESC_HHWRIT = 0xc3,
-	ESC_HHSTAT = 0xc4,
-	ESC_HHSPEC = 0xc5,
-	ESC_HHINIT = 0xc6
-};
-
 /* A function called to handle an escape sequence. */
 typedef void (*EscFunctionType)(void);
 
@@ -302,9 +178,6 @@ UBYTE Atari800_GetByte(UWORD addr);
 
 /* Stores a byte at the specified special address (not RAM or ROM). */
 void Atari800_PutByte(UWORD addr, UBYTE byte);
-
-/* Installs SIO patch and disables ROM checksum test. */
-void Atari800_PatchOS(void);
 
 /* Sleeps until it's time to emulate next Atari frame. */
 void atari_sync(void);

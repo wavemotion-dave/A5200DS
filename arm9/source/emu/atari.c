@@ -96,12 +96,10 @@
 #endif /* _WX_ */
 #endif /* __PLUS */
 
-#include "global.h"
 
 int machine_type = MACHINE_5200;
 int tv_mode = TV_NTSC;
 int disable_basic = TRUE;
-int enable_sio_patch = TRUE;
 
 int verbose = FALSE;
 
@@ -180,28 +178,15 @@ void Atari800_RunEsc(UBYTE esc_code)
 #endif /* CRASH_MENU */
 }
 
-void Atari800_PatchOS(void) {
 
-}
-
-void Warmstart(void) {
-	if (machine_type == MACHINE_OSA || machine_type == MACHINE_OSB) {
-		/* RESET key in 400/800 does not reset chips,
-		   but only generates RNMI interrupt */
-		NMIST = 0x3f;
-		NMI();
-	}
-	else {
-		PIA_Reset();
-		ANTIC_Reset();
-		/* CPU_Reset() must be after PIA_Reset(),
-		   because Reset routine vector must be read from OS ROM */
-		CPU_Reset();
-		/* note: POKEY and GTIA have no Reset pin */
-	}
-#ifdef __PLUS
-	HandleResetEvent();
-#endif
+void Warmstart(void) 
+{
+    PIA_Reset();
+    ANTIC_Reset();
+    /* CPU_Reset() must be after PIA_Reset(),
+       because Reset routine vector must be read from OS ROM */
+    CPU_Reset();
+    /* note: POKEY and GTIA have no Reset pin */
 }
 
 void Coldstart(void) {
@@ -211,9 +196,7 @@ void Coldstart(void) {
 	   because Reset routine vector must be read from OS ROM */
 	CPU_Reset();
 	/* note: POKEY and GTIA have no Reset pin */
-#ifdef __PLUS
-	HandleResetEvent();
-#endif
+    
 	/* reset cartridge to power-up state */
 	CART_Start();
 
@@ -236,92 +219,9 @@ int Atari800_InitialiseMachine(void) {
 	return TRUE;
 }
 
-int Atari800_DetectFileType(const char *filename) {
-	UBYTE header[4];
-	int file_length;
-	FILE *fp = fopen(filename, "rb");
-	if (fp == NULL)
-		return AFILE_ERROR;
-	if (fread(header, 1, 4, fp) != 4) {
-		fclose(fp);
-		return AFILE_ERROR;
-	}
-	switch (header[0]) {
-	case 0:
-		if (header[1] == 0 && (header[2] != 0 || header[3] != 0) /* && file_length < 37 * 1024 */) {
-			fclose(fp);
-			return AFILE_BAS;
-		}
-		break;
-	case 0x1f:
-		if (header[1] == 0x8b) {
-			fclose(fp);
-		}
-		break;
-	case '0':
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case '9':
-		if ((header[1] >= '0' && header[1] <= '9') || header[1] == ' ') {
-			fclose(fp);
-			return AFILE_LST;
-		}
-		break;
-	case 'A':
-		if (header[1] == 'T' && header[2] == 'A' && header[3] == 'R') {
-			fclose(fp);
-			return AFILE_STATE;
-		}
-		break;
-	case 'C':
-		if (header[1] == 'A' && header[2] == 'R' && header[3] == 'T') {
-			fclose(fp);
-			return AFILE_CART;
-		}
-		break;
-	case 'F':
-		if (header[1] == 'U' && header[2] == 'J' && header[3] == 'I') {
-			fclose(fp);
-			return AFILE_CAS;
-		}
-		break;
-	case 0x96:
-		if (header[1] == 0x02) {
-			fclose(fp);
-			return AFILE_ATR;
-		}
-		break;
-	case 0xf9:
-	case 0xfa:
-		fclose(fp);
-		return AFILE_DCM;
-	case 0xff:
-		if (header[1] == 0xff && (header[2] != 0xff || header[3] != 0xff)) {
-			fclose(fp);
-			return AFILE_XEX;
-		}
-		break;
-	default:
-		break;
-	}
-	file_length = Util_flen(fp);
-	fclose(fp);
-	/* 40K or a-power-of-two between 4K and CART_MAX_SIZE */
-	if (file_length >= 4 * 1024 && file_length <= CART_MAX_SIZE
-	 && ((file_length & (file_length - 1)) == 0 || file_length == 40 * 1024))
-		return AFILE_ROM;
-	/* BOOT_TAPE is a raw file containing a program booted from a tape */
-	if ((header[1] << 7) == file_length)
-		return AFILE_BOOT_TAPE;
-	if ((file_length & 0x7f) == 0)
-		return AFILE_XFD;
-	return AFILE_ERROR;
+int Atari800_DetectFileType(const char *filename) 
+{
+    return AFILE_CART;
 }
 
 int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly) {
