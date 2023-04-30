@@ -46,7 +46,6 @@
 #include "util.h"
 #include "input.h"
 #include "screen.h"
-#include "statesav.h"
 
 extern int debug[];
 

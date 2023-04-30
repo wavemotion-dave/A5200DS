@@ -30,7 +30,6 @@
 #include "pokey.h"
 #include "gtia.h"
 #include "input.h"
-#include "statesav.h"
 #include "pokeysnd.h"
 #include "antic.h"
 

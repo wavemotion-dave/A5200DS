@@ -37,7 +37,6 @@
 #include "pia.h"
 #include "rtime.h"
 #include "util.h"
-#include "statesav.h"
 #include "input.h"
 
 static const struct cart_t cart_table[] = 

@@ -76,7 +76,6 @@
 #include "screen.h"
 #endif
 #ifndef BASIC
-#include "statesav.h"
 #ifndef __PLUS
 #endif
 #endif /* BASIC */

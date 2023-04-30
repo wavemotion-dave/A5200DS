@@ -31,7 +31,6 @@
 
 #ifndef BASIC
 #include "input.h"
-#include "statesav.h"
 #endif
 
 UBYTE PACTL;

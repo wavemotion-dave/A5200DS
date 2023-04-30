@@ -66,9 +66,7 @@
 #include "antic.h"
 #include "atari.h"
 #include "memory.h"
-//#include "monitor.h"
 #ifndef BASIC
-#include "statesav.h"
 #ifndef __PLUS
 //#include "ui.h"
 #endif

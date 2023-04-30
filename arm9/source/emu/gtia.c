@@ -30,7 +30,6 @@
 #include "antic.h"
 #include "gtia.h"
 #include "input.h"
-#include "statesav.h"
 #include "pokeysnd.h"
 
 #ifdef BUILD_BOSCONIAN 
