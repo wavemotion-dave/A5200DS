@@ -28,7 +28,8 @@ Features :
 ----------
 * Most things you should expect from an emulator. 
 * Most games run at full speed on a DSi or above.
-* For the DS-LITE/PHAT many games will play but there may be some lag in sound/speed for the more complex games.
+* For the DS-LITE/PHAT many games will play fine but there may be some lag in sound/speed for the more complex games.
+* Bankswitching carts up to 128K are supported.  Bounty Bob Strikes Back is supported (though needs a DSi or better to run smoothly).
 
 Two Flavors :
 ----------
