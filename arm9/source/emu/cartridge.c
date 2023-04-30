@@ -273,10 +273,11 @@ static UWORD last_bounty_bob_bank __attribute__((section(".dtcm"))) = 65535;
 UWORD bosconian_bank __attribute__((section(".dtcm"))) = 0x0000;
 
 // ---------------------------------------------------------------------------------------------
-// VRAM!! 128k which is enough to store the Bounty Bob stuff and the 64K Megacart banks... 
+// VRAM!! 256K block which is enough to store the Bounty Bob stuff and the 64K Megacart 
+// banks and most of the mighty Bosconian 512K ROM.
 // This provides a bit of a speed boost copying to/from the main image RAM (almost 10%)
 // ---------------------------------------------------------------------------------------------
-UBYTE *banked_image = (UBYTE *) 0x06040000;  
+UBYTE *banked_image __attribute__((section(".dtcm")))= (UBYTE *) 0x06860000;  
 
 /* special support of Bounty Bob on Atari5200 */
 ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
@@ -406,11 +407,14 @@ ITCM_CODE UBYTE Bryan_GetByte512(UWORD addr)
     }
     if (last_bryan_bank != bryan_bank)
     {
-        if (bryan_bank >= 12)
+        if (bryan_bank >= 8)
         {
             u32* dest = (u32*)(memory+0x4000);
-            u32* src = (u32*)(banked_image + (0x8000 * (bryan_bank-12)));
-            for (int i=0; i<(0x8000>>2); i++) *dest++ = *src++;
+            u32* src = (u32*)(banked_image + (0x8000 * (bryan_bank-8)));
+            for (int i=0; i<(0x8000>>2); i++)
+            {
+                *dest++ = *src++;
+            }
         }
         else
         {
@@ -550,7 +554,7 @@ void CART_Start(void)
             break;
         case CART_5200_512:
             bryan_bank = 15; last_bryan_bank=15;
-            memcpy(banked_image, cart_image+(0x8000*12), 0x40000);    
+            memcpy(banked_image, cart_image+(0x8000*8), 0x40000);    
             CopyROM(0x4000, 0xbfff, cart_image + (0x8000L * (long)bryan_bank));
             for (int i=0xbfc0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte512;
 #ifdef BUILD_BOSCONIAN                

@@ -54,7 +54,7 @@
 
 	The 6502 emulation also ignores memory attributes for accesses to page 0 and page 1.
  */
-
+#include "nds.h"
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>	/* exit() */
@@ -97,13 +97,13 @@
 #define RMW_GetByte(x, addr) x = GetByte(addr);
 
 /* 6502 registers. */
-UWORD regPC __attribute__((section(".dtcm"))); 
+unsigned int regPC __attribute__((section(".dtcm"))); 
 UBYTE regA __attribute__((section(".dtcm")));
 UBYTE regX __attribute__((section(".dtcm")));
 UBYTE regY __attribute__((section(".dtcm")));
 UBYTE regP __attribute__((section(".dtcm")));						/* Processor Status Byte (Partial) */
 UBYTE regS __attribute__((section(".dtcm")));
-UBYTE IRQ __attribute__((section(".dtcm")));
+UBYTE IRQ  __attribute__((section(".dtcm")));
 
 /* Transfer 6502 registers between global variables and local variables inside GO() */
 //#define UPDATE_GLOBAL_REGS  regPC = GET_PC(); regS = S; regA = A; regX = X; regY = Y
@@ -222,7 +222,7 @@ unsigned int remember_jmp_curpos = 0;
 #define NCYCLES_Y   if ((UBYTE) addr < Y) xpos++
 
 /* Triggers a Non-Maskable Interrupt */
-void NMI(void)
+ITCM_CODE void NMI(void)
 {
 	UBYTE S = regS;
 	UBYTE data;
@@ -286,7 +286,7 @@ static UBYTE cycles[256] __attribute__((section(".dtcm"))) =
 };
 
 /* 6502 emulation routine */
-void GO(int limit)
+ITCM_CODE void GO(int limit)
 {
 #define OPCODE_ALIAS(code)	opcode_##code:
 #define DONE				goto next;
@@ -1927,12 +1927,7 @@ void GO(int limit)
 		}
 		DONE
 
-#ifdef NO_GOTO
-	}
-#else
 	next:
-#endif
-
 		/* This "continue" does nothing here.
 		   But it is necessary because, if we're not using NO_GOTO nor MONITOR_BREAK,
 		   gcc can complain: "error: label at end of compound statement". */

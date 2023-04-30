@@ -202,9 +202,14 @@ void dsInitScreenMain(void)
     SetYtrigger(190); //trigger 2 lines before vsync
     irqSet(IRQ_VBLANK, vblankIntr);
     irqEnable(IRQ_VBLANK | IRQ_VCOUNT);
-    vramSetBankB(VRAM_B_MAIN_BG_0x06020000 ); // Not sure what to use this for yet... 128k
-    vramSetBankD(VRAM_D_MAIN_BG_0x06040000 ); // Not using this for video but for cartridge bank swap area... it's faster!
-    vramSetBankE(VRAM_E_LCD );                // Not using this for video but 64K of faster RAM always useful!  Mapped at 0x06880000
+    vramSetBankB(VRAM_B_MAIN_BG_0x06020000 ); // Not using this for video but could use it for faster access... 128K of faster VRAM!
+    
+    vramSetBankD(VRAM_D_LCD );                // Not using this for video but faster RAM always useful!  128K Mapped at 0x06860000
+    vramSetBankE(VRAM_E_LCD );                // Not using this for video but faster RAM always useful!   64K Mapped at 0x06880000
+    vramSetBankF(VRAM_F_LCD );                // Not using this for video but faster RAM always useful!   16K Mapped at 0x06890000
+    vramSetBankG(VRAM_G_LCD );                // Not using this for video but faster RAM always useful!   16K Mapped at 0x06894000
+    vramSetBankH(VRAM_H_LCD );                // Not using this for video but faster RAM always useful!   32K Mapped at 0x06898000
+    vramSetBankI(VRAM_I_LCD );                // Not using this for video but faster RAM always useful!   16K Mapped at 0x068A0000
 }
 
 void dsInitTimer(void) 

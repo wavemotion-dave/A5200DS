@@ -21,6 +21,7 @@
  * along with Atari800; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include <nds.h>
 #include <string.h>
 #include "config.h"
 #include "atari.h"
@@ -49,10 +50,11 @@ int DELAYED_SEROUT_IRQ;
 int DELAYED_XMTDONE_IRQ;
 
 /* structures to hold the 9 pokey control bytes */
-UBYTE AUDF[4 * MAXPOKEYS];	/* AUDFx (D200, D202, D204, D206) */
-UBYTE AUDC[4 * MAXPOKEYS];	/* AUDCx (D201, D203, D205, D207) */
-UBYTE AUDCTL[MAXPOKEYS];	/* AUDCTL (D208) */
-int DivNIRQ[4], DivNMax[4];
+UBYTE AUDF[4 * MAXPOKEYS] __attribute__((section(".dtcm")));	/* AUDFx (D200, D202, D204, D206) */
+UBYTE AUDC[4 * MAXPOKEYS] __attribute__((section(".dtcm")));	/* AUDCx (D201, D203, D205, D207) */
+UBYTE AUDCTL[MAXPOKEYS]   __attribute__((section(".dtcm")));	/* AUDCTL (D208) */
+int DivNIRQ[4] __attribute__((section(".dtcm")));
+int DivNMax[4] __attribute__((section(".dtcm")));
 int Base_mult[MAXPOKEYS];		/* selects either 64Khz or 15Khz clock mult */
 
 UBYTE POT_input[8] = {228, 228, 228, 228, 228, 228, 228, 228};
@@ -74,7 +76,7 @@ void POKEY_SetRandomCounter(ULONG value)
 	random_scanline_counter = value;
 }
 
-UBYTE POKEY_GetByte(UWORD addr)
+ITCM_CODE UBYTE POKEY_GetByte(UWORD addr)
 {
 	UBYTE byte = 0xff;
 
@@ -147,7 +149,7 @@ void Update_Counter(int chan_mask);
 #define SOUND_GAIN 4
 #endif
 
-void POKEY_PutByte(UWORD addr, UBYTE byte)
+ITCM_CODE void POKEY_PutByte(UWORD addr, UBYTE byte)
 {
 	addr &= 0x0f;
 	switch (addr) {
@@ -284,7 +286,7 @@ void POKEY_Initialise(void)
 	random_scanline_counter = 0;
 }
 
-void POKEY_Frame(void) 
+ITCM_CODE void POKEY_Frame(void) 
 {
 	random_scanline_counter %= (AUDCTL[0] & POLY9) ? POLY9_SIZE : POLY17_SIZE;
 }
@@ -294,7 +296,7 @@ void POKEY_Frame(void)
  ** called on a per-scanline basis, not very precise, but good enough     **
  ** for most applications                                                 **
  ***************************************************************************/
-void POKEY_Scanline(void) 
+ITCM_CODE void POKEY_Scanline(void) 
 {
     Pokey_process(&pokey_buffer[pokeyBufIdx], 1);	// Each scanline, compute 1 output samples. This corresponds to a 15720Khz output sample rate if running at 60FPS (good enough)
     pokeyBufIdx = (pokeyBufIdx+1) & (SNDLENGTH-1);
@@ -351,7 +353,7 @@ void POKEY_Scanline(void)
 /*                                                                           */
 /*****************************************************************************/
 
-void Update_Counter(int chan_mask)
+ITCM_CODE void Update_Counter(int chan_mask)
 {
 
 /************************************************************/

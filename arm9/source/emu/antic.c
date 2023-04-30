@@ -890,7 +890,7 @@ static UBYTE gtia_10_lookup[] __attribute__((section(".dtcm"))) =
 static UBYTE gtia_10_pm[] __attribute__((section(".dtcm"))) =
 {1, 2, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
 {
 	int i = ((const UBYTE *) t_pm_scanline_ptr - pm_scanline) & ~1;
 	while (i < right_border_start) {
@@ -922,7 +922,7 @@ static void draw_an_gtia9(const ULONG *t_pm_scanline_ptr)
 	do_border();
 }
 
-static void draw_an_gtia10(const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_an_gtia10(const ULONG *t_pm_scanline_ptr)
 {
 	int i = ((const UBYTE *) t_pm_scanline_ptr - pm_scanline) | 1;
 	UWORD lookup_gtia10[16];

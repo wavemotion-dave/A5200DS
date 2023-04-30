@@ -45,11 +45,11 @@ extern int debug[];
 /* number of pokey chips currently emulated */
 static uint8 Num_pokeys;
 
-static uint8 AUDV[4 * MAXPOKEYS];	/* Channel volume - derived */
+static uint8 AUDV[4 * MAXPOKEYS] __attribute__((section(".dtcm")));	/* Channel volume - derived */
 
-static uint8 Outbit[4 * MAXPOKEYS];		/* current state of the output (high or low) */
+static uint8 Outbit[4 * MAXPOKEYS] __attribute__((section(".dtcm")));		/* current state of the output (high or low) */
 
-static uint8 Outvol[4 * MAXPOKEYS];		/* last output volume for each channel */
+static uint8 Outvol[4 * MAXPOKEYS] __attribute__((section(".dtcm")));		/* last output volume for each channel */
 
 /* Initialze the bit patterns for the polynomials. */
 
@@ -87,8 +87,7 @@ void (*Pokey_process_ptr)(void *sndbuffer, unsigned int sndn) = null_pokey_proce
 
 static void Update_pokey_sound_rf(uint16, uint8, uint8, uint8);
 static void null_pokey_sound(uint16 addr, uint8 val, uint8 chip, uint8 gain) {}
-void (*Update_pokey_sound) (uint16 addr, uint8 val, uint8 chip, uint8 gain)
-  = null_pokey_sound;
+void (*Update_pokey_sound) (uint16 addr, uint8 val, uint8 chip, uint8 gain) = null_pokey_sound;
 
 /*****************************************************************************/
 /* In my routines, I treat the sample output as another divide by N counter  */
@@ -199,7 +198,7 @@ int  Pokey_sound_init(uint32 freq17, uint16 playback_freq, uint8 num_pokeys, uns
 /*                                                                           */
 /*****************************************************************************/
 
-static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain) 
+ITCM_CODE static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain) 
 {
 	uint32 new_val = 0;
 	uint8 chan;
@@ -370,7 +369,7 @@ static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain
 /* Outputs: the buffer will be filled with n bytes of audio - no return val  */
 /*                                                                           */
 /*****************************************************************************/
-void Pokey_process(void *sndbuffer, unsigned sndn)
+ITCM_CODE void Pokey_process(void *sndbuffer, unsigned sndn)
 {
 	register char *buffer = (char  *) sndbuffer;
 	register uint16 n = sndn;
