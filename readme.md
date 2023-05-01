@@ -49,7 +49,7 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 History :
 --------------------------------------------------------------------------------
-V3.4 : TBD
+V3.4 : 01-May-2023
   * Another frame or two of performance from memory optmizations.
   * Removed lots of obsoleted code to streamline the build.
   * Added a new DSi special build that will finally run Bosconian at full speed with speech as long as you are in DSi (2x CPU) mode.
