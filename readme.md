@@ -10,6 +10,8 @@ games but doesn't have full compatibilty so it is still strongly recommended
 you use 5200.bin). A quick search on google will help you about that.
 Do not ask me about such files - you will be ignored.
 
+![Atari5200](https://github.com/wavemotion-dave/A5200DS/blob/main/arm9/gfx/bgTop.png)
+
 Copyright :
 -----------------------
 a5200ds is Copyright (c) 2021-2023 Dave Bernazzani (wavemotion-dave)
