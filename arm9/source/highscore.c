@@ -69,9 +69,9 @@ void highscore_init(void)
     strcpy(highscores.last_initials, "   ");
     
     // --------------------------------------------------------------
-    // See if the StellaDS high score file exists... if so, read it!
+    // See if the a5200 high score file exists... if so, read it!
     // --------------------------------------------------------------
-    fp = fopen("/data/StellaDS.hi", "rb");
+    fp = fopen("/data/a5200.hi", "rb");
     if (fp != NULL)
     {
         fread(&highscores, sizeof(highscores), 1, fp);
@@ -128,7 +128,7 @@ void highscore_save(void)
     highscores.version = HS_VERSION;
     highscores.checksum = highscore_checksum();
 
-    fp = fopen("/data/StellaDS.hi", "wb+");
+    fp = fopen("/data/a5200.hi", "wb+");
     if (fp != NULL)
     {
         fwrite(&highscores, sizeof(highscores), 1, fp);
