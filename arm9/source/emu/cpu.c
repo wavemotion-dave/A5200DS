@@ -164,11 +164,7 @@ unsigned int remember_jmp_curpos = 0;
 #endif /* MONITOR_BREAK */
 
 /* Addressing modes */
-#ifdef WRAP_ZPAGE
-#define zGetWord(x) (dGetByte(x) + (dGetByte((UBYTE) ((x) + 1)) << 8))
-#else
 #define zGetWord(x) dGetWord(x)
-#endif
 
 #define OP_BYTE     PEEK_CODE_BYTE()
 #define OP_WORD     PEEK_CODE_WORD()

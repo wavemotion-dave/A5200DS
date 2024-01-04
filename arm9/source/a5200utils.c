@@ -54,16 +54,16 @@ int lcd_swap_counter = 0;
 #define  xdxBG (((320 / myCart.scale_x) << 8) | (320 % myCart.scale_x))
 #define  ydyBG (((256 / myCart.scale_y) << 8) | (256 % myCart.scale_y))
   
-unsigned int atari_pal16[256] = {0};
-unsigned char *filebuffer;
-
 unsigned char sound_buffer[SNDLENGTH] __attribute__ ((aligned (4))) = {0};
 u16* aptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[0] + 0xA000000); 
 u16* bptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[2] + 0xA000000);
 
-#define MAX_DEBUG 5
+unsigned int atari_pal16[256] = {0};
+unsigned char *filebuffer;
+
+#define MAX_DEBUG 16
 int debug[MAX_DEBUG]={0};
-char DEBUG_DUMP = 0;
+char DEBUG_DUMP = 1;
 
 static void DumpDebugData(void)
 {
@@ -180,21 +180,33 @@ void FadeToColor(unsigned char ucSens, unsigned short ucBG, unsigned char ucScr,
   }
 }
 
+UWORD sIndex __attribute__((section(".dtcm")))= 0;
+UBYTE dampen_slide_y __attribute__((section(".dtcm")))= 0;
+short int screen_slide_y __attribute__((section(".dtcm"))) = 0;
+
 ITCM_CODE void vblankIntr() 
 {
-    static int sIndex = 0;
     static const u8 jitter[] = 
     {
-        0x00, 0x33, 
-        0x88, 0x44
+        0x00, 0x00,
+        0x40, 0x00
     };
 
     REG_BG2PA = xdxBG; 
     REG_BG2PD = ydyBG; 
 
     REG_BG2X = cxBG+jitter[sIndex++]; 
-    REG_BG2Y = cyBG+jitter[sIndex++]; 
+    REG_BG2Y = cyBG+jitter[sIndex++] + (screen_slide_y<<8);
     sIndex = sIndex & 3;
+    
+    if (sIndex == 0)
+    {
+        if (dampen_slide_y == 0)
+        {
+            if (screen_slide_y < 0) screen_slide_y++;
+            else if (screen_slide_y > 0) screen_slide_y--;
+        } else dampen_slide_y--;
+    }    
 }
 
 void dsInitScreenMain(void) 
@@ -894,6 +906,14 @@ void dsMainLoop(void) {
                    keys_touch = 1;
                }
             }
+            else if ((iTx>0) && (iTx<20) && (iTy>0) && (iTy<20))  { // Full Speed Toggle ... upper corner...
+               if (keys_touch == 0)
+               {
+                    showFps = 1-showFps; 
+                    dsPrintValue(0,0,0, "   ");
+                    keys_touch = 1;
+               }
+            }
             else if ((iTx>160) && (iTx<200) && (iTy>112) && (iTy<130))  { //highscore
               bSoundMute = true;
               highscore_display();
@@ -1025,13 +1045,25 @@ void dsMainLoop(void) {
             } else lcd_swap_counter = 0;
         }            
             
-        static int last_keys = 99;
+        static short int last_keys = 99;
         if (keys_pressed != last_keys)
         {
             last_keys = keys_pressed;
-            if (myCart.control != CTRL_ROBO)          
+        }
+
+        // Screen shift/slide
+        if (myCart.control != CTRL_ROBO)          
+        {
+            if (keys_pressed & KEY_X)
             {
-                if (keys_pressed & KEY_X) {showFps = 1-showFps;dsPrintValue(0,0,0, "   ");}
+                if (myCart.x_function == X_PANUP)
+                {
+                    screen_slide_y = 12;  dampen_slide_y = 6;
+                }
+                else if (myCart.x_function == X_PANDN)
+                {
+                    screen_slide_y = -12;  dampen_slide_y = 6;
+                }
             }
         }
 
