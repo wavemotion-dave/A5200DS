@@ -198,7 +198,7 @@ int  Pokey_sound_init(uint32 freq17, uint16 playback_freq, uint8 num_pokeys, uns
 /*                                                                           */
 /*****************************************************************************/
 
-ITCM_CODE static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain) 
+static void Update_pokey_sound_rf(uint16 addr, uint8 val, uint8 chip, uint8 gain) 
 {
 	uint32 new_val = 0;
 	uint8 chan;

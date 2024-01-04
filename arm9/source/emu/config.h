@@ -6,8 +6,6 @@
 #define SOUND 1
 //#define VOL_ONLY_SOUND 1
 
-//#undef PAGED_ATTRIB
-
 // Define to allow stereo sound. 
 //#define STEREO_SOUND 1
 

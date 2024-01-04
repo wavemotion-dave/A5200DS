@@ -40,6 +40,8 @@ rdfunc readmap[65536]   __attribute__ ((aligned (16)));
 wrfunc writemap[65536]  __attribute__ ((aligned (16)));
 UBYTE  memory[65536]    __attribute__ ((aligned (16)));
 
+UBYTE  normal_memory[16] __attribute__((section(".dtcm"))); 
+
 void ROM_PutByte(UWORD addr, UBYTE value)
 {
 }

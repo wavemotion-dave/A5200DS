@@ -31,6 +31,7 @@
 #include "bgBottom.h"
 #include "bgTop.h"
 #include "bgFileSel.h"
+#include "printf.h"
 
 #include "altirra_5200_os.h"
 
@@ -40,8 +41,9 @@ int gTotalAtariFrames = 0;
 int bg0, bg1, bg0b, bg1b, bg2, bg3;
 unsigned int etatEmu;
 int atari_frames=0;        
-int frame_skip = TRUE;
 u16 bSoundMute = false;
+
+char padKey[] = {AKEY_5200_0,AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_HASH,AKEY_5200_ASTERISK};
 
 gamecfg GameConf;                       // Game Config svg
 
@@ -67,7 +69,7 @@ static void DumpDebugData(void)
 {
     if (DEBUG_DUMP)
     {
-        char dbgbuf[32];
+        static char dbgbuf[32];
         sprintf(dbgbuf, "Cart.offset_x:   %03d", myCart.offset_x);      dsPrintValue(1,2,0, dbgbuf);
         sprintf(dbgbuf, "Cart.offset_y:   %03d", myCart.offset_y);      dsPrintValue(1,3,0, dbgbuf);
         sprintf(dbgbuf, "Cart.scale_x:    %03d", myCart.scale_x);       dsPrintValue(1,4,0, dbgbuf);
@@ -366,7 +368,7 @@ int load_os(char *filename )
 
 void dsLoadGame(char *filename) 
 {
-  unsigned int index;
+  unsigned short int index;
   
   // Free buffer if needed
     TIMER2_CR=0; irqDisable(IRQ_TIMER2); 
@@ -405,7 +407,7 @@ void dsLoadGame(char *filename)
 }
 
 unsigned int dsReadPad(void) {
-	unsigned int keys_pressed, ret_keys_pressed;
+	unsigned short int keys_pressed, ret_keys_pressed;
 
 	do {
 		keys_pressed = keysCurrent();
@@ -427,7 +429,7 @@ bool dsWaitOnQuit(void) {
   bool bRet=false, bDone=false;
   unsigned int keys_pressed;
   unsigned int posdeb=0;
-  char szName[32];
+  static char szName[32];
   
   decompress(bgFileSelTiles, bgGetGfxPtr(bg0b), LZ77Vram);
   decompress(bgFileSelMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
@@ -477,7 +479,7 @@ bool dsWaitOnQuit(void) {
 void dsDisplayFiles(unsigned int NoDebGame,u32 ucSel) {
   unsigned int ucBcl,ucGame;
   u8 maxLen;
-  char szName[256];
+  static char szName[256];
   
   // Display all games if possible
   unsigned short dmaVal = *(bgGetMapPtr(bg1b) +31*32);
@@ -515,7 +517,7 @@ unsigned int dsWaitForRom(void)
 {
   bool bDone=false, bRet=false;
   u32 ucHaut=0x00, ucBas=0x00,ucSHaut=0x00, ucSBas=0x00,romSelected= 0, firstRomDisplay=0,nbRomPerPage, uNbRSPage, uLenFic=0,ucFlip=0, ucFlop=0;
-  char szName[64];
+  static char szName[64];
 
   decompress(bgFileSelTiles, bgGetGfxPtr(bg0b), LZ77Vram);
   decompress(bgFileSelMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
@@ -783,10 +785,10 @@ extern u32 stick1;
 int full_speed = 0;
 
 void dsMainLoop(void) {
-  char fpsbuf[32];
-  unsigned int keys_pressed,keys_touch=0, romSel;
-  int iTx,iTy, shiftctrl;
-  bool showFps=false;
+  static char fpsbuf[32];
+  unsigned short int keys_pressed,keys_touch=0, romSel;
+  short int iTx,iTy, shiftctrl;
+  char showFps=false;
   
   // Timers are fed with 33.513982 MHz clock.
   // With DIV_1024 the clock is 32,728.5 ticks per sec...
@@ -855,7 +857,7 @@ void dsMainLoop(void) {
             TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;
         
             if (!full_speed && (gTotalAtariFrames > 60)) gTotalAtariFrames--;   // We tend to overshoot... 
-            if (showFps) { siprintf(fpsbuf,"%03d",gTotalAtariFrames); dsPrintValue(0,0,0, fpsbuf); } // Show FPS
+            if (showFps) { sprintf(fpsbuf,"%03d",gTotalAtariFrames); dsPrintValue(0,0,0, fpsbuf); } // Show FPS
             DumpDebugData();
             gTotalAtariFrames = 0;
         }
@@ -915,7 +917,6 @@ void dsMainLoop(void) {
             }
             else if ((iTy>155) && (iTy<185)) 
             { 
-              char padKey[] = {AKEY_5200_0,AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_HASH,AKEY_5200_ASTERISK};
               if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
               if (iTx > 0) iTx--;
               if (iTx > 0) iTx--;
@@ -1058,7 +1059,7 @@ int a52Filescmp (const void *c1, const void *c2) {
 void a52FindFiles(void) {
   DIR *pdir;
   struct dirent *pent;
-  char filenametmp[255];
+  static char filenametmp[255];
   
   counta5200 = countfiles= 0;
   
@@ -1105,3 +1106,5 @@ void a52FindFiles(void) {
     counta5200 = 1;
   }
 }
+
+void _putchar(char character) {};   // Not used but needed to link printf()

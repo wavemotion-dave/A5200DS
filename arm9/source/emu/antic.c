@@ -305,18 +305,18 @@ static UBYTE vscrol_off __attribute__((section(".dtcm")));		/* boolean: displayi
 #define SCROLL2 5				/* modes 8,9 with HSC */
 static int md __attribute__((section(".dtcm")));					/* current mode NORMAL0..SCROLL2 */
 /* tables for modes NORMAL0..SCROLL2 */
-static int chars_read[6] __attribute__((section(".dtcm")));
-static int chars_displayed[6] __attribute__((section(".dtcm")));
-static int x_min[6] __attribute__((section(".dtcm")));
-static int ch_offset[6] __attribute__((section(".dtcm")));
-static int load_cycles[6] __attribute__((section(".dtcm")));
-static int font_cycles[6] __attribute__((section(".dtcm")));
-static int before_cycles[6] __attribute__((section(".dtcm")));
-static int extra_cycles[6] __attribute__((section(".dtcm")));
+static short int chars_read[6] __attribute__((section(".dtcm")));
+static short int chars_displayed[6] __attribute__((section(".dtcm")));
+static short int x_min[6] __attribute__((section(".dtcm")));
+static short int ch_offset[6] __attribute__((section(".dtcm")));
+static short int load_cycles[6] __attribute__((section(".dtcm")));
+static short int font_cycles[6] __attribute__((section(".dtcm")));
+static short int before_cycles[6] __attribute__((section(".dtcm")));
+static short int extra_cycles[6] __attribute__((section(".dtcm")));
 
 /* border parameters for current display width */
-static int left_border_chars __attribute__((section(".dtcm")));
-static int right_border_start __attribute__((section(".dtcm")));
+static short int left_border_chars __attribute__((section(".dtcm")));
+static short int right_border_start __attribute__((section(".dtcm")));
 
 #define LBORDER_START (LCHOP * 4)
 #define RBORDER_END ((48 - RCHOP) * 4)
@@ -326,16 +326,16 @@ static UWORD chbase_20 __attribute__((section(".dtcm")));			/* CHBASE for 20 cha
 
 /* set with CHACTL */
 static UBYTE invert_mask __attribute__((section(".dtcm")));
-static int blank_mask __attribute__((section(".dtcm")));
+static UBYTE blank_mask __attribute__((section(".dtcm")));
 
 /* A scanline of AN0 and AN1 signals as transmitted from ANTIC to GTIA.
    In every byte, bit 0 is AN0 and bit 1 is AN1 */
 static UBYTE an_scanline[ATARI_WIDTH / 2 + 8] __attribute__((section(".dtcm")));
 
 /* lookup tables */
-static UBYTE blank_lookup[256];
-static UWORD lookup2[256];
-ULONG lookup_gtia9[16];
+static UBYTE blank_lookup[256] __attribute__((section(".dtcm")));
+static UWORD lookup2[256] __attribute__((section(".dtcm")));
+ULONG lookup_gtia9[16] __attribute__((section(".dtcm")));
 ULONG lookup_gtia11[16];
 static UBYTE playfield_lookup[257];
 static UBYTE mode_e_an_lookup[256];
@@ -488,6 +488,7 @@ UBYTE missile_dma_enabled __attribute__((section(".dtcm")));
 UBYTE missile_gra_enabled __attribute__((section(".dtcm")));
 UBYTE player_flickering __attribute__((section(".dtcm")));
 UBYTE missile_flickering __attribute__((section(".dtcm")));
+UBYTE missile_or_player_dma_enabled __attribute__((section(".dtcm")));
 
 static UWORD pmbase_s __attribute__((section(".dtcm")));
 static UWORD pmbase_d __attribute__((section(".dtcm")));
@@ -773,7 +774,7 @@ void ANTIC_Reset(void) {
 	}\
 }
 
-static void do_border(void)
+ITCM_CODE static void do_border(void)
 {
 	int kk;
 	UWORD *ptr = &scrn_ptr[LBORDER_START];
@@ -832,7 +833,7 @@ static void do_border_gtia11(void)
 	COLOUR_TO_WORD(cl_lookup[C_BAK],COLBK)
 }
 
-static void draw_antic_0(void)
+ITCM_CODE static void draw_antic_0(void)
 {
 	UWORD *ptr = scrn_ptr + LBORDER_START;
 	if (pm_dirty) {
@@ -1069,7 +1070,7 @@ static void draw_an_gtia11(const ULONG *t_pm_scanline_ptr)
 
 #endif /* PAGED_MEM */
 
-static void draw_antic_2(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_antic_2(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
 	INIT_BACKGROUND_6
 	INIT_ANTIC_2
@@ -1091,7 +1092,9 @@ static void draw_antic_2(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, cons
 				DRAW_BACKGROUND(C_PF2)
 		}
 		else
+        {
 			DO_PMG_HIRES(chdata)
+        }
 		t_pm_scanline_ptr++;
 	CHAR_LOOP_END
 	do_border();
@@ -1375,7 +1378,7 @@ static void prepare_an_antic_4(int nchars, const UBYTE *ANTIC_memptr, const ULON
 
 DEFINE_DRAW_AN(4)
 
-static void draw_antic_6(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_antic_6(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
 #ifdef PAGED_MEM
 	UWORD t_chbase = (anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20;
@@ -1484,7 +1487,7 @@ static void prepare_an_antic_6(int nchars, const UBYTE *ANTIC_memptr, const ULON
 
 DEFINE_DRAW_AN(6)
 
-static void draw_antic_8(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_antic_8(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
 	lookup2[0x00] = cl_lookup[C_BAK];
 	lookup2[0x40] = cl_lookup[C_PF0];
@@ -2132,14 +2135,10 @@ void ANTIC_UpdateArtifacting(void)
 
 inline UBYTE ANTIC_GetDLByte(UWORD *paddr)
 {
-    int addr = *paddr;
-	UBYTE result;
-	result = memory[addr]; //GetByte((UWORD) addr);
-	addr++;
-	if ((addr & 0x3FF) == 0)
-		addr -= 0x400;
-	*paddr = (UWORD) addr;
-	return result;
+    UBYTE result = dGetByte(*paddr);
+    (*paddr)++;
+    if ((*paddr & 0x3FF) == 0) *paddr -= 0x400;
+    return result;
 }
 
 inline UWORD ANTIC_GetDLWord(UWORD *paddr)
@@ -2152,7 +2151,7 @@ inline UWORD ANTIC_GetDLWord(UWORD *paddr)
 
 /* Real ANTIC doesn't fetch beginning bytes in HSC
    nor screen+47 in wide playfield. This function does. */
-ITCM_CODE static void ANTIC_load(void)
+static void ANTIC_load(void)
 {
 #ifdef PAGED_MEM
 	UBYTE *ANTIC_memptr = ANTIC_memory + ANTIC_margin;
@@ -2221,7 +2220,7 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 	need_dl = TRUE;
 	do {
         POKEY_Scanline();		/* check and generate IRQ */
-		pmg_dma();
+		if (missile_or_player_dma_enabled) pmg_dma();
 		need_load = FALSE;
 		if (need_dl) {
 			if (DMACTL & 0x20) {
@@ -2408,7 +2407,7 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 }
 
 /* ANTIC registers --------------------------------------------------------- */
-ITCM_CODE UBYTE ANTIC_Get_VCOUNT(UWORD addr)
+UBYTE ANTIC_Get_VCOUNT(UWORD addr)
 {
     if (XPOS < LINE_C)
         return ypos >> 1;
@@ -2431,7 +2430,7 @@ UBYTE ANTIC_Get_NMIST(UWORD addr)
 }
 
 // In theory not used anymore... as valid address combos should map into above functions for slight speed improvement...
-ITCM_CODE UBYTE ANTIC_GetByte(UWORD addr)
+UBYTE ANTIC_GetByte(UWORD addr)
 {
 	switch (addr & 0xf) 
     {
@@ -2538,7 +2537,7 @@ void set_prior(UBYTE byte)
 		draw_antic_ptr = draw_antic_table[byte >> 6][anticmode];
 }
 
-ITCM_CODE void ANTIC_PutByte(UWORD addr, UBYTE byte)
+void ANTIC_PutByte(UWORD addr, UBYTE byte)
 {
 	switch (addr & 0xf) {
 	case _DLISTL:
@@ -2637,6 +2636,8 @@ ITCM_CODE void ANTIC_PutByte(UWORD addr, UBYTE byte)
 		singleline = (byte & 0x10);
 		player_flickering = ((player_dma_enabled | player_gra_enabled) == 0x02);
 		missile_flickering = ((missile_dma_enabled | missile_gra_enabled) == 0x01);
+            
+        missile_or_player_dma_enabled = missile_dma_enabled | player_dma_enabled;
 
 		byte = HSCROL;	/* update horizontal scroll data */
 /* ******* FALLTHROUGH ******* */

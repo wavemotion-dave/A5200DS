@@ -283,7 +283,7 @@ void POKEY_Initialise(void)
 	random_scanline_counter = 0;
 }
 
-ITCM_CODE void POKEY_Frame(void) 
+void POKEY_Frame(void) 
 {
 	random_scanline_counter %= (AUDCTL[0] & POLY9) ? POLY9_SIZE : POLY17_SIZE;
 }

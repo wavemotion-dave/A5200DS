@@ -38,8 +38,10 @@ extern wrfunc writemap[65536];
 
 void ROM_PutByte(UWORD addr, UBYTE byte);
 
-#define GetByte(addr)		(readmap[(addr)] ? (*readmap[(addr)])(addr) : dGetByte(addr))
-#define PutByte(addr,byte)	(writemap[(addr)] ? (*writemap[(addr)])(addr, byte) : (memory[addr] = byte))
+extern UBYTE normal_memory[16];
+#define GetByte(addr)		((normal_memory[(addr)>>12]) ? dGetByte(addr) : (readmap[(addr)] ? (*readmap[(addr)])(addr) : dGetByte(addr)))
+#define PutByte(addr,byte)	((addr & 0xC000) ? writemap[(addr)]((addr), byte) : (memory[addr] = byte))
+
 #define SetRAM(addr1, addr2) do { \
 		int i; \
 		for (i = (addr1); i <= (addr2); i++) { \

@@ -25,6 +25,7 @@ struct cart_t
     short int  digital_min;
     short int  digital_max;
     short int  keys_debounced;
+    short int  frame_skip;
     short int  scale_x;
     short int  scale_y;
     short int  offset_x;
@@ -41,6 +42,9 @@ extern struct cart_t myCart;
 
 #define DIGITAL         0
 #define ANALOG          1
+
+#define NO_FS           0
+#define YES_FS          1       // Only for non-DSi where we need the speed
 
 #define CART_MAX_SIZE	(128 * 1024)
 

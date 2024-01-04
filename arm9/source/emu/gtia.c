@@ -76,7 +76,6 @@ UBYTE POTENA __attribute__((section(".dtcm")));
 
 /* Internal GTIA state ----------------------------------------------------- */
 
-int atari_speaker __attribute__((section(".dtcm")));
 int consol_index __attribute__((section(".dtcm")))= 0;
 UBYTE consol_table[3] __attribute__((section(".dtcm")));
 UBYTE consol_mask __attribute__((section(".dtcm")));
@@ -88,10 +87,10 @@ void set_prior(UBYTE byte);         /* in antic.c */
 /* Player/Missile stuff ---------------------------------------------------- */
 
 /* change to 0x00 to disable collisions */
-UBYTE collisions_mask_missile_playfield __attribute__((section(".dtcm")))= 0x0f;
-UBYTE collisions_mask_player_playfield __attribute__((section(".dtcm")))= 0x0f;
-UBYTE collisions_mask_missile_player __attribute__((section(".dtcm")))= 0x0f;
-UBYTE collisions_mask_player_player __attribute__((section(".dtcm")))= 0x0f;
+#define collisions_mask_missile_playfield   0x0f
+#define collisions_mask_player_playfield    0x0f
+#define collisions_mask_missile_player      0x0f
+#define collisions_mask_player_player       0x0f
 
 #define P1PL_T P1PL
 #define P2PL_T P2PL
@@ -180,7 +179,7 @@ void setup_gtia9_11(void) {
 
 /* Initialization ---------------------------------------------------------- */
 
-ITCM_CODE void GTIA_Initialise(void) 
+void GTIA_Initialise(void) 
 {
 #if !defined(BASIC) && !defined(CURSES_BASIC)
     int i;
@@ -293,7 +292,7 @@ ITCM_CODE void new_pm_scanline(void)
 
 /* GTIA registers ---------------------------------------------------------- */
 
-ITCM_CODE void GTIA_Frame(void) 
+void GTIA_Frame(void) 
 {
     int consol = key_consol | 0x08;
 
@@ -418,7 +417,6 @@ ITCM_CODE void GTIA_PutByte(UWORD addr, UBYTE byte)
     switch (addr & 0x1f) 
     {
     case _CONSOL:
-        atari_speaker = !(byte & 0x08);
         consol_mask = (~byte) & 0x0f;
         POTENA = byte & 0x04;
         break;

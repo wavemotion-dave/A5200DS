@@ -7,11 +7,7 @@
 
 /* Fundamental declarations ---------------------------------------------- */
 
-#define NODIRTYCOMPARE
-
 //#define BUILD_BOSCONIAN 1     // Enable this to produce a build that will run fast bankswitching at the expense of 15% slowdown in memory fetches. Renders games like Bosconian fully playable.
-
-#define PAGED_ATTRIB 1
 
 #ifndef FALSE
 #define FALSE  0
@@ -40,7 +36,6 @@
 
 /* Machine type. */
 #define MACHINE_5200  3
-extern int machine_type;
 
 /* Video system. */
 #define TV_PAL 312

@@ -97,7 +97,6 @@
 #endif /* __PLUS */
 
 
-int machine_type = MACHINE_5200;
 int tv_mode = TV_NTSC;
 int disable_basic = TRUE;
 
@@ -279,12 +278,11 @@ int Atari800_Exit(int run_monitor) {
 }
 
 extern int gTotalAtariFrames;
-extern int frame_skip;
 void Atari800_Frame(void)
 {
 	INPUT_Frame();
 	GTIA_Frame();
-    ANTIC_Frame((frame_skip ? (gTotalAtariFrames&3) : TRUE));
+    ANTIC_Frame((myCart.frame_skip ? (gTotalAtariFrames&3) : TRUE));  // With frameskip, we skip every 8th frame (drawing 7 of 8). Skip is dangerous for the collision detection so we do it sparingly
     POKEY_Frame();
     
     gTotalAtariFrames++;

@@ -8,6 +8,7 @@
 #include "cartridge.h"
 #include "bgHighScore.h"
 #include "bgBottom.h"
+#include "printf.h"
 
 #define MAX_HS_GAMES    500
 #define HS_VERSION      0x0001
@@ -387,7 +388,7 @@ void highscore_entry(short foundIdx)
 void highscore_options(short foundIdx, char *md5)
 {
     uint16 options = 0x0000;
-    char notes[21];
+    static char notes[21];
     char bEntryDone = 0;
     char blink=0;
     unsigned short entry_idx=0;
