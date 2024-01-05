@@ -161,7 +161,7 @@ static const struct cart_t cart_table[] =
     {"4e16903c352c8ed75ed9377e72ebe333",    CART_5200_64,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Laser Hawk (64k conversion).a52
     {"46264c86edf30666e28553bd08369b83",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    220,    32,10,  X_FIRE},  // Last Starfighter, The (USA) (Proto).a52
     {"ff785ce12ad6f4ca67f662598025c367",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,12,  X_PANUP}, // Megamania (1983) (Activision).a52
-    {"8311263811e366bf5ef07977d0f5a5ae",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  15, 200,    1, YES_FS,    256,    256,    32,20,  X_FIRE},  // MajorBlink_5200_V2 (XL Conversion).a52
+    {"8311263811e366bf5ef07977d0f5a5ae",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  15, 200,    1, YES_FS,    256,    256,    32,28,  X_PANDN},  // MajorBlink_5200_V2 (XL Conversion).a52
     {"d00dff571bfa57c7ff7880c3ce03b178",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  X_FIRE},  // Mario Brothers (1983) (Atari).a52
     {"2f5aec81646216ea2720b87712452193",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  X_FIRE},  // Mario Brothers Encore.a52
     {"1cd67468d123219201702eadaffd0275",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    251,    32,25,  X_FIRE},  // Meteorites (USA).a52
@@ -238,13 +238,14 @@ static const struct cart_t cart_table[] =
     {"be75afc33f5da12974900317d824f9b9",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,25,  X_FIRE},  // Sinistar.a52
     {"6151575ffb5ceddd26173f709336776b",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  X_FIRE},  // Slime (XL Conversion).a52
     {"6e24e3519458c5cb95a7fd7711131f8d",    CART_5200_EE_16,    CTRL_ROBO,  DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    252,    32,20,  X_PANUP}, // Space Dungeon (USA).a52
-    {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,21,  X_PANUP}, // Space Invaders (USA).a52
-    {"b94cc9abbdcdbbce73d508d0929ab8b1",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,21,  X_PANUP}, // Space Invaders Arcade.a52
+    {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,20,  X_PANUP}, // Space Invaders (USA).a52
+    {"b94cc9abbdcdbbce73d508d0929ab8b1",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,20,  X_PANUP}, // Space Invaders Arcade.a52
     {"8e280ad05824ef4ca32700716ef8e69a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,24,  X_FIRE},  // Space Invaders Deluxe.a52
     {"802a11dfcba6229cc2f93f0f3aaeb3aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    248,    32,20,  X_FIRE},  // Space Shuttle - A Journey Into Space (USA).a52
     {"88d286e4b5fbbe7fd1694d98af9ef538",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,19,  X_FIRE},  // SpeedAce5200.a52
     {"cd1c3f732c3432c4a642732182b1ea30",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    244,    32,20,  X_FIRE},  // Spitfire (1984) (Atari) (Prototype).a52
     {"6208110dc3c0bf7b15b33246f2971b6e",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,25,  X_PANDN}, // Spy Hunter (XL Conversion).a52
+    {"595703dc459cd51fed6e2a191c462969",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Stargate (Proto).a52
     {"8378e0f92e9365a6ad42efc9b973724a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  X_FIRE},  // Star Island.a52
     {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    250,    32,25,  X_FIRE},  // Star Raiders (USA).a52
     {"0fe34d98a055312aba9ea3cb82d3ee2a",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_FAST,     6, 220,    0, YES_FS,    256,    250,    32,25,  X_FIRE},  // Star Raiders 5200(shield2-02)(32K).a52
