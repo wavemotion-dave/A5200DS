@@ -28,10 +28,12 @@ The a5200ds emulator is offered as-is, without any warranty.
 
 Features :
 ----------
-* Most things you should expect from an emulator. 
-* Most games run at full speed on a DSi or above.
-* For the DS-LITE/PHAT many games will play fine but there may be some lag in sound/speed for the more complex games.
-* Bankswitching carts up to 128K are supported.  Bounty Bob Strikes Back is supported (though needs a DSi or better to run smoothly).
+* Support for the original 69 commercial releases plus a couple hundred homebrews, hacks and prototypes.
+* All games run at full speed on a DSi or above. Most games will run at full speed on the older DS-Lite/Phat (some of the more complex conversions will lag).
+* Bankswitching carts up to 128K are supported. Bounty Bob Strikes Back is supported (though needs a DSi or better to run smoothly).
+* Games like Frogger and Q-Bert auto-patch so the button does not need to be pressed to move/hop.
+* Games like Robotron will auto configure twin-sticks so you can use the ABXY buttons to shoot while the d-pad moves.
+* 10 high-scores per game is saved to the SD card.
 
 Two Flavors :
 ----------
