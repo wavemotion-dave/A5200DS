@@ -1,6 +1,6 @@
 # a5200ds
 
-a5200ds is an Atari 5200 console emulator.
+a5200ds is an Atari 5200 emulator for the Nintendo DS/DSi/XL/LL
 
 To use this emulator, you must use NTSC compatible roms with a52/bin format. 
 You also need the 5200.rom rom bios in the same folder as A5200DS.NDS (alternate
