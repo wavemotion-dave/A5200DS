@@ -1024,21 +1024,21 @@ void dsMainLoop(void) {
         if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
         if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
 
-        if (gTotalAtariFrames & 1)  // Every other frame...
+        if ((gTotalAtariFrames & 3) == 0)  // Every fourth frame...
         {
             if ((keys_pressed & KEY_R) && (keys_pressed & KEY_UP))   myCart.offset_y++;
             if ((keys_pressed & KEY_R) && (keys_pressed & KEY_DOWN)) myCart.offset_y--;
             if ((keys_pressed & KEY_R) && (keys_pressed & KEY_LEFT))  myCart.offset_x++;
             if ((keys_pressed & KEY_R) && (keys_pressed & KEY_RIGHT)) myCart.offset_x--;
 
-            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_UP))   if (myCart.scale_y <= 256) myCart.scale_y++;
+            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_UP))   if (myCart.scale_y < 256) myCart.scale_y++;
             if ((keys_pressed & KEY_L) && (keys_pressed & KEY_DOWN)) if (myCart.scale_y >= 192) myCart.scale_y--;
             if ((keys_pressed & KEY_L) && (keys_pressed & KEY_RIGHT))  if (myCart.scale_x <= 320) myCart.scale_x++;
             if ((keys_pressed & KEY_L) && (keys_pressed & KEY_LEFT)) if (myCart.scale_x >= 192) myCart.scale_x--;
             
             if ((keys_pressed & KEY_R) && (keys_pressed & KEY_L))
             {
-                if (++lcd_swap_counter == 15)
+                if (++lcd_swap_counter == 8)
                 {
                     if (keys_pressed & KEY_A)   {lcdSwap();}
                 }

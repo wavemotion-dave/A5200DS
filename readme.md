@@ -14,7 +14,7 @@ Do not ask me about such files - you will be ignored.
 
 Copyright :
 -----------------------
-a5200ds is Copyright (c) 2021-2023 Dave Bernazzani (wavemotion-dave)
+a5200ds is Copyright (c) 2021-2024 Dave Bernazzani (wavemotion-dave)
 
 This program is built upon alekmaul's magnificent efforts from circa 2011. He was 
 kind enough to grant me permission to update this emulator for the modern era.
@@ -41,9 +41,7 @@ Two Flavors :
 Missing :
 ---------
 Most things are playing fine on a DSi. Most of the original commercial games (like Missile Command, Space Invaders, Centipede) will generally
-run fine on the older DS-LITE or DS-PHAT.  Bosconian (128k AtariMax SD Supercart) is too slow to be playable... or is it? If you have a DSi or 
-above and are running with Unlaunch or Twilight Menu++ (both of which will unlock the faster 2X CPU of the DSi), you can try the special a5200dsi.nds
-build to make Bosconian (and everything else) run smoothly.
+run fine on the older DS-LITE or DS-PHAT.  
 
 Sound is passable. I'm not super pleased with the fidelity but it's come a long way.
 
@@ -51,6 +49,12 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 History :
 --------------------------------------------------------------------------------
+V3.5 : 05-Jan-2024
+  * Major cleanup across the board - a few more frames of performance and many games on the older DS-Lite will now run full speed without frameskip.
+  * Touch of paint on the main emulation screen to make the console buttons a bit more prominent.
+  * New X button handling on the games that utilize more than 192 vertical pixels to smooth scroll upper/lower areas of the screen (usually just status/score in those areas so pressing the X button to bring them momentarily into view works fine).
+  * About 50 new homebrews and hacks added to the internal database (up to 240 games now).
+
 V3.4 : 01-May-2023
   * Another frame or two of performance from memory optmizations.
   * Removed lots of obsoleted code to streamline the build.
