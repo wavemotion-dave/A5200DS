@@ -22,10 +22,10 @@
 #include "input.h"
 #include "sound.h"
 
-u32 trig0 = 1;
-u32 trig1 = 1;
-u32 stick0 = STICK_CENTRE;
-u32 stick1 = STICK_CENTRE;
+u16 trig0 = 1;
+u16 trig1 = 1;
+u16 stick0 = STICK_CENTRE;
+u16 stick1 = STICK_CENTRE;
 
 /* this should be variables if we could move 320x200 window, but we can't :) */
 /* static int first_lno = 24;

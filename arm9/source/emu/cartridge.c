@@ -37,6 +37,8 @@
 #include "pia.h"
 #include "input.h"
 
+extern void restore_bottom_screen(void);
+
 static const struct cart_t cart_table[] = 
 {
     {"DefaultCart000000000000000000000",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Default Cart - If no other cart type found...
@@ -161,7 +163,7 @@ static const struct cart_t cart_table[] =
     {"4e16903c352c8ed75ed9377e72ebe333",    CART_5200_64,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Laser Hawk (64k conversion).a52
     {"46264c86edf30666e28553bd08369b83",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    220,    32,10,  X_FIRE},  // Last Starfighter, The (USA) (Proto).a52
     {"ff785ce12ad6f4ca67f662598025c367",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,12,  X_PANUP}, // Megamania (1983) (Activision).a52
-    {"8311263811e366bf5ef07977d0f5a5ae",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  15, 200,    1, YES_FS,    256,    256,    32,28,  X_PANDN},  // MajorBlink_5200_V2 (XL Conversion).a52
+    {"8311263811e366bf5ef07977d0f5a5ae",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  15, 200,    1, YES_FS,    256,    256,    32,28,  X_PANDN}, // MajorBlink_5200_V2 (XL Conversion).a52
     {"d00dff571bfa57c7ff7880c3ce03b178",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  X_FIRE},  // Mario Brothers (1983) (Atari).a52
     {"2f5aec81646216ea2720b87712452193",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  X_FIRE},  // Mario Brothers Encore.a52
     {"1cd67468d123219201702eadaffd0275",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    251,    32,25,  X_FIRE},  // Meteorites (USA).a52
@@ -223,6 +225,7 @@ static const struct cart_t cart_table[] =
     {"ddf7834a420f1eaae20a7a6255f80a99",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    220,    32,10,  X_FIRE},  // Road Runner (USA) (Proto).a52
     {"4d3bdc741f75f8c1a766dd836cef3461",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Robnbanks.a52
     {"45dee333cecdbe1ef4f703c1db0cea9c",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Robnbanks-Arcade.a52    
+    {"6e69666be0103c709dd820807e5b8ffb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Robnbanks-Arcade v2.a52    
     {"86b358c9bca97c2089b929e3b2751908",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  X_FIRE},  // Rockball 5200.a52
     {"5dba5b478b7da9fd2c617e41fb5ccd31",    CART_5200_NS_16,    CTRL_ROBO,  DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,23,  X_FIRE},  // Robotron 2084 (USA).a52
     {"718cc8b828d36abf068b8fc0a81fc7cf",    CART_5200_32,       CTRL_ROBO,  DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,23,  X_FIRE},  // Robotron 2084 (USA).a52    
@@ -247,8 +250,8 @@ static const struct cart_t cart_table[] =
     {"6208110dc3c0bf7b15b33246f2971b6e",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,25,  X_PANDN}, // Spy Hunter (XL Conversion).a52
     {"595703dc459cd51fed6e2a191c462969",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Stargate (Proto).a52
     {"8378e0f92e9365a6ad42efc9b973724a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  X_FIRE},  // Star Island.a52
-    {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    250,    32,25,  X_FIRE},  // Star Raiders (USA).a52
-    {"0fe34d98a055312aba9ea3cb82d3ee2a",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_FAST,     6, 220,    0, YES_FS,    256,    250,    32,25,  X_FIRE},  // Star Raiders 5200(shield2-02)(32K).a52
+    {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_SR,    DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    250,    32,25,  X_FIRE},  // Star Raiders (USA).a52
+    {"0fe34d98a055312aba9ea3cb82d3ee2a",    CART_5200_32,       CTRL_SR,    ANALOG,      ANA_FAST,     6, 220,    0, YES_FS,    256,    250,    32,25,  X_FIRE},  // Star Raiders 5200(shield2-02)(32K).a52
     {"feacc7a44f9e92d245b2cb2485b48bb6",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,      ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Star Rider.a52
     {"c959b65be720a03b5479650a3af5a511",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,16,  X_FIRE},  // Star Trek - Strategic Operations Simulator (USA).a52
     {"00beaa8405c7fb90d86be5bb1b01ea66",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,      ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,24,  X_FIRE},  // Star Wars - The Arcade Game (USA).a52
@@ -475,7 +478,7 @@ int CART_Insert(const char *filename) {
         /* find cart type */
         myCart.type = CART_NONE;
         myCart.control = CTRL_JOY;
-        int len_kb = len >> 10; /* number of kilobytes */
+        short int len_kb = len >> 10; /* number of kilobytes */
         if (len_kb == 4)  myCart.type =  CART_5200_4;
         if (len_kb == 8)  myCart.type =  CART_5200_8;
         if (len_kb == 16) myCart.type =  CART_5200_NS_16;
@@ -490,7 +493,7 @@ int CART_Insert(const char *filename) {
         // --------------------------------------------
         static char md5[33];
         hash_Compute(cart_image, len, (byte*)md5);
-        int idx=0;
+        short int idx=0;
         myCart.frame_skip = NO_FS;
         while (cart_table[idx].type != CART_NONE)
         {
@@ -503,6 +506,10 @@ int CART_Insert(const char *filename) {
             }
             idx++;
         }
+        
+        extern char bStarRaiders;
+        if (myCart.control == CTRL_SR) bStarRaiders=1; else bStarRaiders=0;
+        restore_bottom_screen();
 
         if (myCart.type != CART_NONE) 
         {
@@ -537,6 +544,8 @@ void CART_Start(void)
     normal_memory[0x4] = 1;  normal_memory[0x5] = 1;  normal_memory[0x6] = 1;  normal_memory[0x7] = 1;
     normal_memory[0x8] = 1;  normal_memory[0x9] = 1;  normal_memory[0xA] = 1;  normal_memory[0xB] = 1;
     normal_memory[0xC] = 0;  normal_memory[0xD] = 0;  normal_memory[0xE] = 0;  normal_memory[0xF] = 0;
+    
+    
 
     switch (myCart.type) 
     {

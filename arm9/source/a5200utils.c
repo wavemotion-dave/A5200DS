@@ -29,6 +29,7 @@
 
 #include "clickNoQuit_wav.h"
 #include "bgBottom.h"
+#include "bgStarRaiders.h"
 #include "bgTop.h"
 #include "bgFileSel.h"
 #include "printf.h"
@@ -43,9 +44,12 @@ unsigned int etatEmu;
 int atari_frames=0;        
 u16 bSoundMute = false;
 
-char padKey[] = {AKEY_5200_0,AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_HASH,AKEY_5200_ASTERISK};
+char padKey[]   = {AKEY_5200_0,AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_HASH,AKEY_5200_ASTERISK};
+char padKeySR[] = {AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_ASTERISK,AKEY_5200_0,AKEY_5200_HASH};
 
 gamecfg GameConf;                       // Game Config svg
+
+char bStarRaiders=0;
 
 int lcd_swap_counter = 0;
 
@@ -60,6 +64,9 @@ u16* bptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[2] + 0x
 
 unsigned int atari_pal16[256] = {0};
 unsigned char *filebuffer;
+
+static int last_key_code = 0x00;
+static UWORD keys_dampen = 0;
 
 #define MAX_DEBUG 16
 int debug[MAX_DEBUG]={0};
@@ -145,11 +152,22 @@ ITCM_CODE void VsoundHandler(void)
 
 void restore_bottom_screen(void)
 {
-  decompress(bgBottomTiles, bgGetGfxPtr(bg0b), LZ77Vram);
-  decompress(bgBottomMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
-  dmaCopy((void *) bgBottomPal,(u16*) BG_PALETTE_SUB,256*2);
-  unsigned short dmaVal = *(bgGetMapPtr(bg1b) +31*32);
-  dmaFillWords(dmaVal | (dmaVal<<16),(void*) bgGetMapPtr(bg1b),32*24*2);
+    if (bStarRaiders)
+    {
+      decompress(bgStarRaidersTiles, bgGetGfxPtr(bg0b), LZ77Vram);
+      decompress(bgStarRaidersMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
+      dmaCopy((void *) bgStarRaidersPal,(u16*) BG_PALETTE_SUB,256*2);
+      unsigned short dmaVal = *(bgGetMapPtr(bg1b) +31*32);
+      dmaFillWords(dmaVal | (dmaVal<<16),(void*) bgGetMapPtr(bg1b),32*24*2);
+    }
+    else
+    {
+      decompress(bgBottomTiles, bgGetGfxPtr(bg0b), LZ77Vram);
+      decompress(bgBottomMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
+      dmaCopy((void *) bgBottomPal,(u16*) BG_PALETTE_SUB,256*2);
+      unsigned short dmaVal = *(bgGetMapPtr(bg1b) +31*32);
+      dmaFillWords(dmaVal | (dmaVal<<16),(void*) bgGetMapPtr(bg1b),32*24*2);
+    }
 }
 
 // Color fading effect
@@ -263,11 +281,7 @@ void dsShowScreenMain(void) {
   decompress(bgTopMap, (void*) bgGetMapPtr(bg0), LZ77Vram);
   dmaCopy((void *) bgTopPal,(u16*) BG_PALETTE,256*2);
 
-  decompress(bgBottomTiles, bgGetGfxPtr(bg0b), LZ77Vram);
-  decompress(bgBottomMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
-  dmaCopy((void *) bgBottomPal,(u16*) BG_PALETTE_SUB,256*2);
-  unsigned short dmaVal = *(bgGetMapPtr(bg1b) +31*32);
-  dmaFillWords(dmaVal | (dmaVal<<16),(void*) bgGetMapPtr(bg1b),32*24*2);
+  restore_bottom_screen();
 
   REG_BLDCNT=0; REG_BLDCNT_SUB=0; REG_BLDY=0; REG_BLDY_SUB=0;
   
@@ -478,11 +492,7 @@ bool dsWaitOnQuit(void) {
     }
   }
 
-  decompress(bgBottomTiles, bgGetGfxPtr(bg0b), LZ77Vram);
-  decompress(bgBottomMap, (void*) bgGetMapPtr(bg0b), LZ77Vram);
-  dmaCopy((void *) bgBottomPal,(u16*) BG_PALETTE_SUB,256*2);
-  dmaVal = *(bgGetMapPtr(bg1b) +31*32);
-  dmaFillWords(dmaVal | (dmaVal<<16),(void*) bgGetMapPtr(bg1b),32*24*2);  
+  restore_bottom_screen();
 
   return bRet;
 }
@@ -570,6 +580,7 @@ unsigned int dsWaitForRom(void)
         ucHaut++;
         if (ucHaut>10) ucHaut=0;
       } 
+      uLenFic=0; ucFlip=0;        
     }
     else {
       ucHaut = 0;
@@ -594,7 +605,8 @@ unsigned int dsWaitForRom(void)
       else {
         ucBas++;
         if (ucBas>10) ucBas=0;
-      } 
+      }
+      uLenFic=0; ucFlip=0;
     }
     else {
       ucBas = 0;
@@ -668,15 +680,15 @@ unsigned int dsWaitForRom(void)
     }
       
       
-    // Scroll la selection courante
+    // Scroll the current selection
     if (strlen(a5200romlist[ucFicAct].filename) > 29) {
       ucFlip++;
-      if (ucFlip >= 8) {
+      if (ucFlip >= 10) {
         ucFlip = 0;
         uLenFic++;
         if ((uLenFic+29)>strlen(a5200romlist[ucFicAct].filename)) {
           ucFlop++;
-          if (ucFlop >= 8) {
+          if (ucFlop >= 10) {
             uLenFic=0;
             ucFlop = 0;
           }
@@ -688,6 +700,7 @@ unsigned int dsWaitForRom(void)
         dsPrintValue(1,5+romSelected,1,szName);
       }
     }
+
     swiWaitForVBlank();
   }
   
@@ -758,319 +771,6 @@ void dsPrintValue(int x, int y, unsigned int isSelect, char *pchStr)
   }
 }
 
-//---------------------------------------------------------------------------------
-void dsInstallSoundEmuFIFO(void) 
-{
-    // We are going to use the 16-bit sound engine so we need to scale up our 8-bit values...
-    for (int i=0; i<256; i++)
-    {
-        sampleExtender[i] = (i << 8);
-    }
-    
-    if (isDSiMode())
-    {
-        aptr = (u16*) ((u32)&sound_buffer[0] + 0xA000000); 
-        bptr = (u16*) ((u32)&sound_buffer[2] + 0xA000000);
-    }
-    else
-    {
-        aptr = (u16*) ((u32)&sound_buffer[0] + 0x00400000);
-        bptr = (u16*) ((u32)&sound_buffer[2] + 0x00400000);
-    }
-        
-    FifoMessage msg;
-    msg.SoundPlay.data = &sound_buffer;
-    msg.SoundPlay.freq = SOUND_FREQ*2;
-    msg.SoundPlay.volume = 127;
-    msg.SoundPlay.pan = 64;
-    msg.SoundPlay.loop = 1;
-    msg.SoundPlay.format = ((1)<<4) | SoundFormat_16Bit;
-    msg.SoundPlay.loopPoint = 0;
-    msg.SoundPlay.dataSize = 4 >> 2;
-    msg.type = EMUARM7_PLAY_SND;
-    fifoSendDatamsg(FIFO_USER_01, sizeof(msg), (u8*)&msg);
-}
-
-extern u32 trig0, trig1;
-extern u32 stick0;
-extern u32 stick1;
-int full_speed = 0;
-
-void dsMainLoop(void) {
-  static char fpsbuf[32];
-  unsigned short int keys_pressed,keys_touch=0, romSel;
-  short int iTx,iTy, shiftctrl;
-  char showFps=false;
-  
-  // Timers are fed with 33.513982 MHz clock.
-  // With DIV_1024 the clock is 32,728.5 ticks per sec...
-  TIMER0_DATA=0;
-  TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
-  TIMER1_DATA=0;
-  TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;  
-  
-  while(etatEmu != A5200_QUITSTDS) {
-    switch (etatEmu) {
-    
-      case A5200_MENUINIT:
-        dsShowScreenMain();
-        etatEmu = A5200_MENUSHOW;
-        break;
-        
-      case A5200_MENUSHOW:
-        etatEmu =  dsWaitOnMenu(A5200_MENUSHOW);
-        Atari800_Initialise();
-        break;
-        
-      case A5200_PLAYINIT:
-        irqDisable(IRQ_TIMER2);  
-        dsShowScreenEmu();
-        VsoundClear();
-        swiWaitForVBlank();swiWaitForVBlank();
-        irqEnable(IRQ_TIMER2);  
-        bSoundMute = false;
-        etatEmu = A5200_PLAYGAME;
-        atari_frames=0;
-        TIMER0_DATA=0;
-        TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
-        TIMER1_DATA=0;
-        TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;  
-        break;
-        
-      case A5200_PLAYGAME:
-
-        // 32,728.5 ticks = 1 second
-        // 1 frame = 1/50 or 1/60 (0.02 or 0.016)
-        // 655 -> 50 fps and 546 -> 60 fps
-        if (!full_speed)
-        {
-            while(TIMER0_DATA < (546*atari_frames))
-                ;
-        }
-
-        // Execute one frame
-        Atari800_Frame();
-            
-        if (++atari_frames == 60)
-        {
-            TIMER0_CR=0;
-            TIMER0_DATA=0;
-            TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
-            atari_frames=0;
-        }            
-
-        // -------------------------------------------------------------
-        // Stuff to do once/second such as FPS display and Debug Data
-        // -------------------------------------------------------------
-        if (TIMER1_DATA >= 32728)   // 1000MS (1 sec)
-        {
-            TIMER1_CR = 0;
-            TIMER1_DATA = 0;
-            TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;
-        
-            if (!full_speed && (gTotalAtariFrames > 60)) gTotalAtariFrames--;   // We tend to overshoot... 
-            if (showFps) { sprintf(fpsbuf,"%03d",gTotalAtariFrames); dsPrintValue(0,0,0, fpsbuf); } // Show FPS
-            DumpDebugData();
-            gTotalAtariFrames = 0;
-        }
-        
-        // Read keys
-        keys_pressed=keysCurrent();
-        key_consol = CONSOL_NONE; //|= (CONSOL_OPTION | CONSOL_SELECT | CONSOL_START); /* OPTION/START/SELECT key OFF */
-        shiftctrl = 0; key_shift = 0;
-        trig0 = ((keys_pressed & KEY_A) || (keys_pressed & KEY_Y)) ? 0 : 1;
-        stick0 = STICK_CENTRE;
-        stick1 = STICK_CENTRE;
-            
-        if (keys_pressed & KEY_B) { shiftctrl ^= AKEY_SHFT; key_shift = 1; }
-        key_code = shiftctrl ? 0x40 : 0x00;
-        
-        // if touch screen pressed
-        if (keys_pressed & KEY_TOUCH) 
-        {
-            touchPosition touch;
-            touchRead(&touch);
-            iTx = touch.px;
-            iTy = touch.py;
-            if ((iTx>211) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
-              bSoundMute = true;                
-              soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
-              if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
-              else { bSoundMute = false;}
-            }
-            else if ((iTx>240) && (iTx<256) && (iTy>0) && (iTy<20))  { // Full Speed Toggle ... upper corner...
-               if (keys_touch == 0)
-               {
-                   full_speed = 1-full_speed; 
-                   if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
-                   keys_touch = 1;
-               }
-            }
-            else if ((iTx>0) && (iTx<20) && (iTy>0) && (iTy<20))  { // Full Speed Toggle ... upper corner...
-               if (keys_touch == 0)
-               {
-                    showFps = 1-showFps; 
-                    dsPrintValue(0,0,0, "   ");
-                    keys_touch = 1;
-               }
-            }
-            else if ((iTx>160) && (iTx<200) && (iTy>112) && (iTy<130))  { //highscore
-              bSoundMute = true;
-              highscore_display();
-              restore_bottom_screen();
-              bSoundMute = false;
-            }
-            else if ((iTx>115) && (iTx<150) && (iTy>112) && (iTy<130))  { //pause
-              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
-              key_code = AKEY_5200_PAUSE + key_code;
-              keys_touch = 1;
-            }
-            else if ((iTx>64) && (iTx<105) && (iTy>112) && (iTy<130))  { //reset
-              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
-              key_code = AKEY_5200_RESET + key_code;
-              keys_touch = 1;
-            }
-            else if ((iTx>8) && (iTx<54) && (iTy>112) && (iTy<130))  { //start
-              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
-              key_code = AKEY_5200_START + key_code;
-              keys_touch = 1;
-            }
-            else if ((iTy>155) && (iTy<185)) 
-            { 
-              if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
-              if (iTx > 0) iTx--;
-              if (iTx > 0) iTx--;
-              key_code = padKey[iTx / 21] + key_code;
-              keys_touch = 1;
-            }
-            else if ((iTx>70) && (iTx<185) && (iTy>7) && (iTy<50)) {     // 72,8 -> 182,42 cartridge slot
-              bSoundMute = true;
-              // Find files in current directory and show it 
-              a52FindFiles();
-              romSel=dsWaitForRom();
-              bSoundMute = false;
-              if (romSel) 
-              { 
-                  etatEmu=A5200_PLAYINIT; 
-                  dsLoadGame(a5200romlist[ucFicAct].filename); 
-                  if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
-              }
-            }
-        }
-        else
-        {
-            keys_touch = 0;
-        }
-      
-        if (myCart.control == CTRL_JOY)
-        {
-          if (keys_pressed & KEY_UP) stick0 = STICK_FORWARD;
-          if (keys_pressed & KEY_LEFT) stick0 = STICK_LEFT;
-          if (keys_pressed & KEY_RIGHT) stick0 = STICK_RIGHT;
-          if (keys_pressed & KEY_DOWN) stick0 = STICK_BACK;
-          if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_LEFT)) stick0 = STICK_UL; 
-          if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_UR;
-          if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick0 = STICK_LL;
-          if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_LR;
-        }
-        else if (myCart.control == CTRL_SWAP)
-        {
-          trig1 = (keys_pressed & KEY_A) ? 0 : 1;
-          if (keys_pressed & KEY_UP) stick1 = STICK_FORWARD;
-          if (keys_pressed & KEY_LEFT) stick1 = STICK_LEFT;
-          if (keys_pressed & KEY_RIGHT) stick1 = STICK_RIGHT;
-          if (keys_pressed & KEY_DOWN) stick1 = STICK_BACK;
-          if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_LEFT)) stick1 = STICK_UL; 
-          if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_RIGHT)) stick1 = STICK_UR;
-          if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick1 = STICK_LL;
-          if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick1 = STICK_LR;          
-        }
-        else if (myCart.control == CTRL_ROBO)
-        {
-          if (keys_pressed & KEY_UP) stick0 = STICK_FORWARD;
-          if (keys_pressed & KEY_LEFT) stick0 = STICK_LEFT;
-          if (keys_pressed & KEY_RIGHT) stick0 = STICK_RIGHT;
-          if (keys_pressed & KEY_DOWN) stick0 = STICK_BACK;
-          if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_LEFT)) stick0 = STICK_UL; 
-          if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_UR;
-          if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick0 = STICK_LL;
-          if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_LR;
-          if (keys_pressed & KEY_X) stick1 = STICK_FORWARD;
-          if (keys_pressed & KEY_Y) stick1 = STICK_LEFT;
-          if (keys_pressed & KEY_A) stick1 = STICK_RIGHT;
-          if (keys_pressed & KEY_B) stick1 = STICK_BACK;
-          if ((keys_pressed & KEY_X) && (keys_pressed & KEY_Y)) stick1 = STICK_UL; 
-          if ((keys_pressed & KEY_X) && (keys_pressed & KEY_A)) stick1 = STICK_UR;
-          if ((keys_pressed & KEY_B) && (keys_pressed & KEY_Y)) stick1 = STICK_LL;
-          if ((keys_pressed & KEY_B) && (keys_pressed & KEY_A)) stick1 = STICK_LR;          
-        }
-        else if (myCart.control == CTRL_FROG)
-        {
-          trig0=0;
-          if (keys_pressed & KEY_UP) {stick0 = STICK_FORWARD; trig0=1;}
-          if (keys_pressed & KEY_LEFT) {stick0 = STICK_LEFT;  trig0=1;}
-          if (keys_pressed & KEY_RIGHT) {stick0 = STICK_RIGHT;trig0=1;}
-          if (keys_pressed & KEY_DOWN) {stick0 = STICK_BACK;  trig0=1;}
-        }
-        else if (myCart.control == CTRL_QBERT)
-        {
-          if (keys_pressed & KEY_UP) {stick0 = STICK_UR; }
-          if (keys_pressed & KEY_LEFT) {stick0 = STICK_UL;}
-          if (keys_pressed & KEY_RIGHT) {stick0 = STICK_LR;}
-          if (keys_pressed & KEY_DOWN) {stick0 = STICK_LL; }
-          trig0=0;
-        }
-
-        if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
-        if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
-
-        if ((gTotalAtariFrames & 3) == 0)  // Every fourth frame...
-        {
-            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_UP))   myCart.offset_y++;
-            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_DOWN)) myCart.offset_y--;
-            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_LEFT))  myCart.offset_x++;
-            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_RIGHT)) myCart.offset_x--;
-
-            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_UP))   if (myCart.scale_y < 256) myCart.scale_y++;
-            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_DOWN)) if (myCart.scale_y >= 192) myCart.scale_y--;
-            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_RIGHT))  if (myCart.scale_x <= 320) myCart.scale_x++;
-            if ((keys_pressed & KEY_L) && (keys_pressed & KEY_LEFT)) if (myCart.scale_x >= 192) myCart.scale_x--;
-            
-            if ((keys_pressed & KEY_R) && (keys_pressed & KEY_L))
-            {
-                if (++lcd_swap_counter == 8)
-                {
-                    if (keys_pressed & KEY_A)   {lcdSwap();}
-                }
-            } else lcd_swap_counter = 0;
-        }            
-            
-        static short int last_keys = 99;
-        if (keys_pressed != last_keys)
-        {
-            last_keys = keys_pressed;
-        }
-
-        // Screen shift/slide
-        if (myCart.control != CTRL_ROBO)          
-        {
-            if (keys_pressed & KEY_X)
-            {
-                if (myCart.x_function == X_PANUP)
-                {
-                    screen_slide_y = 12;  dampen_slide_y = 6;
-                }
-                else if (myCart.x_function == X_PANDN)
-                {
-                    screen_slide_y = -12;  dampen_slide_y = 6;
-                }
-            }
-        }
-
-        break;
-    }
-	}
-}
 
 //----------------------------------------------------------------------------------
 // Find files (a78 / bin) available
@@ -1138,5 +838,368 @@ void a52FindFiles(void) {
     counta5200 = 1;
   }
 }
+
+//---------------------------------------------------------------------------------
+void dsInstallSoundEmuFIFO(void) 
+{
+    // We are going to use the 16-bit sound engine so we need to scale up our 8-bit values...
+    for (int i=0; i<256; i++)
+    {
+        sampleExtender[i] = (i << 8);
+    }
+    
+    if (isDSiMode())
+    {
+        aptr = (u16*) ((u32)&sound_buffer[0] + 0xA000000); 
+        bptr = (u16*) ((u32)&sound_buffer[2] + 0xA000000);
+    }
+    else
+    {
+        aptr = (u16*) ((u32)&sound_buffer[0] + 0x00400000);
+        bptr = (u16*) ((u32)&sound_buffer[2] + 0x00400000);
+    }
+        
+    FifoMessage msg;
+    msg.SoundPlay.data = &sound_buffer;
+    msg.SoundPlay.freq = SOUND_FREQ*2;
+    msg.SoundPlay.volume = 127;
+    msg.SoundPlay.pan = 64;
+    msg.SoundPlay.loop = 1;
+    msg.SoundPlay.format = ((1)<<4) | SoundFormat_16Bit;
+    msg.SoundPlay.loopPoint = 0;
+    msg.SoundPlay.dataSize = 4 >> 2;
+    msg.type = EMUARM7_PLAY_SND;
+    fifoSendDatamsg(FIFO_USER_01, sizeof(msg), (u8*)&msg);
+}
+
+extern u16 trig0, trig1;
+extern u16 stick0;
+extern u16 stick1;
+char full_speed = 0;
+
+void dsMainLoop(void) {
+  static char fpsbuf[32];
+  unsigned short int keys_pressed,keys_touch=0, romSel;
+  short int iTx,iTy, shiftctrl;
+  char showFps=false;
+  
+  // Timers are fed with 33.513982 MHz clock.
+  // With DIV_1024 the clock is 32,728.5 ticks per sec...
+  TIMER0_DATA=0;
+  TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
+  TIMER1_DATA=0;
+  TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;  
+  
+  while(etatEmu != A5200_QUITSTDS) 
+  {
+        switch (etatEmu) 
+        {    
+          case A5200_MENUINIT:
+            dsShowScreenMain();
+            etatEmu = A5200_MENUSHOW;
+            break;
+
+          case A5200_MENUSHOW:
+            etatEmu =  dsWaitOnMenu(A5200_MENUSHOW);
+            Atari800_Initialise();
+            break;
+
+          case A5200_PLAYINIT:
+            irqDisable(IRQ_TIMER2);  
+            dsShowScreenEmu();
+            VsoundClear();
+            swiWaitForVBlank();swiWaitForVBlank();
+            irqEnable(IRQ_TIMER2);  
+            bSoundMute = false;
+            etatEmu = A5200_PLAYGAME;
+            atari_frames=0;
+            TIMER0_DATA=0;
+            TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
+            TIMER1_DATA=0;
+            TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;  
+            break;
+
+          case A5200_PLAYGAME:
+
+            // 32,728.5 ticks = 1 second
+            // 1 frame = 1/50 or 1/60 (0.02 or 0.016)
+            // 655 -> 50 fps and 546 -> 60 fps
+            if (!full_speed)
+            {
+                while(TIMER0_DATA < (546*atari_frames))
+                    ;
+            }
+
+            // Execute one frame
+            Atari800_Frame();
+
+            if (++atari_frames == 60)
+            {
+                TIMER0_CR=0;
+                TIMER0_DATA=0;
+                TIMER0_CR=TIMER_ENABLE|TIMER_DIV_1024;
+                atari_frames=0;
+            }            
+
+            // -------------------------------------------------------------
+            // Stuff to do once/second such as FPS display and Debug Data
+            // -------------------------------------------------------------
+            if (TIMER1_DATA >= 32728)   // 1000MS (1 sec)
+            {
+                TIMER1_CR = 0;
+                TIMER1_DATA = 0;
+                TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;
+
+                if (!full_speed && (gTotalAtariFrames > 60)) gTotalAtariFrames--;   // We tend to overshoot... 
+                if (showFps) { sprintf(fpsbuf,"%03d",gTotalAtariFrames); dsPrintValue(0,0,0, fpsbuf); } // Show FPS
+                DumpDebugData();
+                gTotalAtariFrames = 0;
+            }
+
+            // Read keys
+            keys_pressed=keysCurrent();
+            key_consol = CONSOL_NONE; //|= (CONSOL_OPTION | CONSOL_SELECT | CONSOL_START); /* OPTION/START/SELECT key OFF */
+            shiftctrl = 0; key_shift = 0;
+            trig0 = ((keys_pressed & KEY_A) || (keys_pressed & KEY_Y)) ? 0 : 1;
+            stick0 = STICK_CENTRE;
+            stick1 = STICK_CENTRE;
+
+            if (keys_pressed & KEY_B) { shiftctrl ^= AKEY_SHFT; key_shift = 1; }
+            key_code = shiftctrl ? 0x40 : 0x00;
+
+            // if touch screen pressed
+            if (keys_pressed & KEY_TOUCH) 
+            {
+                touchPosition touch;
+                touchRead(&touch);
+                iTx = touch.px;
+                iTy = touch.py;
+                if (iTy < 20)
+                {
+                    if ((iTx>240) && (iTx<256) && (iTy>0) && (iTy<20))  { // Full Speed Toggle ... upper right corner...
+                       if (keys_touch == 0)
+                       {
+                           full_speed = 1-full_speed; 
+                           if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
+                           keys_touch = 1;
+                       }
+                    }
+                    else if ((iTx>0) && (iTx<20) && (iTy>0) && (iTy<20))  { // FPS Counter ... upper left corner...
+                       if (keys_touch == 0)
+                       {
+                            showFps = 1-showFps; 
+                            dsPrintValue(0,0,0, "   ");
+                            keys_touch = 1;
+                       }
+                    }
+                }
+                else if (iTy < 50)
+                {
+                    if ((iTx>70) && (iTx<185) && (iTy>7) && (iTy<50)) {     // 72,8 -> 182,42 cartridge slot
+                      bSoundMute = true;
+                      // Find files in current directory and show it 
+                      a52FindFiles();
+                      romSel=dsWaitForRom();
+                      bSoundMute = false;
+                      if (romSel) 
+                      { 
+                          etatEmu=A5200_PLAYINIT; 
+                          dsLoadGame(a5200romlist[ucFicAct].filename); 
+                          if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
+                      }
+                    }
+                }
+                else if (iTy < 130)
+                {
+                    if ((iTx>211) && (iTx<250) && (iTy>112) && (iTy<130))  { //quit
+                      bSoundMute = true;                
+                      soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+                      if (dsWaitOnQuit()) etatEmu=A5200_QUITSTDS;
+                      else { bSoundMute = false;}
+                    }
+                    else if ((iTx>160) && (iTx<200) && (iTy>112) && (iTy<130))  { //highscore
+                      bSoundMute = true;
+                      highscore_display();
+                      restore_bottom_screen();
+                      bSoundMute = false;
+                    }
+                    else if ((iTx>115) && (iTx<150) && (iTy>112) && (iTy<130))  { //pause
+                      if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+                      key_code = AKEY_5200_PAUSE + key_code;
+                      keys_touch = 1;
+                    }
+                    else if ((iTx>64) && (iTx<105) && (iTy>112) && (iTy<130))  { //reset
+                      if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+                      key_code = AKEY_5200_RESET + key_code;
+                      keys_touch = 1;
+                    }
+                    else if ((iTx>8) && (iTx<54) && (iTy>112) && (iTy<130))  { //start
+                      if (!keys_touch) soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+                      key_code = AKEY_5200_START + key_code;
+                      keys_touch = 1;
+                    }
+                }
+                else
+                {
+                    if (bStarRaiders) // Special Overlay for Star Raiders
+                    {
+                        if ((iTy>144) && (iTy<191))  // This is our 5200 Keypad 0-9,#,*
+                        { 
+                          if (!keys_dampen && (keys_touch==0)) // First time pressed?
+                          {
+                              keys_touch = 1;
+                              soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+                              if (iTx > 0) iTx--;
+                              if (iTy < 169) key_code = padKeySR[0 + (iTx / 42)] | key_code;
+                              else           key_code = padKeySR[6 + (iTx / 42)] | key_code;
+                              last_key_code = key_code;
+                              keys_dampen = 20; // A half second for consistent debounce
+                          }
+                          else
+                          {
+                              key_code = last_key_code;
+                              if (keys_dampen) keys_dampen--; else last_key_code=0x00;
+                          }
+                        }
+                    }
+                    else
+                    {
+                        if ((iTy>150) && (iTy<185))  // This is our 5200 Keypad 0-9,#,*
+                        { 
+                          if (!keys_dampen) // First time pressed?
+                          {
+                              soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
+                              if (iTx > 0) iTx--;
+                              key_code = padKey[iTx / 21] | key_code;
+                              last_key_code = key_code;
+                              keys_dampen = 15; // One-fourth of a second for consistent debounce
+                          }
+                          else
+                          {
+                              key_code = last_key_code;
+                              keys_dampen--;
+                          }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                keys_touch = 0;
+                if (keys_dampen)
+                {
+                    key_code = last_key_code;
+                    keys_dampen--;
+                }
+                else
+                {
+                    last_key_code = 0x00;
+                }
+            }
+
+            if ((myCart.control == CTRL_JOY) || (myCart.control == CTRL_SR))
+            {
+              if (keys_pressed & KEY_UP) stick0 = STICK_FORWARD;
+              if (keys_pressed & KEY_LEFT) stick0 = STICK_LEFT;
+              if (keys_pressed & KEY_RIGHT) stick0 = STICK_RIGHT;
+              if (keys_pressed & KEY_DOWN) stick0 = STICK_BACK;
+              if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_LEFT)) stick0 = STICK_UL; 
+              if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_UR;
+              if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick0 = STICK_LL;
+              if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_LR;
+            }
+            else if (myCart.control == CTRL_SWAP)
+            {
+              trig1 = (keys_pressed & KEY_A) ? 0 : 1;
+              if (keys_pressed & KEY_UP) stick1 = STICK_FORWARD;
+              if (keys_pressed & KEY_LEFT) stick1 = STICK_LEFT;
+              if (keys_pressed & KEY_RIGHT) stick1 = STICK_RIGHT;
+              if (keys_pressed & KEY_DOWN) stick1 = STICK_BACK;
+              if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_LEFT)) stick1 = STICK_UL; 
+              if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_RIGHT)) stick1 = STICK_UR;
+              if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick1 = STICK_LL;
+              if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick1 = STICK_LR;          
+            }
+            else if (myCart.control == CTRL_ROBO)
+            {
+              if (keys_pressed & KEY_UP) stick0 = STICK_FORWARD;
+              if (keys_pressed & KEY_LEFT) stick0 = STICK_LEFT;
+              if (keys_pressed & KEY_RIGHT) stick0 = STICK_RIGHT;
+              if (keys_pressed & KEY_DOWN) stick0 = STICK_BACK;
+              if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_LEFT)) stick0 = STICK_UL; 
+              if ((keys_pressed & KEY_UP) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_UR;
+              if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_LEFT)) stick0 = STICK_LL;
+              if ((keys_pressed & KEY_DOWN) && (keys_pressed & KEY_RIGHT)) stick0 = STICK_LR;
+              if (keys_pressed & KEY_X) stick1 = STICK_FORWARD;
+              if (keys_pressed & KEY_Y) stick1 = STICK_LEFT;
+              if (keys_pressed & KEY_A) stick1 = STICK_RIGHT;
+              if (keys_pressed & KEY_B) stick1 = STICK_BACK;
+              if ((keys_pressed & KEY_X) && (keys_pressed & KEY_Y)) stick1 = STICK_UL; 
+              if ((keys_pressed & KEY_X) && (keys_pressed & KEY_A)) stick1 = STICK_UR;
+              if ((keys_pressed & KEY_B) && (keys_pressed & KEY_Y)) stick1 = STICK_LL;
+              if ((keys_pressed & KEY_B) && (keys_pressed & KEY_A)) stick1 = STICK_LR;          
+            }
+            else if (myCart.control == CTRL_FROG)
+            {
+              trig0=0;
+              if (keys_pressed & KEY_UP) {stick0 = STICK_FORWARD; trig0=1;}
+              if (keys_pressed & KEY_LEFT) {stick0 = STICK_LEFT;  trig0=1;}
+              if (keys_pressed & KEY_RIGHT) {stick0 = STICK_RIGHT;trig0=1;}
+              if (keys_pressed & KEY_DOWN) {stick0 = STICK_BACK;  trig0=1;}
+            }
+            else if (myCart.control == CTRL_QBERT)
+            {
+              if (keys_pressed & KEY_UP) {stick0 = STICK_UR; }
+              if (keys_pressed & KEY_LEFT) {stick0 = STICK_UL;}
+              if (keys_pressed & KEY_RIGHT) {stick0 = STICK_LR;}
+              if (keys_pressed & KEY_DOWN) {stick0 = STICK_LL; }
+              trig0=0;
+            }
+
+            if (keys_pressed & KEY_START) key_code = AKEY_5200_START + key_code;
+            if (keys_pressed & KEY_SELECT) key_code = AKEY_5200_PAUSE + key_code;
+
+            if ((gTotalAtariFrames & 3) == 0)  // Every fourth frame...
+            {
+                if ((keys_pressed & KEY_R) && (keys_pressed & KEY_UP))   myCart.offset_y++;
+                if ((keys_pressed & KEY_R) && (keys_pressed & KEY_DOWN)) myCart.offset_y--;
+                if ((keys_pressed & KEY_R) && (keys_pressed & KEY_LEFT))  myCart.offset_x++;
+                if ((keys_pressed & KEY_R) && (keys_pressed & KEY_RIGHT)) myCart.offset_x--;
+
+                if ((keys_pressed & KEY_L) && (keys_pressed & KEY_UP))   if (myCart.scale_y < 256) myCart.scale_y++;
+                if ((keys_pressed & KEY_L) && (keys_pressed & KEY_DOWN)) if (myCart.scale_y >= 192) myCart.scale_y--;
+                if ((keys_pressed & KEY_L) && (keys_pressed & KEY_RIGHT))  if (myCart.scale_x <= 320) myCart.scale_x++;
+                if ((keys_pressed & KEY_L) && (keys_pressed & KEY_LEFT)) if (myCart.scale_x >= 192) myCart.scale_x--;
+
+                if ((keys_pressed & KEY_R) && (keys_pressed & KEY_L))
+                {
+                    if (++lcd_swap_counter == 8)
+                    {
+                        if (keys_pressed & KEY_A)   {lcdSwap();}
+                    }
+                } else lcd_swap_counter = 0;
+            }            
+
+            // Screen shift/slide
+            if (myCart.control != CTRL_ROBO)          
+            {
+                if (keys_pressed & KEY_X)
+                {
+                    if (myCart.x_function == X_PANUP)
+                    {
+                        screen_slide_y = 12;  dampen_slide_y = 6;
+                    }
+                    else if (myCart.x_function == X_PANDN)
+                    {
+                        screen_slide_y = -12;  dampen_slide_y = 6;
+                    }
+                }
+            }
+
+            break;
+        }
+	}
+}
+
 
 void _putchar(char character) {};   // Not used but needed to link printf()

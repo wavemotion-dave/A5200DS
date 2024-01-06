@@ -68,7 +68,7 @@ void INPUT_Initialise(void)
     }    
 }
 
-extern int trig0, trig1;
+extern UWORD trig0, trig1;
 
 UBYTE anlaog_speed_map[6][2] =
 {
@@ -116,11 +116,13 @@ void INPUT_Frame(void)
 	if (key_shift)
 		SKSTAT &= ~8;
 
-	if (key_code < 0) 
+	if (key_code <= 0) 
     {
         last_key_code = AKEY_NONE;
 	}
     
+    if ((key_code > 0) || key_shift)
+    {
     /* The 5200 has only 4 of the 6 keyboard scan lines connected */
     /* Pressing one 5200 key is like pressing 4 Atari 800 keys. */
     /* The LSB (bit 0) and bit 5 are the two missing lines. */
@@ -170,6 +172,8 @@ void INPUT_Frame(void)
 			}
 		}
 	}
+        
+    }
 
 	/* handle joysticks */
 	i = Atari_PORT(0);

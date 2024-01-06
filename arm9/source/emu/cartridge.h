@@ -40,6 +40,7 @@ extern struct cart_t myCart;
 #define CTRL_FROG       3
 #define CTRL_QBERT      4
 #define CTRL_ROBO       5
+#define CTRL_SR         6
 
 #define DIGITAL         0
 #define ANALOG          1
