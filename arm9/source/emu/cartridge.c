@@ -250,8 +250,8 @@ static const struct cart_t cart_table[] =
     {"6208110dc3c0bf7b15b33246f2971b6e",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,25,  X_PANDN}, // Spy Hunter (XL Conversion).a52
     {"595703dc459cd51fed6e2a191c462969",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Stargate (Proto).a52
     {"8378e0f92e9365a6ad42efc9b973724a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  X_FIRE},  // Star Island.a52
-    {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_SR,    DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    250,    32,25,  X_FIRE},  // Star Raiders (USA).a52
-    {"0fe34d98a055312aba9ea3cb82d3ee2a",    CART_5200_32,       CTRL_SR,    ANALOG,      ANA_FAST,     6, 220,    0, YES_FS,    256,    250,    32,25,  X_FIRE},  // Star Raiders 5200(shield2-02)(32K).a52
+    {"e2d3a3e52bb4e3f7e489acd9974d68e2",    CART_5200_EE_16,    CTRL_SR,    DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    251,    32,25,  X_FIRE},  // Star Raiders (USA).a52
+    {"0fe34d98a055312aba9ea3cb82d3ee2a",    CART_5200_32,       CTRL_SR,    DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    251,    32,25,  X_FIRE},  // Star Raiders 5200(shield2-02)(32K).a52
     {"feacc7a44f9e92d245b2cb2485b48bb6",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,      ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Star Rider.a52
     {"c959b65be720a03b5479650a3af5a511",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,16,  X_FIRE},  // Star Trek - Strategic Operations Simulator (USA).a52
     {"00beaa8405c7fb90d86be5bb1b01ea66",    CART_5200_EE_16,    CTRL_JOY,   ANALOG,      ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,24,  X_FIRE},  // Star Wars - The Arcade Game (USA).a52
