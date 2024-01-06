@@ -51,7 +51,7 @@ V3.5 : 05-Jan-2024
   * Touch of paint on the main emulation screen to make the console buttons a bit more prominent.
   * New X button handling on the games that utilize more than 192 vertical pixels to smooth scroll upper/lower areas of the screen (usually just status/score in those areas so pressing the X button to bring them momentarily into view works fine).
   * About 50 new homebrews and hacks added to the internal database (up to 240 games now).
-  * Version 3.5a fixes the Star Raiders game and adds a new overlay for it!
+  * Version 3.5a fixes the Star Raiders game and adds a new overlay for it! Fixes for Phobos. A few screen tweaks. Sound pops improved.
 
 V3.4 : 01-May-2023
   * Another frame or two of performance from memory optmizations.
