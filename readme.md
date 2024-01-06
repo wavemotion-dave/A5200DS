@@ -40,8 +40,6 @@ Known Issues :
 Most things are playing fine on a DSi. Most of the original commercial games (like Missile Command, Space Invaders, Centipede) will generally
 run fine on the older DS-LITE or DS-PHAT.  
 
-Star Raiders does not work properly - there is something happening in the keyboard detection that is causing problems. Working on it...
-
 Sound is passable. I'm not super pleased with the fidelity but it's come a long way.
 
 Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
