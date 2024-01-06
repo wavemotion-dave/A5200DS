@@ -40,10 +40,12 @@ Two Flavors :
 * The normal a5200ds.nds file will run on an original DS (Lite/Phat) as well as the DSi (or 2DS, 3DS / XL/LL).
 * The special a5200dsi.nds file uses a different way of fetching memory that is 10% slower on non-bankswitch carts (which is almost all games available) but is an order of magnitude faster when it comes to bankswitching carts (anything bigger than 32K). The DSi can afford the 10% hit on normal carts to gain this blazing speed on bankswitching. This build will run the mighty Bosconian port (128K AtariMax version) at full speed with the new bankswitch handling.
 
-Missing :
+Known Issues :
 ---------
 Most things are playing fine on a DSi. Most of the original commercial games (like Missile Command, Space Invaders, Centipede) will generally
 run fine on the older DS-LITE or DS-PHAT.  
+
+Star Raiders does not work properly - there is something happening in the keyboard detection that is causing problems. Working on it...
 
 Sound is passable. I'm not super pleased with the fidelity but it's come a long way.
 
