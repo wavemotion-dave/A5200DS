@@ -79,7 +79,7 @@ static const struct cart_t cart_table[] =
     {"8f4c07a9e0ef2ded720b403810220aaf",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_FASTEST,  6, 220,    1, YES_FS,    256,    240,    32,16,  X_FIRE},  // Castle Crisis (USA) (Unl).a52
     {"d64a175672b6dba0c0b244c949799e64",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,15,  X_PANUP}, // Caverns of Mars (Conv).a52
     {"1db260d6769bed6bf4731744213097b8",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Caverns Of Mars 2 (Conv).a52    
-    {"c4a14a88a4257970223b1ef9bf95da5b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,16,  X_FIRE},  // Caverns Of Mars 3 (Conv).a52    
+    {"c4a14a88a4257970223b1ef9bf95da5b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0, YES_FS,    256,    250,    32,17,  X_FIRE},  // Caverns Of Mars 3 (Phobos).a52    
     {"261702e8d9acbf45d44bb61fd8fa3e17",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  45, 165,    1,  NO_FS,    256,    251,    32,16,  X_FIRE},  // Centipede (USA).a52
     {"df283efab9d36a15603283ee2a7bdb71",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Chess (XL Conversion).a52
     {"21b722b9c93076a3605ec157ac3aa4b8",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,19,  X_FIRE},  // Chop Suey.a52
