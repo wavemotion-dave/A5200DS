@@ -98,7 +98,6 @@ static const struct cart_t cart_table[] =
     {"c24be906c9d79f4eab391fd583332a4c",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  X_FIRE},  // Curse of the Lost Miner.a52
     {"7c27d225a13e178610babf331a0759c0",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  X_FIRE},  // David Crane's Pitfall II - Lost Caverns (USA).a52
     {"27d5f32b0d46d3d80773a2b505f95046",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    1,  NO_FS,    256,    256,    32,23,  X_FIRE},  // Defender (1982) (Atari).a52
-    {"8e280ad05824ef4ca32700716ef8e69a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,23,  X_FIRE},  // Deluxe Invaders.a52
     {"b4af8b555278dec6e2c2329881dc0a15",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,18,  X_FIRE},  // Demon Attack (XL Conversion).a52
     {"32b2bb28213dbb01b69e003c4b35bb57",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,18,  X_FIRE},  // Desmonds Dungeon (XL Conversion).a52
     {"6049d5ef7eddb1bb3a643151ff506219",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // Diamond Mine (XL Conversion).a52
@@ -243,7 +242,7 @@ static const struct cart_t cart_table[] =
     {"6e24e3519458c5cb95a7fd7711131f8d",    CART_5200_EE_16,    CTRL_ROBO,  DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    252,    32,20,  X_PANUP}, // Space Dungeon (USA).a52
     {"58430368d2c9190083f95ce923f4c996",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,20,  X_PANUP}, // Space Invaders (USA).a52
     {"b94cc9abbdcdbbce73d508d0929ab8b1",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,20,  X_PANUP}, // Space Invaders Arcade.a52
-    {"8e280ad05824ef4ca32700716ef8e69a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,24,  X_FIRE},  // Space Invaders Deluxe.a52
+    {"8e280ad05824ef4ca32700716ef8e69a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,23,  X_PANUP}, // Space Invaders Deluxe.a52
     {"802a11dfcba6229cc2f93f0f3aaeb3aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    248,    32,20,  X_FIRE},  // Space Shuttle - A Journey Into Space (USA).a52
     {"88d286e4b5fbbe7fd1694d98af9ef538",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,19,  X_FIRE},  // SpeedAce5200.a52
     {"cd1c3f732c3432c4a642732182b1ea30",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    244,    32,20,  X_FIRE},  // Spitfire (1984) (Atari) (Prototype).a52

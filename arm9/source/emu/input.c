@@ -38,18 +38,11 @@
 extern int debug[];
 #define Atari_POT(x) 228
 
-
 extern UBYTE PCPOT_input[8];
 
 int key_code = AKEY_NONE;
 int key_shift = 0;
 int key_consol = CONSOL_NONE;
-
-int joy_autofire[4] = {AUTOFIRE_OFF, AUTOFIRE_OFF, AUTOFIRE_OFF, AUTOFIRE_OFF};
-
-int joy_block_opposite_directions = 1;
-
-int joy_multijoy = 0;
 
 #define joy_5200_min    6
 #define joy_5200_center 114
@@ -82,7 +75,7 @@ UBYTE anlaog_speed_map[6][2] =
 
 void INPUT_Frame(void) 
 {
-    static int input_frame=0;
+    static UWORD input_frame=0;
     int i;
     static int last_key_code = AKEY_NONE;
     static int last_key_break = 0;
@@ -123,56 +116,55 @@ void INPUT_Frame(void)
     
     if ((key_code > 0) || key_shift)
     {
-    /* The 5200 has only 4 of the 6 keyboard scan lines connected */
-    /* Pressing one 5200 key is like pressing 4 Atari 800 keys. */
-    /* The LSB (bit 0) and bit 5 are the two missing lines. */
-    /* When debounce is enabled, multiple keys pressed generate
-     * no results. */
-    /* When debounce is disabled, multiple keys pressed generate
-     * results only when in numerical sequence. */
-    /* Thus the LSB being one of the missing lines is important
-     * because that causes events to be generated. */
-    /* Two events are generated every 64 scan lines
-     * but this code only does one every frame. */
-    /* Bit 5 is different for each keypress because it is one
-     * of the missing lines. */
-    static int bit5_5200 = 0;
-    if (bit5_5200) 
-    {
-        key_code &= ~0x20;
-    }
-    
-    if (myCart.keys_debounced)
-        bit5_5200 = !bit5_5200;
-    else 
-        bit5_5200 = 0;
-    
-    /* 5200 2nd fire button generates CTRL as well */
-    if (key_shift) 
-    {
-        key_code |= AKEY_SHFTCTRL;
-    }
-    
-	if (key_code >= 0) 
-    {
-        SKSTAT &= ~4;
-		if ((key_code ^ last_key_code) & ~AKEY_SHFTCTRL) {
-		/* ignore if only shift or control has changed its state */
-			last_key_code = key_code;
-			KBCODE = (UBYTE) key_code;
-			if (IRQEN & 0x40) {
-				if (IRQST & 0x40) {
-					IRQST &= ~0x40;
-					GenerateIRQ();
-				}
-				else {
-					/* keyboard over-run */
-					SKSTAT &= ~0x40;
-				}
-			}
-		}
-	}
-        
+        /* The 5200 has only 4 of the 6 keyboard scan lines connected */
+        /* Pressing one 5200 key is like pressing 4 Atari 800 keys. */
+        /* The LSB (bit 0) and bit 5 are the two missing lines. */
+        /* When debounce is enabled, multiple keys pressed generate
+         * no results. */
+        /* When debounce is disabled, multiple keys pressed generate
+         * results only when in numerical sequence. */
+        /* Thus the LSB being one of the missing lines is important
+         * because that causes events to be generated. */
+        /* Two events are generated every 64 scan lines
+         * but this code only does one every frame. */
+        /* Bit 5 is different for each keypress because it is one
+         * of the missing lines. */
+        static char bit5_5200 = 0;
+        if (bit5_5200) 
+        {
+            key_code &= ~0x20;
+        }
+
+        if (myCart.keys_debounced)
+            bit5_5200 = !bit5_5200;
+        else 
+            bit5_5200 = 0;
+
+        /* 5200 2nd fire button generates CTRL as well */
+        if (key_shift) 
+        {
+            key_code |= AKEY_SHFTCTRL;
+        }
+
+        if (key_code >= 0) 
+        {
+            SKSTAT &= ~4;
+            if ((key_code ^ last_key_code) & ~AKEY_SHFTCTRL) {
+            /* ignore if only shift or control has changed its state */
+                last_key_code = key_code;
+                KBCODE = (UBYTE) key_code;
+                if (IRQEN & 0x40) {
+                    if (IRQST & 0x40) {
+                        IRQST &= ~0x40;
+                        GenerateIRQ();
+                    }
+                    else {
+                        /* keyboard over-run */
+                        SKSTAT &= ~0x40;
+                    }
+                }
+            }
+        }
     }
 
 	/* handle joysticks */
@@ -186,8 +178,8 @@ void INPUT_Frame(void)
 	STICK[2] = i & 0x0f;
 	STICK[3] = (i >> 4) & 0x0f;
 
-  for (i = 0; i < 2; i++) 
-  {
+    for (i = 0; i < 2; i++) 
+    {
         if ((STICK[i] & 0x0c) == 0) {	/* right and left simultaneously */
             if (last_stick[i] & 0x04)	/* if wasn't left before, move left */
                 STICK[i] |= 0x08;
