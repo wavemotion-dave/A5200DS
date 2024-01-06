@@ -1,8 +1,11 @@
 #ifndef _ATARI_H_
 #define _ATARI_H_
 
+#include <stdio.h>
 #include "config.h"
-#include <stdio.h> /* FILENAME_MAX */
+
+
+#define MAX_FILENAME_LEN    256
 
 
 /* Fundamental declarations ---------------------------------------------- */

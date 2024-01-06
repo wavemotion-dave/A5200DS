@@ -57,7 +57,7 @@ static const struct cart_t cart_table[] =
     {"d31a3bbb4c99f539f0d2c4e02bec516e",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,19,  X_FIRE},  // Atlantis (XL Conversion).a52
     {"ec65389cc604b279d69a889725c723e7",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,20,  X_FIRE},  // Attack of the Mutant Camels (XL Conversion).a52
     {"f5cd178cbea0ae7d8cf65b30cfd04225",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    1, YES_FS,    256,    256,    32,16,  X_FIRE},  // Ballblazer (USA).a52
-    {"96b424d0bb0339f4edfe8095fe275d62",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    242,    32,26,  X_FIRE},  // Batty Builders (XL Conversion).a52
+    {"96b424d0bb0339f4edfe8095fe275d62",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    246,    32,25,  X_PANDN}, // Batty Builders (XL Conversion).a52
     {"8123393ae9635f6bc15ddc3380b04328",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    252,    32,24,  X_FIRE},  // Blueprint (1982) (CBS).a52    
     {"17e5c03b4fcada48d4c2529afcfe3a70",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_FIRE},  // BCs Quest For Tires (XL Conversion).a52
     {"96ec5b299b203c88f98100b57af6838d",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  X_PANUP}, // Biscuits From Hell.bin
@@ -283,7 +283,7 @@ static const struct cart_t cart_table[] =
 
 
 UBYTE          *cart_image = NULL;       /* For cartridge memory */
-char            cart_filename[FILENAME_MAX];
+char            cart_filename[MAX_FILENAME_LEN];
 struct cart_t   myCart __attribute__((section(".dtcm"))) = {"", CART_5200_32, CTRL_JOY, 0,0,0,0};
 static byte     cart_image_fixed_buffer[CART_MAX_SIZE] __attribute__ ((aligned (4)));;
 static byte     bryan_bank __attribute__((section(".dtcm"))) = 0;
@@ -529,7 +529,7 @@ void CART_Remove(void)
     cart_image = NULL;
     dFillMem(0x0000, 0, 0xC000);    
     memset(pokey_buffer, 0x00, SNDLENGTH);
-    memset(sound_buffer, 0x00, SNDLENGTH);
+    memset(sound_buffer, 0x00, 16);
     SetROM(0x4000, 0xbfff);     /* Set the entire 32k back to normal ROM */
     bosconian_bank = 0;
 }
@@ -543,8 +543,6 @@ void CART_Start(void)
     normal_memory[0x4] = 1;  normal_memory[0x5] = 1;  normal_memory[0x6] = 1;  normal_memory[0x7] = 1;
     normal_memory[0x8] = 1;  normal_memory[0x9] = 1;  normal_memory[0xA] = 1;  normal_memory[0xB] = 1;
     normal_memory[0xC] = 0;  normal_memory[0xD] = 0;  normal_memory[0xE] = 0;  normal_memory[0xF] = 0;
-    
-    
 
     switch (myCart.type) 
     {

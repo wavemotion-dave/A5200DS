@@ -49,16 +49,12 @@ char padKeySR[] = {AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,A
 
 gamecfg GameConf;                       // Game Config svg
 
-char bStarRaiders=0;
-
-int lcd_swap_counter = 0;
-
 #define  cxBG (myCart.offset_x<<8)
 #define  cyBG (myCart.offset_y<<8)
 #define  xdxBG (((320 / myCart.scale_x) << 8) | (320 % myCart.scale_x))
 #define  ydyBG (((256 / myCart.scale_y) << 8) | (256 % myCart.scale_y))
   
-unsigned char sound_buffer[SNDLENGTH] __attribute__ ((aligned (4))) = {0};
+unsigned char sound_buffer[16] __attribute__ ((aligned (4))) = {0};
 u16* aptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[0] + 0xA000000); 
 u16* bptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[2] + 0xA000000);
 
@@ -67,10 +63,17 @@ unsigned char *filebuffer;
 
 static int last_key_code = 0x00;
 static UWORD keys_dampen = 0;
+char bStarRaiders=0;
+char lcd_swap_counter = 0;
+
+u16 sound_idx           __attribute__((section(".dtcm"))) = 0;
+u16 myPokeyBufIdx       __attribute__((section(".dtcm"))) = 0;
+u8  lastSample          __attribute__((section(".dtcm"))) = 0;
+u16 sampleExtender[256] __attribute__((section(".dtcm"))) = {0};
 
 #define MAX_DEBUG 16
 int debug[MAX_DEBUG]={0};
-char DEBUG_DUMP = 1;
+char DEBUG_DUMP = 0;
 
 static void DumpDebugData(void)
 {
@@ -84,47 +87,18 @@ static void DumpDebugData(void)
 
         for (int i=0; i<MAX_DEBUG; i++)
         {
-            int idx=0;
-            int val = debug[i];
-            if (val < 0)
-            {
-                dbgbuf[idx++] = '-';
-                val = val * -1;
-            }
-            else
-            {
-                dbgbuf[idx++] = '0' + (int)val/10000000;
-            }
-            val = val % 10000000;
-            dbgbuf[idx++] = '0' + (int)val/1000000;
-            val = val % 1000000;
-            dbgbuf[idx++] = '0' + (int)val/100000;
-            val = val % 100000;
-            dbgbuf[idx++] = '0' + (int)val/10000;
-            val = val % 10000;
-            dbgbuf[idx++] = '0' + (int)val/1000;
-            val= val % 1000;
-            dbgbuf[idx++] = '0' + (int)val/100;
-            val = val % 100;
-            dbgbuf[idx++] = '0' + (int)val/10;
-            dbgbuf[idx++] = '0' + (int)val%10;
-            dbgbuf[idx++] = 0;
+            sprintf(dbgbuf, "%02d: %-9d %08X", i, debug[i], debug[i]);
             dsPrintValue(0,7+i,0, dbgbuf);
         }
     }
 }
-
-u16 sound_idx           __attribute__((section(".dtcm"))) = 0;
-u16 myPokeyBufIdx       __attribute__((section(".dtcm"))) = 0;
-u8  lastSample          __attribute__((section(".dtcm"))) = 0;
-u16 sampleExtender[256] __attribute__((section(".dtcm"))) = {0};
 
 void VsoundClear(void)
 {
     extern void PokeyClearBuffer(void);
     
     PokeyClearBuffer();   
-    memset(sound_buffer, 0x00, SNDLENGTH);
+    memset(sound_buffer, 0x00, 16);
     lastSample = 0x00;
     myPokeyBufIdx = 0;
     sound_idx = 0;
@@ -409,7 +383,7 @@ void dsLoadGame(char *filename)
         
       INPUT_Initialise();
         
-      memset(sound_buffer, 0x00, SNDLENGTH);
+      memset(sound_buffer, 0x00, 16);
 
       // Init palette
       for(index = 0; index < 256; index++) {
@@ -791,7 +765,7 @@ int a52Filescmp (const void *c1, const void *c2) {
 void a52FindFiles(void) {
   DIR *pdir;
   struct dirent *pent;
-  static char filenametmp[255];
+  static char filenametmp[MAX_FILENAME_LEN];
   
   counta5200 = countfiles= 0;
   
