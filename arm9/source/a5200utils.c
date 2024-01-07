@@ -176,27 +176,24 @@ short int screen_slide_y __attribute__((section(".dtcm"))) = 0;
 
 ITCM_CODE void vblankIntr() 
 {
-    static const u8 jitter[] = 
-    {
-        0x00, 0x00,
-        0x40, 0x00
-    };
-
     REG_BG2PA = xdxBG; 
     REG_BG2PD = ydyBG; 
+    REG_BG2X = cxBG; 
 
-    REG_BG2X = cxBG+jitter[sIndex++]; 
-    REG_BG2Y = cyBG+jitter[sIndex++] + (screen_slide_y<<8);
-    sIndex = sIndex & 3;
-    
-    if (sIndex == 0)
+    if (++sIndex & 1)
     {
+        // Slight jitter to help with X-screen scaling...
+        REG_BG2Y = cyBG+0x40 + (screen_slide_y<<8);
         if (dampen_slide_y == 0)
         {
             if (screen_slide_y < 0) screen_slide_y++;
             else if (screen_slide_y > 0) screen_slide_y--;
         } else dampen_slide_y--;
     }    
+    else
+    {
+        REG_BG2Y = cyBG + (screen_slide_y<<8);
+    }
 }
 
 void dsInitScreenMain(void) 
@@ -366,8 +363,6 @@ int load_os(char *filename )
 
 void dsLoadGame(char *filename) 
 {
-  unsigned short int index;
-  
   // Free buffer if needed
     TIMER2_CR=0; irqDisable(IRQ_TIMER2); 
     if (filebuffer != 0)
@@ -384,7 +379,7 @@ void dsLoadGame(char *filename)
       memset(sound_buffer, 0x00, 16);
 
       // Init palette
-      for(index = 0; index < 256; index++) {
+      for(u16 index = 0; index < 256; index++) {
         unsigned short r = palette_data[(index * 3) + 0];
         unsigned short g = palette_data[(index * 3) + 1];
         unsigned short b = palette_data[(index * 3) + 2];
@@ -424,9 +419,9 @@ unsigned int dsReadPad(void) {
 }
 
 bool dsWaitOnQuit(void) {
-  bool bRet=false, bDone=false;
+  char bRet=false, bDone=false;
   unsigned int keys_pressed;
-  unsigned int posdeb=0;
+  char posdeb=0;
   static char szName[32];
   
   decompress(bgFileSelTiles, bgGetGfxPtr(bg0b), LZ77Vram);
@@ -471,7 +466,7 @@ bool dsWaitOnQuit(void) {
 
 
 void dsDisplayFiles(unsigned int NoDebGame,u32 ucSel) {
-  unsigned int ucBcl,ucGame;
+  unsigned short int ucBcl,ucGame;
   u8 maxLen;
   static char szName[256];
   
@@ -509,8 +504,8 @@ void dsDisplayFiles(unsigned int NoDebGame,u32 ucSel) {
 
 unsigned int dsWaitForRom(void) 
 {
-  bool bDone=false, bRet=false;
-  u32 ucHaut=0x00, ucBas=0x00,ucSHaut=0x00, ucSBas=0x00,romSelected= 0, firstRomDisplay=0,nbRomPerPage, uNbRSPage, uLenFic=0,ucFlip=0, ucFlop=0;
+  char bDone=false, bRet=false;
+  u16 ucHaut=0x00, ucBas=0x00,ucSHaut=0x00, ucSBas=0x00,romSelected= 0, firstRomDisplay=0,nbRomPerPage, uNbRSPage, uLenFic=0,ucFlip=0, ucFlop=0;
   static char szName[64];
 
   decompress(bgFileSelTiles, bgGetGfxPtr(bg0b), LZ77Vram);

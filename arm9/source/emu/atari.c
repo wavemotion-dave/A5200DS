@@ -26,80 +26,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifdef HAVE_SIGNAL_H
-#include <signal.h>
-#endif
-#ifdef TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# ifdef HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# elif defined(HAVE_TIME_H)
-#  include <time.h>
-# endif
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#ifdef WIN32
-#include <windows.h>
-#endif
-#ifdef __EMX__
-#define INCL_DOS
-#include <os2.h>
-#endif
-#ifdef __BEOS__
-#include <OS.h>
-#endif
-#ifdef HAVE_LIBZ
-#include <zlib.h>
-#endif
-
 #include "main.h"
-
 #include "antic.h"
 #include "atari.h"
 #include "cartridge.h"
 #include "cpu.h"
 #include "gtia.h"
-
 #include "input.h"
-
 #include "memory.h"
 #include "pia.h"
 #include "platform.h"
 #include "pokeysnd.h"
-#if !defined(BASIC) && !defined(CURSES_BASIC)
-#endif
-#ifndef BASIC
-#ifndef __PLUS
-#endif
-#endif /* BASIC */
-#if defined(SOUND) && !defined(__PLUS)
-#include "pokeysnd.h"
-#endif
 
-#ifdef __PLUS
-#ifdef _WX_
-#include "export.h"
-#else /* _WX_ */
-#include "globals.h"
-#include "macros.h"
-#include "display_win.h"
-#include "misc_win.h"
-#include "registry.h"
-#include "timing.h"
-#include "FileService.h"
-#include "Helpers.h"
-#endif /* _WX_ */
-#endif /* __PLUS */
-
-
-int tv_mode = TV_NTSC;
-int disable_basic = TRUE;
-
-int verbose = FALSE;
 
 void Atari800_RunEsc(UBYTE esc_code)
 {
@@ -131,9 +69,8 @@ void Coldstart(void) {
 
 	/* set Atari OS Coldstart flag */
 	dPutByte(0x244, 1);
-	/* handle Option key (disable BASIC in XL/XE)
-	   and Start key (boot from cassette) */
-	consol_index = 2;
+
+    consol_index = 2;
 	consol_table[2] = 0x0f;
     
     /* hold Option during reboot */
@@ -195,9 +132,7 @@ int Atari800_Initialise(void) {
 }
 
 int Atari800_Exit(int run_monitor) {
-	int restart;
-	restart = Atari_Exit(run_monitor);
-	return restart;
+	return Atari_Exit(run_monitor);
 }
 
 extern int gTotalAtariFrames;
@@ -209,13 +144,4 @@ void Atari800_Frame(void)
     POKEY_Frame();
     
     gTotalAtariFrames++;
-}
-
-
-void MainStateSave(void) 
-{
-}
-
-void MainStateRead(void) 
-{
 }

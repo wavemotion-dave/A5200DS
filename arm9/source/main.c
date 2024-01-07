@@ -12,14 +12,8 @@
 
 extern int bg0, bg1;
 int bg0s, bg1s, bg2s, bg3s;         // sub BG pointers 
-extern volatile u16 vusCptVBL;      // VBL test
 
 extern int load_os(char *filename );
-
-void irqVBlank(void) { 
-  // Manage time
-  vusCptVBL++;
-}
 
 // Program entry point
 int main(int argc, char **argv) 

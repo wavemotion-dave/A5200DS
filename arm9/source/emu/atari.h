@@ -5,9 +5,6 @@
 #include "config.h"
 
 
-#define MAX_FILENAME_LEN    256
-
-
 /* Fundamental declarations ---------------------------------------------- */
 
 //#define BUILD_BOSCONIAN 1     // Enable this to produce a build that will run fast bankswitching at the expense of 15% slowdown in memory fetches. Renders games like Bosconian fully playable.
@@ -18,6 +15,8 @@
 #ifndef TRUE
 #define TRUE   1
 #endif
+
+#define MAX_FILENAME_LEN    256
 
 // Some global sound defines
 #define SOUND_FREQ (15720)        // 60 frames per second. 264 scanlines per frame. 1 samples per scanline. 60*264*1 = 15720
@@ -41,9 +40,8 @@
 #define MACHINE_5200  3
 
 /* Video system. */
-#define TV_PAL 312
+#define TV_PAL  312
 #define TV_NTSC 262
-extern int tv_mode;
 
 /* Dimensions of atari_screen.
    atari_screen is ATARI_WIDTH * ATARI_HEIGHT bytes.
@@ -103,12 +101,6 @@ int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly
    Util_filenamenotset() is TRUE for it. */
 void Atari800_FindROMImages(const char *directory, int only_if_not_set);
 
-/* Load Atari800 text configuration file. */
-int Atari800_LoadConfig(const char *alternate_config_filename);
-
-/* Writes Atari800 text configuration file. */
-int Atari800_WriteConfig(void);
-
 /* Shuts down Atari800 emulation core. */
 int Atari800_Exit(int run_monitor);
 
@@ -154,8 +146,5 @@ UBYTE Atari800_GetByte(UWORD addr);
 
 /* Stores a byte at the specified special address (not RAM or ROM). */
 void Atari800_PutByte(UWORD addr, UBYTE byte);
-
-/* Sleeps until it's time to emulate next Atari frame. */
-void atari_sync(void);
 
 #endif /* _ATARI_H_ */

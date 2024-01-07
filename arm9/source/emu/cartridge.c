@@ -51,6 +51,7 @@ static const struct cart_t cart_table[] =
     {"e2f6085028eb8cf24ad7b50ca4ef640f",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  0,  X_FIRE},  // Adventure II-b.a52
     {"9a46d46a97b4993891ae1a34477e9c5f",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  0,  X_FIRE},  // Adventure II.a52
     {"b48dd725b5d024ef0a5a797fb5acefc6",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Alien Swarm (XL Conversion).a52
+    {"a47fcb4eedab9418ea098bb431a407aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  2,  X_FIRE},  // A.E. (Anti-Enviormental Encounter).a52
     {"9e6d04dc20cbd6d3cdb722e420dea203",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,17,  0,  X_FIRE},  // ANALOG Multicart (XL Conversion).a52
     {"737717ff4f8402ed5b02e4bf866bbbe3",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,17,  0,  X_FIRE},  // ANALOG Multicart V2 (XL Conversion).a52
     {"77c6b647746bb1413c5566378ef25eec",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,24,  0,  X_FIRE},  // Archon (XL Conversion).a52
@@ -60,10 +61,12 @@ static const struct cart_t cart_table[] =
     {"ec65389cc604b279d69a889725c723e7",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,20,  0,  X_FIRE},  // Attack of the Mutant Camels (XL Conversion).a52
     {"f5cd178cbea0ae7d8cf65b30cfd04225",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    1, YES_FS,    256,    256,    32,16,  0,  X_FIRE},  // Ballblazer (USA).a52
     {"96b424d0bb0339f4edfe8095fe275d62",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    246,    32,25,  0,  X_PANDN}, // Batty Builders (XL Conversion).a52
+    {"8576867c2cfc965cf152be0468f684a7",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,24,  0,  X_FIRE},  // Battlezone.a52
     {"8123393ae9635f6bc15ddc3380b04328",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    252,    32,24,  0,  X_FIRE},  // Blueprint (1982) (CBS).a52
     {"17e5c03b4fcada48d4c2529afcfe3a70",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // BCs Quest For Tires (XL Conversion).a52
     {"96ec5b299b203c88f98100b57af6838d",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_PANUP}, // Biscuits From Hell.bin
     {"315e0bb45f28bb227e92b8c9e00ee8eb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    228,    32,17,  0,  X_FIRE},  // Blaster.a52
+    {"e0b47a17fa6cd9d6addc1961fca43414",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    228,    32,17,  0,  X_FIRE},  // Blaster.a52    
     {"992f62ccfda4c92ef113af1dd96d8f55",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    248,    32,24,  0,  X_FIRE},  // BlowSub.a52
     {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    247,    32,20,  0,  X_FIRE},  // Beamrider (USA).a52
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,25,  0,  X_FIRE},  // BerZerk (USA).a52
@@ -163,14 +166,16 @@ static const struct cart_t cart_table[] =
     {"5154dc468c00e5a343f5a8843a14f8ce",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // K-Star Patrol (XL Conversion).a52
     {"c4931be078e2b16dc45e9537ebce836b",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Laser Gates (Conversion).a52
     {"4e16903c352c8ed75ed9377e72ebe333",    CART_5200_64,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Laser Hawk (64k conversion).a52
-    {"46264c86edf30666e28553bd08369b83",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    220,    32,10,  0,  X_FIRE},  // Last Starfighter, The (USA) (Proto).a52
+    {"46264c86edf30666e28553bd08369b83",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Last Starfighter, The (USA) (Proto).a52
+    {"6d2296cada88c2f286bebe909559adcb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Last Starfighter, The (USA) (Proto).a52    
     {"ff785ce12ad6f4ca67f662598025c367",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,12,  0,  X_PANUP}, // Megamania (1983) (Activision).a52
     {"8311263811e366bf5ef07977d0f5a5ae",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  15, 200,    1, YES_FS,    256,    256,    32,28,  0,  X_PANDN}, // MajorBlink_5200_V2 (XL Conversion).a52
     {"d00dff571bfa57c7ff7880c3ce03b178",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  0,  X_FIRE},  // Mario Brothers (1983) (Atari).a52
     {"2f5aec81646216ea2720b87712452193",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  0,  X_FIRE},  // Mario Brothers Encore.a52
     {"1cd67468d123219201702eadaffd0275",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    251,    32,25,  0,  X_FIRE},  // Meteorites (USA).a52
-    {"bc33c07415b42646cc813845b979d85a",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    244,    32,20,  0,  X_FIRE},  // Meebzork (1983) (Atari).a52
-    {"84d88bcdeffee1ab880a5575c6aca45e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    250,    32,22,  0,  X_FIRE},  // Millipede (USA) (Proto).a52
+    {"bc33c07415b42646cc813845b979d85a",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Meebzork (1983) (Atari).a52
+    {"24348dd9287f54574ccc40ee40d24a86",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    276,    256,    41,24,  1,  X_FIRE},  // Microgammon.a52   
+    {"84d88bcdeffee1ab880a5575c6aca45e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    255,    32,24,  0,  X_FIRE},  // Millipede (USA) (Proto).a52
     {"d859bff796625e980db1840f15dec4b5",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE},  // Miner 2049er Starring Bounty Bob (USA).a52
     {"69d472a79f404e49ad2278df3c8a266e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0, YES_FS,    256,    240,    32,19,  1,  X_FIRE},  // Miniature Golf (1983) (Atari).a52
     {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,      ANA_SLOWER,  20, 185,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE},  // Missile Command (USA).a52
@@ -220,6 +225,7 @@ static const struct cart_t cart_table[] =
     {"88fa71fc34e81e616bdffc30e013330b",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Ratcatcher.a52
     {"2bb928d7516e451c6b0159ac413407de",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,17,  0,  X_FIRE},  // RealSports Baseball (USA).a52
     {"e056001d304db597bdd21b2968fcc3e6",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    248,    32,17,  0,  X_FIRE},  // RealSports Basketball (USA).a52
+    {"cfd05f2a0ea1068718d1149dbd1f19fa",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // RealSports Basketball (USA).a52    
     {"022c47b525b058796841134bb5c75a18",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    246,    32,21,  0,  X_FIRE},  // RealSports Football (USA).a52
     {"3074fad290298d56c67f82e8588c5a8b",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,16,  0,  X_FIRE},  // RealSports Soccer (USA).a52
     {"7e683e571cbe7c77f76a1648f906b932",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,16,  0,  X_FIRE},  // RealSports Tennis (USA).a52
@@ -248,7 +254,7 @@ static const struct cart_t cart_table[] =
     {"8e280ad05824ef4ca32700716ef8e69a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,23,  0,  X_PANUP}, // Space Invaders Deluxe.a52
     {"802a11dfcba6229cc2f93f0f3aaeb3aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    248,    32,20,  0,  X_FIRE},  // Space Shuttle - A Journey Into Space (USA).a52
     {"88d286e4b5fbbe7fd1694d98af9ef538",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,19,  0,  X_FIRE},  // SpeedAce5200.a52
-    {"cd1c3f732c3432c4a642732182b1ea30",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    244,    32,20,  0,  X_FIRE},  // Spitfire (1984) (Atari) (Prototype).a52
+    {"cd1c3f732c3432c4a642732182b1ea30",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Spitfire (1984) (Atari) (Prototype).a52
     {"6208110dc3c0bf7b15b33246f2971b6e",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,25,  0,  X_PANDN}, // Spy Hunter (XL Conversion).a52
     {"595703dc459cd51fed6e2a191c462969",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Stargate (Proto).a52
     {"8378e0f92e9365a6ad42efc9b973724a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Star Island.a52
@@ -261,10 +267,11 @@ static const struct cart_t cart_table[] =
     {"865570ff9052c1704f673e6222192336",    CART_5200_4,        CTRL_JOY,   ANALOG,      ANA_FASTER,   6, 220,    1, YES_FS,    280,    256,    36,18,  0,  X_FIRE},  // Super Breakout (USA).a52
     {"dfcd77aec94b532728c3d1fef1da9d85",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    255,    32,24,  0,  X_FIRE},  // Super Cobra (USA).a52
     {"d89669f026c34de7f0da2bcb75356e27",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,35,  0,  X_PANDN}, // Super Pac Man Final (5200).a52
+    {"7dab86351fe78c2f529010a1ac83a4cf",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,35,  0,  X_PANDN}, // Super Pac Man.a52
     {"332bf2774f7d9a6008da35420fd7dffc",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,35,  0,  X_PANDN}, // Super Pac Man Final Hack (5200).a52
     {"1569b7869bf9e46abd2c991c3b90caa6",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Superfly (XL Conversion).a52
     {"c098a0ce6c7e059264511e650ce47b35",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  0,  X_FIRE},  // Tapper (XL Conversion).a52
-    {"496b6a002bc7d749c02014f7ec6c303c",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,      ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Tempest (1983) (Atari) (Prototype) [!].a52
+    {"496b6a002bc7d749c02014f7ec6c303c",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,      ANA_SLOWER,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Tempest (1983) (Atari) (Prototype) [!].a52
     {"6836a07ea7b2a4c071e9e86c5695b4a1",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    244,    32,20,  0,  X_FIRE},  // Timeslip_5200 (XL Conversion).a52
     {"bb3761de48d39218744d7dbb94553528",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Time Runner (XL Conversion).a52
     {"3f4d175927f891642e5c9f8a197c7d89",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Time Runner 32k (BIOS Patched).a52

@@ -7,16 +7,17 @@
 #include "pdev_tbg0.h"
 #include "pdev_bg0.h"
 
-volatile unsigned int vusCptVBL;
+volatile u16 vusCptVBL;
 
-void vblankIntro() {
+void vblankIntro() 
+{
   vusCptVBL++;
 }
 
 // Intro with portabledev logo
 void intro_logo(void) {
   int soundId=-1; 
-  bool bOK;
+  char bOK;
 
   // Init graphics
   videoSetMode(MODE_0_2D | DISPLAY_BG0_ACTIVE );
@@ -26,10 +27,10 @@ void intro_logo(void) {
   irqEnable(IRQ_VBLANK);
   
   // Init BG
-	int bg1 = bgInit(0, BgType_Text8bpp, BgSize_T_256x256, 31,0);
+  int bg1 = bgInit(0, BgType_Text8bpp, BgSize_T_256x256, 31,0);
 
   // Init sub BG
-	int bg1s = bgInitSub(0, BgType_Text8bpp, BgSize_T_256x256, 31,0);
+  int bg1s = bgInitSub(0, BgType_Text8bpp, BgSize_T_256x256, 31,0);
 
   REG_BLDCNT = BLEND_FADE_BLACK | BLEND_SRC_BG0 | BLEND_DST_BG0; REG_BLDY = 16;
   REG_BLDCNT_SUB = BLEND_FADE_BLACK | BLEND_SRC_BG0 | BLEND_DST_BG0; REG_BLDY_SUB = 16;

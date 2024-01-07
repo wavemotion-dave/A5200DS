@@ -29,9 +29,6 @@ u16 trig1 = 1;
 u16 stick0 = STICK_CENTRE;
 u16 stick1 = STICK_CENTRE;
 
-/* this should be variables if we could move 320x200 window, but we can't :) */
-/* static int first_lno = 24;
-static int first_col = 32; */
 #define first_lno 20 /* center 320x200 window in 384x240 screen */
 #define first_col 32
 
@@ -40,7 +37,6 @@ static int first_col = 32; */
 /* -------------------------------------------------------------------------- */
 void Atari_Initialise(void)
 {
-
     Pokey_sound_init(FREQ_17_APPROX, DSPRATE, 1, 0); //SND_BIT16);
     
 	trig0 = 1;  // Not pressed

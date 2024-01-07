@@ -76,11 +76,11 @@ UBYTE POTENA __attribute__((section(".dtcm")));
 
 /* Internal GTIA state ----------------------------------------------------- */
 
-int consol_index __attribute__((section(".dtcm")))= 0;
-UBYTE consol_table[3] __attribute__((section(".dtcm")));
-UBYTE consol_mask __attribute__((section(".dtcm")));
-UBYTE TRIG[4] __attribute__((section(".dtcm")));
-UBYTE TRIG_latch[4] __attribute__((section(".dtcm")));
+int consol_index        __attribute__((section(".dtcm")))= 0;
+UBYTE consol_table[3]   __attribute__((section(".dtcm")));
+UBYTE consol_mask       __attribute__((section(".dtcm")));
+UBYTE TRIG[4]           __attribute__((section(".dtcm")));
+UBYTE TRIG_latch[4]     __attribute__((section(".dtcm")));
 
 void set_prior(UBYTE byte);         /* in antic.c */
 
@@ -100,7 +100,7 @@ void set_prior(UBYTE byte);         /* in antic.c */
 #define M2PL_T M2PL
 #define M3PL_T M3PL
 
-extern UBYTE player_dma_enabled ;
+extern UBYTE player_dma_enabled;
 extern UBYTE missile_dma_enabled;
 extern UBYTE player_gra_enabled;
 extern UBYTE missile_gra_enabled;
@@ -391,7 +391,7 @@ ITCM_CODE UBYTE GTIA_GetByte(UWORD addr)
     case _TRIG3:
         return TRIG[3] & TRIG_latch[3];
     case _PAL:
-        return (tv_mode == TV_PAL) ? 0x01 : 0x0f;
+        return 0x0f; // Force NTSC
     case _CONSOL:
         {
             UBYTE byte = consol_table[consol_index] & consol_mask;
@@ -710,5 +710,3 @@ ITCM_CODE void GTIA_PutByte(UWORD addr, UBYTE byte)
         break;
     }
 }
-
-
