@@ -21,6 +21,9 @@
 #include "cpu.h"
 #include "input.h"
 #include "sound.h"
+#include "pokeysnd.h"
+
+#define DSPRATE 11025
 
 u16 trig0 = 1;
 u16 trig1 = 1;
@@ -36,16 +39,11 @@ static int first_col = 32; */
 /* -------------------------------------------------------------------------- */
 /* CONFIG & INITIALISATION                                                    */
 /* -------------------------------------------------------------------------- */
-void Atari_Initialise(void) {
-#ifdef DEBUG
-  iprintf("Atari_Initialise\n");
-#endif
+void Atari_Initialise(void)
+{
 
-#ifdef SOUND
-  // initialise sound routines 
-  Sound_Initialise();
-#endif
-
+    Pokey_sound_init(FREQ_17_APPROX, DSPRATE, 1, 0); //SND_BIT16);
+    
 	trig0 = 1;  // Not pressed
     trig1 = 1;  // Not pressed
 	stick0 = STICK_CENTRE;
@@ -57,28 +55,8 @@ void Atari_Initialise(void) {
 /* -------------------------------------------------------------------------- */
 /* ATARI EXIT                                                                 */
 /* -------------------------------------------------------------------------- */
-int Atari_Exit(int run_monitor) {
-#ifdef SOUND
-  Sound_Exit();
-#endif
+int Atari_Exit(int run_monitor) 
+{
   return 0;
 }
 
-/* -------------------------------------------------------------------------- */
-u32 Atari_PORT(u32 num) {
-	if (num == 0)
-		return (stick1 << 4) | stick0;
-	return (STICK_CENTRE << 4) | STICK_CENTRE;
-}
-
-/* -------------------------------------------------------------------------- */
-u32 Atari_TRIG(u32 num) {
-  switch (num) {
-    case 0:
-      return trig0;
-    case 1:
-      return trig1;
-    default:
-      return 1; // Not pressed
-  }
-}

@@ -28,10 +28,7 @@
 #include "cpu.h"
 #include "memory.h"
 #include "pia.h"
-
-#ifndef BASIC
 #include "input.h"
-#endif
 
 UBYTE PACTL;
 UBYTE PBCTL;
@@ -39,22 +36,13 @@ UBYTE PORTA;
 UBYTE PORTB;
 UBYTE PORT_input[2];
 
-int xe_bank = 0;
-int selftest_enabled = 0;
-
-UBYTE atari_basic[8192];
-UBYTE atari_os[16384];
-
-UBYTE PORTA_mask;
-UBYTE PORTB_mask;
+UBYTE atari_os[0x800];
 
 void PIA_Initialise(void) {
     PACTL = 0x3f;
     PBCTL = 0x3f;
     PORTA = 0xff;
     PORTB = 0xff;
-    PORTA_mask = 0xff;
-    PORTB_mask = 0xff;
     PORT_input[0] = 0xff;
     PORT_input[1] = 0xff;
 }
@@ -63,12 +51,3 @@ void PIA_Reset(void) {
     PORTA = 0xff;
     PORTB = 0xff;
 }
-
-void PIAStateSave(void) 
-{
-}
-
-void PIAStateRead(void) 
-{
-}
-

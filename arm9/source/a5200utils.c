@@ -40,14 +40,12 @@ FICA5200 a5200romlist[1024];
 unsigned int counta5200=0, countfiles=0, ucFicAct=0;
 int gTotalAtariFrames = 0;
 int bg0, bg1, bg0b, bg1b, bg2, bg3;
-unsigned int etatEmu;
+unsigned short int etatEmu;
 int atari_frames=0;        
 u16 bSoundMute = false;
 
 char padKey[]   = {AKEY_5200_0,AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_HASH,AKEY_5200_ASTERISK};
 char padKeySR[] = {AKEY_5200_1,AKEY_5200_2,AKEY_5200_3,AKEY_5200_4,AKEY_5200_5,AKEY_5200_6,AKEY_5200_7,AKEY_5200_8,AKEY_5200_9,AKEY_5200_ASTERISK,AKEY_5200_0,AKEY_5200_HASH};
-
-gamecfg GameConf;                       // Game Config svg
 
 #define  cxBG (myCart.offset_x<<8)
 #define  cyBG (myCart.offset_y<<8)
@@ -72,7 +70,7 @@ u8  lastSample          __attribute__((section(".dtcm"))) = 0;
 u16 sampleExtender[256] __attribute__((section(".dtcm"))) = {0};
 
 #define MAX_DEBUG 16
-int debug[MAX_DEBUG]={0};
+u32 debug[MAX_DEBUG]={0};
 char DEBUG_DUMP = 0;
 
 static void DumpDebugData(void)
@@ -1142,7 +1140,7 @@ void dsMainLoop(void) {
 
                 if ((keys_pressed & KEY_L) && (keys_pressed & KEY_UP))   if (myCart.scale_y < 256) myCart.scale_y++;
                 if ((keys_pressed & KEY_L) && (keys_pressed & KEY_DOWN)) if (myCart.scale_y >= 192) myCart.scale_y--;
-                if ((keys_pressed & KEY_L) && (keys_pressed & KEY_RIGHT))  if (myCart.scale_x <= 320) myCart.scale_x++;
+                if ((keys_pressed & KEY_L) && (keys_pressed & KEY_RIGHT))  if (myCart.scale_x < 320) myCart.scale_x++;
                 if ((keys_pressed & KEY_L) && (keys_pressed & KEY_LEFT)) if (myCart.scale_x >= 192) myCart.scale_x--;
 
                 if ((keys_pressed & KEY_R) && (keys_pressed & KEY_L))

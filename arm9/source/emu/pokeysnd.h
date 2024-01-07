@@ -114,7 +114,6 @@ extern void (*Pokey_process_ptr)(void *sndbuffer, unsigned int sndn);
 extern void (*Update_pokey_sound)(uint16 addr, uint8 val, uint8 /*chip*/, uint8 gain);
 extern void (*Update_serio_sound)(int out, UBYTE data);
 extern void (*Update_consol_sound)(int set);
-extern void (*Update_vol_only_sound)(void);
 
 int Pokey_sound_init(uint32 freq17, uint16 playback_freq, uint8 num_pokeys,
                      unsigned int flags

@@ -12,15 +12,9 @@ extern UBYTE PACTL;
 extern UBYTE PBCTL;
 extern UBYTE PORTA;
 extern UBYTE PORTB;
-extern UBYTE PORTA_mask;
-extern UBYTE PORTB_mask;
 extern UBYTE PORT_input[2];
 
-extern int xe_bank;
-extern int selftest_enabled;
-
-extern UBYTE atari_basic[8192];
-extern UBYTE atari_os[16384];
+extern UBYTE atari_os[0x800];
 
 extern void PIA_Initialise(void);
 extern void PIA_Reset(void);

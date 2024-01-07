@@ -30,6 +30,7 @@ struct cart_t
     short int       scale_y;
     short int       offset_x;
     short int       offset_y;
+    unsigned char   artifacting;
     unsigned char   x_function;
 };
 

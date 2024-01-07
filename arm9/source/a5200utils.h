@@ -7,7 +7,7 @@
 #define A5200_PLAYGAME 0x04 
 #define A5200_QUITSTDS 0x05
 
-extern unsigned int etatEmu;
+extern unsigned short int etatEmu;
 
 typedef enum {
   EMUARM7_INIT_SND = 0x123C,
@@ -21,20 +21,13 @@ typedef struct FICtoLoad {
   unsigned int uCrc;
 } FICA5200;
 
-typedef struct {
-  unsigned int sndLevel;
-  unsigned int m_ScreenRatio; // 0 = original show, 1 = full screen
-  unsigned short DS_Pad[12]; // each key mapping
-  unsigned int m_DisplayFPS;
-} gamecfg;
-
 #define ds_GetTicks() (TIMER0_DATA)
 
-extern gamecfg GameConf;
+extern u32 debug[];
 
 extern int bg0, bg1, bg0b,bg1b, bg2, bg3;
-extern unsigned int video_height;                  // Actual video height
-extern unsigned int gameCRC;               // crc checksum of file  
+extern unsigned int video_height;           // Actual video height
+extern unsigned int gameCRC;                // crc checksum of file  
 
 extern void FadeToColor(unsigned char ucSens, unsigned short ucBG, unsigned char ucScr, unsigned char valEnd, unsigned char uWait);
 

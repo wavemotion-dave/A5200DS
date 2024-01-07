@@ -44,6 +44,7 @@ UBYTE  normal_memory[16] __attribute__((section(".dtcm")));
 
 void ROM_PutByte(UWORD addr, UBYTE value)
 {
+    // ROM normally doesn't respond to a write...
 }
 
 void MEMORY_InitialiseMachine(void) 
@@ -138,12 +139,4 @@ void MEMORY_InitialiseMachine(void)
         writemap[i] = POKEY_PutByte;
     }
 	Coldstart();
-}
-
-void MemStateSave(UBYTE SaveVerbose)
-{
-}
-
-void MemStateRead(UBYTE SaveVerbose) 
-{
 }

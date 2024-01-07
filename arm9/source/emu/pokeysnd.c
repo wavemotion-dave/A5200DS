@@ -40,7 +40,6 @@
   }
 
 /* GLOBAL VARIABLE DEFINITIONS */
-extern int debug[];
 
 /* number of pokey chips currently emulated */
 static uint8 Num_pokeys;

@@ -139,34 +139,12 @@ extern int xpos_limit;
 /* Number of scanlines per frame. */
 #define max_ypos TV_NTSC
 
-/* Main clock value at the beginning of the current scanline. */
-extern unsigned int screenline_cpu_clock;
-
-/* Current main clock value. */
-#define cpu_clock (screenline_cpu_clock + xpos)
-
-#define UNALIGNED_STAT_DEF(stat_arr)
-#define UNALIGNED_STAT_DECL(stat_arr)
-#define UNALIGNED_GET_WORD(ptr, stat_arr)        (*(const UWORD *) (ptr))
-#define UNALIGNED_PUT_WORD(ptr, value, stat_arr) (*(UWORD *) (ptr) = (value))
-#define UNALIGNED_GET_LONG(ptr, stat_arr)        (*(const ULONG *) (ptr))
-#define UNALIGNED_PUT_LONG(ptr, value, stat_arr) (*(ULONG *) (ptr) = (value))
-
-
-/* A function called to handle an escape sequence. */
-typedef void (*EscFunctionType)(void);
-
-/* Puts an escape sequence at the specified address. */
-void Atari800_AddEsc(UWORD address, UBYTE esc_code, EscFunctionType function);
-
-/* Puts an escape sequence followed by the RTS instruction. */
-void Atari800_AddEscRts(UWORD address, UBYTE esc_code, EscFunctionType function);
-
-/* Puts an escape sequence with an integrated RTS. */
-void Atari800_AddEscRts2(UWORD address, UBYTE esc_code, EscFunctionType function);
-
-/* Unregisters an escape sequence. You must cleanup the Atari memory yourself. */
-void Atari800_RemoveEsc(UBYTE esc_code);
+#define UNALIGNED_STAT_DEF()
+#define UNALIGNED_STAT_DECL()
+#define UNALIGNED_GET_WORD(ptr)        (*(const UWORD *) (ptr))
+#define UNALIGNED_PUT_WORD(ptr, value) (*(UWORD *) (ptr) = (value))
+#define UNALIGNED_GET_LONG(ptr)        (*(const ULONG *) (ptr))
+#define UNALIGNED_PUT_LONG(ptr, value) (*(ULONG *) (ptr) = (value))
 
 /* Handles an escape sequence. */
 void Atari800_RunEsc(UBYTE esc_code);

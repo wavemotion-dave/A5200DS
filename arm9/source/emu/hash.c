@@ -49,7 +49,7 @@ static uint hash_Step4(uint w, uint x, uint y, uint z, uint data, uint s) {
 // Transform
 // ----------------------------------------------------------------------------
 static void hash_Transform(uint out[4], uint in[16]) {
-  uint a, b, c, d;
+  static uint a, b, c, d;
 
   a = out[0];
   b = out[1];
@@ -133,12 +133,14 @@ static void hash_Transform(uint out[4], uint in[16]) {
 // ----------------------------------------------------------------------------
 // Compute
 // ----------------------------------------------------------------------------
+static byte __attribute__((aligned(64))) buffer3[64] = { 0 };
+static uint idx = 0;
+
 void hash_Compute(const byte* source, uint length, byte * dest) {
-  uint index;
   uint buffer1[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
   uint buffer2[2] = {0};
-  //LUDO: word alignment !
-  byte __attribute__((aligned(64))) buffer3[64] = { 0 };
+    
+  memset(buffer3, 0x00, sizeof(buffer3));
 
   uint temp = buffer2[0];
   if((buffer2[0] = temp + ((uint)length << 3)) < temp) {
@@ -151,13 +153,13 @@ void hash_Compute(const byte* source, uint length, byte * dest) {
 	  byte* ptr = (byte*)buffer3 + temp;
 	  temp = 64 - temp;
 	  if(length < temp) {
-      for(index = 0; index < length; index++) {
-        ptr[index] = source[index];
+      for(idx = 0; idx < length; idx++) {
+        ptr[idx] = source[idx];
       }
 	  }
 	  
-    for(index = 0; index < temp; index++) {
-      ptr[index] = source[index];
+    for(idx = 0; idx < temp; idx++) {
+      ptr[idx] = source[idx];
     }
 
 	  hash_Transform(buffer1, (uint*)buffer3);
@@ -166,16 +168,16 @@ void hash_Compute(const byte* source, uint length, byte * dest) {
   }
 
   while(length >= 64) {
-    for(index = 0; index < 64; index++) {
-      buffer3[index] = source[index];
+    for(idx = 0; idx < 64; idx++) {
+      buffer3[idx] = source[idx];
     }
 	  hash_Transform(buffer1, (uint*)buffer3);
 	  source += 64;
 	  length -= 64;
   }
 
-  for(index = 0; index < length; index++) {
-    buffer3[index] = source[index];
+  for(idx = 0; idx < length; idx++) {
+    buffer3[idx] = source[idx];
   }
 
   uint count = (buffer2[0] >> 3) & 0x3f;
@@ -185,18 +187,18 @@ void hash_Compute(const byte* source, uint length, byte * dest) {
   count = 63 - count;
 
   if(count < 8) {
-    for(index = 0; index < count; index++) {
-      ptr[index] = 0;
+    for(idx = 0; idx < count; idx++) {
+      ptr[idx] = 0;
     }
 	  hash_Transform(buffer1, (uint*)buffer3);
     
-    for(index = 0; index < 56; index++) {
-      buffer3[index] = 0;
+    for(idx = 0; idx < 56; idx++) {
+      buffer3[idx] = 0;
     }
   } 
   else {
-    for(index = 0; index < count - 8; index++) {
-      ptr[index] = 0;
+    for(idx = 0; idx < count - 8; idx++) {
+      ptr[idx] = 0;
     }
   }
 
@@ -207,8 +209,8 @@ void hash_Compute(const byte* source, uint length, byte * dest) {
   
   byte digest[16];
   byte* bufferptr = (byte*)buffer1;
-  for(index = 0; index < 16; index++) {
-    digest[index] = bufferptr[index];
+  for(idx = 0; idx < 16; idx++) {
+    digest[idx] = bufferptr[idx];
   }
 
   sprintf((char*)dest, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", digest[0], digest[1], digest[2], digest[3], digest[4], digest[5], digest[6], digest[7], digest[8], digest[9], digest[10], digest[11], digest[12], digest[13], digest[14], digest[15]);

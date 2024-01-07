@@ -181,7 +181,6 @@ void setup_gtia9_11(void) {
 
 void GTIA_Initialise(void) 
 {
-#if !defined(BASIC) && !defined(CURSES_BASIC)
     int i;
     for (i = 0; i < 256; i++) {
         int tmp = i + 0x100;
@@ -206,7 +205,7 @@ void GTIA_Initialise(void)
     memset(cl_lookup, COLOUR_BLACK, sizeof(cl_lookup));
     for (i = 0; i < 32; i++)
         GTIA_PutByte((UWORD) i, 0);
-#endif /* !defined(BASIC) && !defined(CURSES_BASIC) */
+
   POTENA=0;
 }
 
@@ -712,13 +711,4 @@ ITCM_CODE void GTIA_PutByte(UWORD addr, UBYTE byte)
     }
 }
 
-/* State ------------------------------------------------------------------- */
-
-void GTIAStateSave(void)
-{
-}
-
-void GTIAStateRead(void)
-{
-}
 

@@ -102,79 +102,10 @@ int disable_basic = TRUE;
 
 int verbose = FALSE;
 
-/* Now we check address of every escape code, to make sure that the patch
-   has been set by the emulator and is not a CIM in Atari program.
-   Also switch() for escape codes has been changed to array of pointers
-   to functions. This allows adding port-specific patches (e.g. modem device)
-   using Atari800_AddEsc, Device_UpdateHATABSEntry etc. without modifying
-   atari.c/devices.c. Unfortunately it can't be done for patches in Atari OS,
-   because the OS in XL/XE can be disabled.
-*/
-static UWORD esc_address[256];
-static EscFunctionType esc_function[256];
-
-void Atari800_ClearAllEsc(void) {
-	int i;
-	for (i = 0; i < 256; i++)
-		esc_function[i] = NULL;
-}
-
-void Atari800_AddEsc(UWORD address, UBYTE esc_code, EscFunctionType function) {
-	esc_address[esc_code] = address;
-	esc_function[esc_code] = function;
-	dPutByte(address, 0xf2);			/* ESC */
-	dPutByte(address + 1, esc_code);	/* ESC CODE */
-}
-
-void Atari800_AddEscRts(UWORD address, UBYTE esc_code, EscFunctionType function) {
-	esc_address[esc_code] = address;
-	esc_function[esc_code] = function;
-	dPutByte(address, 0xf2);			/* ESC */
-	dPutByte(address + 1, esc_code);	/* ESC CODE */
-	dPutByte(address + 2, 0x60);		/* RTS */
-}
-
-/* 0xd2 is ESCRTS, which works same as pair of ESC and RTS (I think so...).
-   So this function does effectively the same as Atari800_AddEscRts,
-   except that it modifies 2, not 3 bytes in Atari memory.
-   I don't know why it is done that way, so I simply leave it
-   unchanged (0xf2/0xd2 are used as in previous versions).
-*/
-void Atari800_AddEscRts2(UWORD address, UBYTE esc_code, EscFunctionType function)
-{
-	esc_address[esc_code] = address;
-	esc_function[esc_code] = function;
-	dPutByte(address, 0xd2);			/* ESCRTS */
-	dPutByte(address + 1, esc_code);	/* ESC CODE */
-}
-
-void Atari800_RemoveEsc(UBYTE esc_code)
-{
-	esc_function[esc_code] = NULL;
-}
-
 void Atari800_RunEsc(UBYTE esc_code)
 {
-	if (esc_address[esc_code] == regPC - 2 && esc_function[esc_code] != NULL) {
-		esc_function[esc_code]();
-		return;
-	}
-#ifdef CRASH_MENU
-	regPC -= 2;
-	crash_address = regPC;
-	crash_afterCIM = regPC + 2;
-	crash_code = dGetByte(crash_address);
-	ui();
-#else /* CRASH_MENU */
 	cim_encountered = 1;
-	iprintf("Invalid ESC code %02x at address %04x", esc_code, regPC - 2);
-#ifndef __PLUS
-	if (!Atari800_Exit(TRUE))
-		exit(0);
-#else /* __PLUS */
 	Atari800_Exit(TRUE);
-#endif /* __PLUS */
-#endif /* CRASH_MENU */
 }
 
 
@@ -212,8 +143,8 @@ void Coldstart(void) {
 	consol_table[1] = consol_table[2];
 }
 
-int Atari800_InitialiseMachine(void) {
-	Atari800_ClearAllEsc();
+int Atari800_InitialiseMachine(void) 
+{
 	MEMORY_InitialiseMachine();
 	return TRUE;
 }
@@ -263,13 +194,6 @@ int Atari800_Initialise(void) {
 
 	return TRUE;
 }
-
-UNALIGNED_STAT_DEF(atari_screen_write_long_stat)
-UNALIGNED_STAT_DEF(pm_scanline_read_long_stat)
-UNALIGNED_STAT_DEF(memory_read_word_stat)
-UNALIGNED_STAT_DEF(memory_write_word_stat)
-UNALIGNED_STAT_DEF(memory_read_aligned_word_stat)
-UNALIGNED_STAT_DEF(memory_write_aligned_word_stat)
 
 int Atari800_Exit(int run_monitor) {
 	int restart;

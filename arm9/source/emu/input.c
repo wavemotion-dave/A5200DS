@@ -21,6 +21,7 @@
  * along with Atari800; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
+#include <nds.h>
 
 #include "config.h"
 #include <string.h>
@@ -35,7 +36,6 @@
 #include "platform.h"
 #include "pokeysnd.h"
 
-extern int debug[];
 #define Atari_POT(x) 228
 
 extern UBYTE PCPOT_input[8];
@@ -62,6 +62,7 @@ void INPUT_Initialise(void)
 }
 
 extern UWORD trig0, trig1;
+extern UWORD stick0, stick1;
 
 UBYTE anlaog_speed_map[6][2] =
 {
@@ -168,13 +169,13 @@ void INPUT_Frame(void)
     }
 
 	/* handle joysticks */
-	i = Atari_PORT(0);
+	i = (stick1 << 4) | stick0;
     OLDSTICK[0] = STICK[0];OLDSTICK[1] = STICK[1];
 	STICK[0] = i & 0x0f;
 	STICK[1] = (i >> 4) & 0x0f;
 
     // We don't support the other two sticks, so this will result in both being in the CENTER position...
-	i = Atari_PORT(1);
+	i = (STICK_CENTRE << 4) | STICK_CENTRE;
 	STICK[2] = i & 0x0f;
 	STICK[3] = (i >> 4) & 0x0f;
 
@@ -212,7 +213,6 @@ void INPUT_Frame(void)
         {
           if (PCPOT_input[2 * i] >myCart.digital_min) PCPOT_input[2 * i] -= anlaog_speed_map[myCart.analog_speed][input_frame & 1];
           if (PCPOT_input[2 * i] <=myCart.digital_min) PCPOT_input[2 * i]= myCart.digital_min; 
-          debug[0] = PCPOT_input[2 * i];            
         }
         else
           PCPOT_input[2 * i]= myCart.digital_min; 
@@ -223,7 +223,6 @@ void INPUT_Frame(void)
         {
           if (PCPOT_input[2 * i] <myCart.digital_max) PCPOT_input[2 * i] += anlaog_speed_map[myCart.analog_speed][input_frame & 1];
           if (PCPOT_input[2 * i] >=myCart.digital_max) PCPOT_input[2 * i]= myCart.digital_max; 
-          debug[0] = PCPOT_input[2 * i];            
         }
         else
           PCPOT_input[2 * i]= myCart.digital_max; 
@@ -240,7 +239,6 @@ void INPUT_Frame(void)
         {
           if (PCPOT_input[2 * i +1] >myCart.digital_min) PCPOT_input[2 * i +1] -= anlaog_speed_map[myCart.analog_speed][input_frame & 1];
           if (PCPOT_input[2 * i +1] <=myCart.digital_min) PCPOT_input[2 * i +1]= myCart.digital_min; 
-          debug[1] = PCPOT_input[2 * i +1];
         }
         else 
           PCPOT_input[2 * i +1]= myCart.digital_min;
@@ -251,7 +249,6 @@ void INPUT_Frame(void)
         {
           if (PCPOT_input[2 * i +1] <myCart.digital_max) PCPOT_input[2 * i +1] += anlaog_speed_map[myCart.analog_speed][input_frame & 1];
           if (PCPOT_input[2 * i +1] >=myCart.digital_max) PCPOT_input[2 * i +1]= myCart.digital_max; 
-          debug[1] = PCPOT_input[2 * i +1];
         }
         else
           PCPOT_input[2 * i +1]= myCart.digital_max;

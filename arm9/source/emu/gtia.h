@@ -97,18 +97,8 @@ extern UBYTE PRIOR;
 extern UBYTE VDELAY;
 extern UBYTE POTENA;
 
-#ifdef USE_COLOUR_TRANSLATION_TABLE
-
-extern UWORD colour_translation_table[256];
-#define COLOUR_BLACK colour_translation_table[0]
-#define COLOUR_TO_WORD(dest,src) dest = colour_translation_table[src];
-
-#else
-
 #define COLOUR_BLACK 0
 #define COLOUR_TO_WORD(dest,src) dest = (((UWORD) (src)) << 8) | (src);
-
-#endif /* USE_COLOUR_TRANSLATION_TABLE */
 
 extern UBYTE collisions_mask_missile_playfield;
 extern UBYTE collisions_mask_player_playfield;
@@ -127,7 +117,4 @@ void new_pm_scanline(void);
 UBYTE GTIA_GetByte(UWORD addr);
 void GTIA_PutByte(UWORD addr, UBYTE byte);
 
-#ifdef NEW_CYCLE_EXACT
-void update_pmpl_colls(void);
-#endif
 #endif /* _GTIA_H_ */
