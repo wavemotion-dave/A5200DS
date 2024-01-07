@@ -78,7 +78,6 @@
 #endif /* BASIC */
 #if defined(SOUND) && !defined(__PLUS)
 #include "pokeysnd.h"
-#include "sound.h"
 #endif
 
 #ifdef __PLUS

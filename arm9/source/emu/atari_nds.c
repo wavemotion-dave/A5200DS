@@ -20,7 +20,6 @@
 #include "config.h"
 #include "cpu.h"
 #include "input.h"
-#include "sound.h"
 #include "pokeysnd.h"
 
 #define DSPRATE 11025
