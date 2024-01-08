@@ -352,7 +352,6 @@ ITCM_CODE void POKEY_Scanline(void)
 
 ITCM_CODE void Update_Counter(int chan_mask)
 {
-
 /************************************************************/
 /* As defined in the manual, the exact Div_n_cnt values are */
 /* different depending on the frequency and resolution:     */
@@ -408,10 +407,3 @@ void PokeyClearBuffer(void)
    pokeyBufIdx = 0;
 }
 
-void POKEYStateSave(void)
-{
-}
-
-void POKEYStateRead(void)
-{
-}

@@ -46,33 +46,39 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 History :
 --------------------------------------------------------------------------------
-V3.5 : 05-Jan-2024
+V3.6 : 08-Jan-2024 by wavemotion-dave
+  * Internal database updated to include known prototypes, hacks and other sundry 5200 games.
+  * Codebase cleanup across the board.
+  * Improved key debounce to fix lots of games including Star Raiders (which has a new overlay).
+  * Color Artifacting added for the few games that utilize it (Choplifter, etc.)
+
+V3.5 : 05-Jan-2024 by wavemotion-dave
   * Major cleanup across the board - a few more frames of performance and many games on the older DS-Lite will now run full speed without frameskip.
   * Touch of paint on the main emulation screen to make the console buttons a bit more prominent.
   * New X button handling on the games that utilize more than 192 vertical pixels to smooth scroll upper/lower areas of the screen (usually just status/score in those areas so pressing the X button to bring them momentarily into view works fine).
   * About 50 new homebrews and hacks added to the internal database (up to 240 games now).
   * Version 3.5a fixes the Star Raiders game and adds a new overlay for it! Fixes for Phobos. A few screen tweaks. Sound pops improved.
 
-V3.4 : 01-May-2023
+V3.4 : 01-May-2023 by wavemotion-dave
   * Another frame or two of performance from memory optmizations.
   * Removed lots of obsoleted code to streamline the build.
   * Added a new DSi special build that will finally run Bosconian at full speed with speech as long as you are in DSi (2x CPU) mode.
   * Added tweaks and support for latest homebrew carts like Rob-N-Banks.
   
-V3.3 : 30-Apr-2023
+V3.3 : 30-Apr-2023 by wavemotion-dave
   * Improved screen blend so it leaves less visible artifacts.
   * Improved sound mute so it eliminates most of the little pops.
   * Built with latest libnds to keep things fresh.
   * v3.3a hotfix for sound pops. Sorry!
 
-V3.2 : 12-Dec-2021
+V3.2 : 12-Dec-2021 by wavemotion-dave
   * Reverted back to ARM7 SoundLib (a few games missing key sounds)
   
-V3.1 : 30-Nov-2021
+V3.1 : 30-Nov-2021 by wavemotion-dave
   * Switched to maxmod audio library for improved sound.
   * Try to start in /roms or /roms/a5200 if possible
 
-V3.0 : 04-Nov-2021
+V3.0 : 04-Nov-2021 by wavemotion-dave
   * New sound core to eliminate zingers.
   * 5200.rom bios can be in /roms/bios or /data/bios 
 

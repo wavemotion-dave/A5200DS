@@ -108,7 +108,7 @@ extern UBYTE collisions_mask_player_player;
 extern UBYTE TRIG[4];
 extern UBYTE TRIG_latch[4];
 
-extern int consol_index;
+extern UBYTE consol_index;
 extern UBYTE consol_table[3];
 
 void GTIA_Initialise(void);

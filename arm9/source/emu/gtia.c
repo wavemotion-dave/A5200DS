@@ -23,6 +23,7 @@
 */
 #include <nds.h>
 #include "config.h"
+#include "a5200utils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,7 +77,7 @@ UBYTE POTENA __attribute__((section(".dtcm")));
 
 /* Internal GTIA state ----------------------------------------------------- */
 
-int consol_index        __attribute__((section(".dtcm")))= 0;
+UBYTE consol_index       __attribute__((section(".dtcm"))) = 0;
 UBYTE consol_table[3]   __attribute__((section(".dtcm")));
 UBYTE consol_mask       __attribute__((section(".dtcm")));
 UBYTE TRIG[4]           __attribute__((section(".dtcm")));
@@ -112,7 +113,7 @@ static UBYTE *hposm_ptr[4] __attribute__((section(".dtcm")));
 static ULONG hposp_mask[4] __attribute__((section(".dtcm")));
 
 static ULONG *grafp_ptr[4] __attribute__((section(".dtcm")));
-static int global_sizem[4] __attribute__((section(".dtcm")));
+static UBYTE global_sizem[4] __attribute__((section(".dtcm")));
 static UBYTE PM_Width[4] __attribute__((section(".dtcm"))) = {1, 2, 1, 4};
 
 static ULONG grafp_lookup[4][256];
@@ -212,7 +213,6 @@ void GTIA_Initialise(void)
 #define update_partial_pmpl_colls()
 
 /* Prepare PMG scanline ---------------------------------------------------- */
-
 
 ITCM_CODE void new_pm_scanline(void)
 {

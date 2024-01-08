@@ -41,7 +41,6 @@
 
 void Atari800_RunEsc(UBYTE esc_code)
 {
-	cim_encountered = 1;
 	Atari800_Exit(TRUE);
 }
 

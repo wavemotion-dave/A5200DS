@@ -57,7 +57,6 @@ u16* aptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[0] + 0x
 u16* bptr __attribute__((section(".dtcm"))) = (u16*) ((u32)&sound_buffer[2] + 0xA000000);
 
 unsigned int atari_pal16[256] = {0};
-unsigned char *filebuffer;
 
 static int last_key_code = 0x00;
 static UWORD keys_dampen = 0;
@@ -358,19 +357,16 @@ int load_os(char *filename )
     fclose(romfile);  
   }
   
- 	return 0;
+    return 0;
 } /* end load_os */
 
 void dsLoadGame(char *filename) 
 {
-  // Free buffer if needed
     TIMER2_CR=0; irqDisable(IRQ_TIMER2); 
-    if (filebuffer != 0)
-        free(filebuffer);
 
     // load card game if ok
     if (Atari800_OpenFile(filename, true, 1, true) != AFILE_ERROR) 
-    {	
+    {   
       // Initialize the virtual console emulation 
       dsShowScreenEmu();
         
@@ -388,7 +384,7 @@ void dsLoadGame(char *filename)
       }
       
       TIMER2_DATA = TIMER_FREQ((SOUND_FREQ/2)+20);  // keep this a little faster than our Pokey sound generation 
-      TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;	     
+      TIMER2_CR = TIMER_DIV_1 | TIMER_IRQ_REQ | TIMER_ENABLE;        
       irqSet(IRQ_TIMER2, VsoundHandler);
         
       TIMER0_CR=0;
@@ -400,22 +396,22 @@ void dsLoadGame(char *filename)
 }
 
 unsigned int dsReadPad(void) {
-	unsigned short int keys_pressed, ret_keys_pressed;
+    unsigned short int keys_pressed, ret_keys_pressed;
 
-	do {
-		keys_pressed = keysCurrent();
-	} while ((keys_pressed & (KEY_LEFT | KEY_RIGHT | KEY_DOWN | KEY_UP | KEY_A | KEY_B | KEY_L | KEY_R))!=0);
+    do {
+        keys_pressed = keysCurrent();
+    } while ((keys_pressed & (KEY_LEFT | KEY_RIGHT | KEY_DOWN | KEY_UP | KEY_A | KEY_B | KEY_L | KEY_R))!=0);
 
-	do {
-		keys_pressed = keysCurrent();
-	} while ((keys_pressed & (KEY_LEFT | KEY_RIGHT | KEY_DOWN | KEY_UP | KEY_A | KEY_B | KEY_L | KEY_R))==0);
-	ret_keys_pressed = keys_pressed;
+    do {
+        keys_pressed = keysCurrent();
+    } while ((keys_pressed & (KEY_LEFT | KEY_RIGHT | KEY_DOWN | KEY_UP | KEY_A | KEY_B | KEY_L | KEY_R))==0);
+    ret_keys_pressed = keys_pressed;
 
-	do {
-		keys_pressed = keysCurrent();
-	} while ((keys_pressed & (KEY_LEFT | KEY_RIGHT | KEY_DOWN | KEY_UP | KEY_A | KEY_B | KEY_L | KEY_R))!=0);
+    do {
+        keys_pressed = keysCurrent();
+    } while ((keys_pressed & (KEY_LEFT | KEY_RIGHT | KEY_DOWN | KEY_UP | KEY_A | KEY_B | KEY_L | KEY_R))!=0);
 
-	return ret_keys_pressed;
+    return ret_keys_pressed;
 }
 
 bool dsWaitOnQuit(void) {
@@ -613,7 +609,7 @@ unsigned int dsWaitForRom(void)
     else {
       ucSHaut = 0;
     }  
-		if ( keysCurrent() & KEY_B ) {
+        if ( keysCurrent() & KEY_B ) {
       bDone=true;
       while (keysCurrent() & KEY_B);
     }
@@ -1165,7 +1161,7 @@ void dsMainLoop(void) {
 
             break;
         }
-	}
+    }
 }
 
 

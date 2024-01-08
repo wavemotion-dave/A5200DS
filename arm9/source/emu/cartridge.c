@@ -45,7 +45,7 @@ static const struct cart_t cart_table[] =
     {"DefaultCart000000000000000000000",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Default Cart - If no other cart type found...
     {"72a91c53bfaa558d863610e3e6d50213",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Ant Eater.a52
     {"c8e90376b7e1b00dcbd4042f50bffb75",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Atari 5200 Calibration Cart
-    {"32a6d0de4f1728dee163eb2d4b3f49f1",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    239,    32,16,  0,  X_FIRE},  // Atari Diagnostics v2.3    
+    {"32a6d0de4f1728dee163eb2d4b3f49f1",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    239,    32,16,  0,  X_FIRE},  // Atari Diagnostics v2.3
     {"45f8841269313736489180c8ec3e9588",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,18,  0,  X_FIRE},  // Activision Decathlon, The (USA).a52
     {"4b1aecab0e2f9c90e514cb0a506e3a5f",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  0,  X_FIRE},  // Adventure II-a.a52
     {"e2f6085028eb8cf24ad7b50ca4ef640f",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  0,  X_FIRE},  // Adventure II-b.a52
@@ -66,12 +66,13 @@ static const struct cart_t cart_table[] =
     {"17e5c03b4fcada48d4c2529afcfe3a70",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // BCs Quest For Tires (XL Conversion).a52
     {"96ec5b299b203c88f98100b57af6838d",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_PANUP}, // Biscuits From Hell.bin
     {"315e0bb45f28bb227e92b8c9e00ee8eb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    228,    32,17,  0,  X_FIRE},  // Blaster.a52
-    {"e0b47a17fa6cd9d6addc1961fca43414",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    228,    32,17,  0,  X_FIRE},  // Blaster.a52    
+    {"e0b47a17fa6cd9d6addc1961fca43414",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    228,    32,17,  0,  X_FIRE},  // Blaster.a52
     {"992f62ccfda4c92ef113af1dd96d8f55",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    248,    32,24,  0,  X_FIRE},  // BlowSub.a52
     {"1913310b1e44ad7f3b90aeb16790a850",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    247,    32,20,  0,  X_FIRE},  // Beamrider (USA).a52
     {"f8973db8dc272c2e5eb7b8dbb5c0cc3b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,25,  0,  X_FIRE},  // BerZerk (USA).a52
     {"322cf3f7ff6515e2f363927134146b59",    CART_5200_64,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,28,  0,  X_FIRE},  // Berks4.a52
     {"139229eed18032fdea735fa5360bd551",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,16,  0,  X_FIRE},  // Beef Drop Ultimate SD Edition.a52
+    {"8aff994ec12afdcbda01f1aa411e6a90",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,16,  0,  X_FIRE},  // Beef Drop + (Beef Drop Hack).a52    
     {"bcff0c4f8edb7726497fc6716d4bded7",    CART_5200_128,      CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    217,    32, 8,  0,  X_FIRE},  // Bosconian (128k AtariMaxSD conversion).a52
     {"417e6d5523b700d5c753f0a9a4121710",    CART_5200_128,      CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    217,    32, 8,  0,  X_FIRE},  // Bosconian 1.5f (128k AtariMaxSD conversion).a52
     {"81790daff7f7646a6c371c056622be9c",    CART_5200_40,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    254,    24,28,  0,  X_PANDN}, // Bounty Bob Strikes Back (Merged) (Big Five Software) (U).a52
@@ -80,6 +81,7 @@ static const struct cart_t cart_table[] =
     {"3147ad22f8d5f46b1ef40a39da3a3de1",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  0,  X_FIRE},  // Captain Beeble (XL Conversion).a52
     {"79335deb06a1ef532fea8eee8012ecde",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    320,    241,    64,21,  0,  X_FIRE},  // Capture the Flag.a52
     {"01b978c3faf5d516f300f98c00377532",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    1, YES_FS,    256,    256,    32,15,  0,  X_FIRE},  // Carol Shaw's River Raid (USA).a52
+    {"e839c8eace5b2c2545736eb302108e5b",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    1, YES_FS,    256,    256,    32,15,  0,  X_FIRE},  // Carol Shaw's River Raid (Cold Winter).a52    
     {"4965b4c8acca64c4fac39a7c0763f611",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Castle Blast (USA) (Unl).a52
     {"8f4c07a9e0ef2ded720b403810220aaf",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_FASTEST,  6, 220,    1, YES_FS,    256,    240,    32,16,  0,  X_FIRE},  // Castle Crisis (USA) (Unl).a52
     {"d64a175672b6dba0c0b244c949799e64",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,15,  0,  X_PANUP}, // Caverns of Mars (Conv).a52
@@ -142,6 +144,9 @@ static const struct cart_t cart_table[] =
     {"b7617ac90462ef13f8350e32b8198873",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,22,  0,  X_FIRE},  // Gyruss (Autofire Hack).a52
     {"f8f0e0a6dc2ffee41b2a2dd736cba4cd",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,16,  0,  X_PANUP}, // H.E.R.O. (USA).a52
     {"3491fa368ae42766a83a43a627496c41",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    278,    256,    44,24,  0,  X_PANDN}, // Hangly Pollux.a52
+    {"02b00d632f1f1ceaa39ee3df83edf08a",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    278,    256,    44,24,  0,  X_PANDN}, // Hangly Man.a52
+    {"cae9255004733e784d6c4fa4f29c7e59",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    278,    256,    44,24,  0,  X_PANDN}, // Hangly Man Plus.a52
+    {"194759bb6fc4a1b115b4dd9aa0549034",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    278,    256,    44,24,  0,  X_PANDN}, // Hangly Man Plus (Ghost Eyes).a52    
     {"0f6407d83115a78a182f323e5ef76384",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Heavy Metal.a52
     {"0c25803c9175487afce0c9d636133dc1",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    224,    32,13,  0,  X_FIRE},  // Hyperblast! (XL Conversion).a52
     {"612c3ca4c2938bb36f2e45fc91c6e779",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Intellidiscs Final Version.a52
@@ -155,8 +160,11 @@ static const struct cart_t cart_table[] =
     {"27140302a715694401319568a83971a1",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,18,  0,  X_FIRE},  // Jumpman Jr (XL Conversion).a52
     {"1a6ccf1152d2bcebd16f0989b8257108",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,18,  0,  X_FIRE},  // Jumpman Jr (XL Conversion).a52
     {"834067fdce5d09b86741e41e7e491d6c",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,23,  0,  X_FIRE},  // Jungle Hunt (USA).a52
+    {"12c020a98e7f898726b9b649d123214f",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,23,  0,  X_FIRE},  // Jungle Hunt (Pirate Pete Hack v3).a52
+    {"947a614b16ae56a18a05ef8f34340894",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,23,  0,  X_FIRE},  // Jungle Hunt (32K Pirate Pete Hack v3).a52
     {"9584d143be1871241e4a0d038e8e1468",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    248,    32,24,  0,  X_FIRE},  // Juno First (XL Conversion).a52
     {"92fd2f43bc0adf2f704666b5244fadf1",    CART_5200_4,        CTRL_JOY,   ANALOG,      ANA_FASTEST,  6, 220,    1, YES_FS,    256,    250,    32,22,  0,  X_FIRE},  // Kaboom! (USA).a52
+    {"61c7fc252400eb5a1470e383c4e9faa1",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,      ANA_FASTEST,  6, 220,    1, YES_FS,    256,    250,    32,22,  0,  X_FIRE},  // Kaboom! (No 1812).a52
     {"796d2c22f8205fb0ce8f1ee67c8eb2ca",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Kangaroo (USA).a52
     {"f25a084754ea4d37c2fb1dc8ca6dc51b",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  0,  X_FIRE},  // Keystone Kapers (USA).a52
     {"3b03e3cda8e8aa3beed4c9617010b010",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    249,    32,26,  0,  X_FIRE},  // Koffi - Yellow Kopter (USA) (Unl).a52
@@ -167,14 +175,14 @@ static const struct cart_t cart_table[] =
     {"c4931be078e2b16dc45e9537ebce836b",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Laser Gates (Conversion).a52
     {"4e16903c352c8ed75ed9377e72ebe333",    CART_5200_64,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Laser Hawk (64k conversion).a52
     {"46264c86edf30666e28553bd08369b83",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Last Starfighter, The (USA) (Proto).a52
-    {"6d2296cada88c2f286bebe909559adcb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Last Starfighter, The (USA) (Proto).a52    
+    {"6d2296cada88c2f286bebe909559adcb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Last Starfighter, The (USA) (Proto).a52
     {"ff785ce12ad6f4ca67f662598025c367",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,12,  0,  X_PANUP}, // Megamania (1983) (Activision).a52
     {"8311263811e366bf5ef07977d0f5a5ae",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  15, 200,    1, YES_FS,    256,    256,    32,28,  0,  X_PANDN}, // MajorBlink_5200_V2 (XL Conversion).a52
     {"d00dff571bfa57c7ff7880c3ce03b178",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  0,  X_FIRE},  // Mario Brothers (1983) (Atari).a52
     {"2f5aec81646216ea2720b87712452193",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,22,  0,  X_FIRE},  // Mario Brothers Encore.a52
     {"1cd67468d123219201702eadaffd0275",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    251,    32,25,  0,  X_FIRE},  // Meteorites (USA).a52
     {"bc33c07415b42646cc813845b979d85a",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Meebzork (1983) (Atari).a52
-    {"24348dd9287f54574ccc40ee40d24a86",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    276,    256,    41,24,  1,  X_FIRE},  // Microgammon.a52   
+    {"24348dd9287f54574ccc40ee40d24a86",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    276,    256,    41,24,  1,  X_FIRE},  // Microgammon.a52
     {"84d88bcdeffee1ab880a5575c6aca45e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    255,    32,24,  0,  X_FIRE},  // Millipede (USA) (Proto).a52
     {"d859bff796625e980db1840f15dec4b5",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE},  // Miner 2049er Starring Bounty Bob (USA).a52
     {"69d472a79f404e49ad2278df3c8a266e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0, YES_FS,    256,    240,    32,19,  1,  X_FIRE},  // Miniature Golf (1983) (Atari).a52
@@ -198,6 +206,7 @@ static const struct cart_t cart_table[] =
     {"e24490c20bf79c933e50c11a89018960",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,25,  0,  X_FIRE},  // Pac-Man (Fixed Munch V2).a52
     {"43e9af8d8c648515de46b9f4bcd024d7",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    232,    32,14,  0,  X_FIRE},  // Pacific Coast Hwy (XL Conversion).a52
     {"57c5b010ec9b5f6313e691bdda94e185",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0, YES_FS,    256,    240,    32,19,  0,  X_FIRE},  // Pastfinder (XL Conversion).a52
+    {"1a43c2c84d4ea1b5d440fae4f4d8b372",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0, YES_FS,    256,    240,    32,19,  0,  X_FIRE},  // Pastfinder (HIP Demo).a52    
     {"a301a449fc20ad345b04932d3ca3ef54",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    254,    32,24,  0,  X_PANDN}, // Pengo (USA).a52
     {"b9e727eaef3463d5979ec06fc5bd5048",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  0,  X_FIRE},  // Pinhead.a52
     {"ecbd6dd2ab105dd43f98476966bbf26c",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,25,  0,  X_FIRE},  // Pitfall! (USA).a52 (use classics fix instead)
@@ -225,7 +234,7 @@ static const struct cart_t cart_table[] =
     {"88fa71fc34e81e616bdffc30e013330b",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Ratcatcher.a52
     {"2bb928d7516e451c6b0159ac413407de",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,17,  0,  X_FIRE},  // RealSports Baseball (USA).a52
     {"e056001d304db597bdd21b2968fcc3e6",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    248,    32,17,  0,  X_FIRE},  // RealSports Basketball (USA).a52
-    {"cfd05f2a0ea1068718d1149dbd1f19fa",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // RealSports Basketball (USA).a52    
+    {"cfd05f2a0ea1068718d1149dbd1f19fa",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // RealSports Basketball (USA).a52
     {"022c47b525b058796841134bb5c75a18",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    246,    32,21,  0,  X_FIRE},  // RealSports Football (USA).a52
     {"3074fad290298d56c67f82e8588c5a8b",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    240,    32,16,  0,  X_FIRE},  // RealSports Soccer (USA).a52
     {"7e683e571cbe7c77f76a1648f906b932",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,16,  0,  X_FIRE},  // RealSports Tennis (USA).a52
@@ -236,8 +245,9 @@ static const struct cart_t cart_table[] =
     {"6e69666be0103c709dd820807e5b8ffb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Robnbanks-Arcade v2.a52
     {"86b358c9bca97c2089b929e3b2751908",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  0,  X_FIRE},  // Rockball 5200.a52
     {"5dba5b478b7da9fd2c617e41fb5ccd31",    CART_5200_NS_16,    CTRL_ROBO,  DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,23,  0,  X_FIRE},  // Robotron 2084 (USA).a52
-    {"718cc8b828d36abf068b8fc0a81fc7cf",    CART_5200_32,       CTRL_ROBO,  DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,23,  0,  X_FIRE},  // Robotron 2084 (USA).a52
-    {"b8cbc918cf2bc81f941719b874f13fcb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    246,    32,24,  0,  X_FIRE},  // Runner5200.a52
+    {"718cc8b828d36abf068b8fc0a81fc7cf",    CART_5200_32,       CTRL_ROBO,  DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,23,  0,  X_FIRE},  // Robotron 2084 (Arcade Hack).a52
+    {"d4ec7de1becfd944e58cfb8db031c314",    CART_5200_32,       CTRL_ROBO,  DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,23,  0,  X_FIRE},  // Robotron 2084 (Alt Colors).a52    
+    {"b8cbc918cf2bc81f941719b874f13fcb",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    246,    32,24,  0,  X_FIRE},  // Runner Bear.a52
     {"950aa1075eaf4ee2b2c2cfcf8f6c25b4",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    250,    32,28,  0,  X_PANDN}, // Satans Hollow (Conv).a52
     {"b610a576cbf26a259da4ec5e38c33f09",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Savage Pond (XL Conversion).a52
     {"467e72c97db63eb59011dd062c965ec9",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    254,    32,16,  0,  X_PANUP}, // Scramble.a52
@@ -271,6 +281,7 @@ static const struct cart_t cart_table[] =
     {"332bf2774f7d9a6008da35420fd7dffc",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,35,  0,  X_PANDN}, // Super Pac Man Final Hack (5200).a52
     {"1569b7869bf9e46abd2c991c3b90caa6",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Superfly (XL Conversion).a52
     {"c098a0ce6c7e059264511e650ce47b35",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  0,  X_FIRE},  // Tapper (XL Conversion).a52
+    {"59699274930349b4fe0ee94b21ce3c16",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,23,  0,  X_FIRE},  // Tapper (XL Conversion).a52    
     {"496b6a002bc7d749c02014f7ec6c303c",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,      ANA_SLOWER,   6, 220,    1, YES_FS,    256,    256,    32,22,  0,  X_FIRE},  // Tempest (1983) (Atari) (Prototype) [!].a52
     {"6836a07ea7b2a4c071e9e86c5695b4a1",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    244,    32,20,  0,  X_FIRE},  // Timeslip_5200 (XL Conversion).a52
     {"bb3761de48d39218744d7dbb94553528",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Time Runner (XL Conversion).a52
@@ -294,13 +305,14 @@ static const struct cart_t cart_table[] =
 
 UBYTE          *cart_image = NULL;       /* For cartridge memory */
 char            cart_filename[MAX_FILENAME_LEN];
-struct cart_t   myCart __attribute__((section(".dtcm"))) = {"", CART_5200_32, CTRL_JOY, 0,0,0,0};
-static byte     cart_image_fixed_buffer[CART_MAX_SIZE] __attribute__ ((aligned (4)));;
-static byte     bryan_bank __attribute__((section(".dtcm"))) = 0;
-static byte     last_bryan_bank __attribute__((section(".dtcm"))) = 255;
-static UWORD    last_bounty_bob_bank __attribute__((section(".dtcm"))) = 65535;
-static UWORD    last_bounty_bob_bank2 __attribute__((section(".dtcm"))) = 65535;
-UWORD           bosconian_bank __attribute__((section(".dtcm"))) = 0x0000;
+static byte     cart_image_fixed_buffer[CART_MAX_SIZE] __attribute__ ((aligned (4)));
+
+struct cart_t   myCart                      __attribute__((section(".dtcm")));
+static byte     bryan_bank                  __attribute__((section(".dtcm"))) = 0;
+static byte     last_bryan_bank             __attribute__((section(".dtcm"))) = 255;
+static UWORD    last_bounty_bob_bank        __attribute__((section(".dtcm"))) = 65535;
+static UWORD    last_bounty_bob_bank2       __attribute__((section(".dtcm"))) = 65535;
+UWORD           bosconian_bank              __attribute__((section(".dtcm"))) = 0x0000;
 
 
 /* Rewinds the stream to its beginning. */
@@ -310,8 +322,8 @@ UWORD           bosconian_bank __attribute__((section(".dtcm"))) = 0x0000;
    May change the current position. */
 int Util_flen(FILE *fp)
 {
-	fseek(fp, 0, SEEK_END);
-	return (int) ftell(fp);
+    fseek(fp, 0, SEEK_END);
+    return (int) ftell(fp);
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -319,7 +331,7 @@ int Util_flen(FILE *fp)
 // banks and most of the mighty Bosconian 128K ROM.
 // This provides a bit of a speed boost copying to/from the main image RAM (almost 10%)
 // ---------------------------------------------------------------------------------------------
-UBYTE *banked_image __attribute__((section(".dtcm")))= (UBYTE *) 0x06860000;
+UBYTE *banked_image = (UBYTE *) 0x06860000;
 
 /* special support of Bounty Bob on Atari5200 */
 ITCM_CODE UBYTE BountyBob1_GetByte(UWORD addr)
@@ -446,7 +458,8 @@ UBYTE Bryan_GetByte128(UWORD addr)
 }
 #endif
 
-int CART_Insert(const char *filename) {
+int CART_Insert(const char *filename) 
+{
     FILE *fp;
     int len;
 
@@ -482,7 +495,7 @@ int CART_Insert(const char *filename) {
         short int len_kb = len >> 10; /* number of kilobytes */
         if (len_kb == 4)  myCart.type =  CART_5200_4;
         if (len_kb == 8)  myCart.type =  CART_5200_8;
-        if (len_kb == 16) myCart.type =  CART_5200_NS_16;
+        if (len_kb == 16) myCart.type =  CART_5200_NS_16;  // This is the more popular of the 16K carts with homebrews (since we've got most every EE_16 covered in our table)
         if (len_kb == 32) myCart.type =  CART_5200_32;
         if (len_kb == 40) myCart.type =  CART_5200_40;
         if (len_kb == 64) myCart.type =  CART_5200_64;
@@ -508,13 +521,13 @@ int CART_Insert(const char *filename) {
             }
             idx++;
         }
-        
+
         ANTIC_UpdateArtifacting();
 
         extern char bStarRaiders;
         if (myCart.control == CTRL_SR) bStarRaiders=1; else bStarRaiders=0;
         restore_bottom_screen();
-        
+
         if (myCart.type != CART_NONE)
         {
             CART_Start();

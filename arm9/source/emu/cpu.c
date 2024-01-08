@@ -60,18 +60,9 @@
 #include <stdlib.h>	/* exit() */
 
 #include "cpu.h"
-#ifdef ASAP /* external project, see http://asap.sf.net */
-#include "asap_internal.h"
-#else
 #include "antic.h"
 #include "atari.h"
 #include "memory.h"
-#ifndef BASIC
-#ifndef __PLUS
-//#include "ui.h"
-#endif
-#endif /* BASIC */
-#endif /* ASAP */
 
 /* Windows headers define it */
 #undef ABSOLUTE
@@ -121,7 +112,7 @@ UBYTE IRQ  __attribute__((section(".dtcm")));
 /* 6502 flags local to this module */
 static UBYTE N __attribute__((section(".dtcm")));					/* bit7 set => N flag set */
 #ifndef NO_V_FLAG_VARIABLE
-static UBYTE V __attribute__((section(".dtcm")));                 /* non-zero => V flag set */
+static UBYTE V __attribute__((section(".dtcm")));                   /* non-zero => V flag set */
 #endif
 static UBYTE Z __attribute__((section(".dtcm")));					/* zero     => Z flag set */
 static UBYTE C __attribute__((section(".dtcm")));					/* must be 0 or 1 */
@@ -149,19 +140,6 @@ inline void CPU_PutStatus(void)
 /* For Atari Basic loader */
 void (*rts_handler)(void) = NULL;
 
-UBYTE cim_encountered = FALSE;
-
-/* Execution history */
-#ifdef MONITOR_BREAK
-UWORD remember_PC[REMEMBER_PC_STEPS];
-unsigned int remember_PC_curpos = 0;
-int remember_xpos[REMEMBER_PC_STEPS];
-UWORD remember_JMP[REMEMBER_JMP_STEPS];
-unsigned int remember_jmp_curpos = 0;
-#define INC_RET_NESTING ret_nesting++
-#else /* MONITOR_BREAK */
-#define INC_RET_NESTING
-#endif /* MONITOR_BREAK */
 
 /* Addressing modes */
 #define zGetWord(x) dGetWord(x)
@@ -230,7 +208,6 @@ void NMI(void)
 	regPC = dGetWordAligned(0xfffa);
 	regS = S;
 	xpos += 7; /* handling an interrupt by 6502 takes 7 cycles */
-	INC_RET_NESTING;
 }
 
 /* Check pending IRQ, helps in (not only) Lucasfilm games */
@@ -241,22 +218,10 @@ void NMI(void)
 		SetI; \
 		SET_PC(dGetWordAligned(0xfffe)); \
 		xpos += 7; \
-		INC_RET_NESTING; \
 	}
 
 /* Enter monitor */
-#ifdef __PLUS
-#define ENTER_MONITOR  Atari800_Exit(TRUE)
-#else
 #define ENTER_MONITOR  if (!Atari800_Exit(TRUE)) exit(0)
-#endif
-#define DO_BREAK \
-	UPDATE_GLOBAL_REGS; \
-	CPU_GetStatus(); \
-	ENTER_MONITOR; \
-	CPU_PutStatus(); \
-	UPDATE_LOCAL_REGS;
-
 
 /*  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F */
 static UBYTE cycles[256] __attribute__((section(".dtcm"))) =
@@ -412,20 +377,11 @@ next:
 		goto *opcode[insn];
         
 	OPCODE(00)				/* BRK */
-#ifdef MONITOR_BREAK
-		if (break_brk) {
-			DO_BREAK;
-		}
-		else
-#endif
-		{
-			PC++;
-			PHPC;
-			PHPB1;
-			SetI;
-			SET_PC(dGetWordAligned(0xfffe));
-			INC_RET_NESTING;
-		}
+        PC++;
+        PHPC;
+        PHPB1;
+        SetI;
+        SET_PC(dGetWordAligned(0xfffe));
 		DONE
 
 	OPCODE(01)				/* ORA (ab,x) */
@@ -607,11 +563,6 @@ next:
 	OPCODE(20)				/* JSR abcd */
 		{
 			UWORD retaddr = GET_PC() + 1;
-#ifdef MONITOR_BREAK
-			remember_JMP[remember_jmp_curpos] = GET_PC() - 1;
-			remember_jmp_curpos = (remember_jmp_curpos + 1) % REMEMBER_JMP_STEPS;
-			ret_nesting++;
-#endif
 			PHW(retaddr);
 		}
 		SET_PC(OP_WORD);
@@ -790,10 +741,6 @@ next:
 		data = PL;
 		SET_PC((PL << 8) + data);
 		CPUCHECKIRQ;
-#ifdef MONITOR_BREAK
-		if (break_ret && --ret_nesting <= 0)
-			break_step = TRUE;
-#endif
 		DONE
 
 	OPCODE(41)				/* EOR (ab,x) */
@@ -857,10 +804,6 @@ next:
 		DONE
 
 	OPCODE(4c)				/* JMP abcd */
-#ifdef MONITOR_BREAK
-		remember_JMP[remember_jmp_curpos] = GET_PC() - 1;
-		remember_jmp_curpos = (remember_jmp_curpos + 1) % REMEMBER_JMP_STEPS;
-#endif
 		SET_PC(OP_WORD);
 		DONE
 
@@ -954,10 +897,6 @@ next:
 	OPCODE(60)				/* RTS */
 		data = PL;
 		SET_PC((PL << 8) + data + 1);
-#ifdef MONITOR_BREAK
-		if (break_ret && --ret_nesting <= 0)
-			break_step = TRUE;
-#endif
 		DONE
 
 	OPCODE(61)				/* ADC (ab,x) */
@@ -1058,10 +997,6 @@ next:
 		DONE
 
 	OPCODE(6c)				/* JMP (abcd) */
-#ifdef MONITOR_BREAK
-		remember_JMP[remember_jmp_curpos] = GET_PC() - 1;
-		remember_jmp_curpos = (remember_jmp_curpos + 1) % REMEMBER_JMP_STEPS;
-#endif
 		ABSOLUTE;
 #ifdef CPU65C02
 		/* XXX: if ((UBYTE) addr == 0xff) xpos++; */
@@ -1784,10 +1719,6 @@ next:
 		UPDATE_LOCAL_REGS;
 		data = PL;
 		SET_PC((PL << 8) + data + 1);
-#ifdef MONITOR_BREAK
-		if (break_ret && --ret_nesting <= 0)
-			break_step = TRUE;
-#endif
 		DONE
 
 	OPCODE(f2)				/* ESC #ab (CIM) - on Atari is here instruction CIM [unofficial] !RS! */
@@ -1832,7 +1763,6 @@ next:
 		crash_code = insn;
 		ui();
 #else
-		cim_encountered = TRUE;
 		ENTER_MONITOR;
 #endif /* CRASH_MENU */
 
@@ -1948,12 +1878,3 @@ void CPU_Reset(void)
 	regS = 0xff;
 	regPC = dGetWordAligned(0xfffc);
 }
-
-void CpuStateSave(UBYTE SaveVerbose)
-{
-}
-
-void CpuStateRead(UBYTE SaveVerbose)
-{
-}
-
