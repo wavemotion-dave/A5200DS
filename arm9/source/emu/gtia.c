@@ -306,7 +306,7 @@ void GTIA_Frame(void)
     }
 }
 
-ITCM_CODE UBYTE GTIA_GetByte(UWORD addr)
+UBYTE GTIA_GetByte(UWORD addr)
 {
     switch (addr & 0x1f) {
     case _M0PF:
@@ -408,7 +408,7 @@ ITCM_CODE UBYTE GTIA_GetByte(UWORD addr)
 }
 
 #define UPDATE_PM_CYCLE_EXACT {}
-ITCM_CODE void GTIA_PutByte(UWORD addr, UBYTE byte)
+void GTIA_PutByte(UWORD addr, UBYTE byte)
 {
     UWORD cword;
     UWORD cword2;

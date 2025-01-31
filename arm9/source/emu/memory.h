@@ -12,25 +12,25 @@ extern UBYTE memory[65536];
 extern rdfunc readmap[65536];
 extern wrfunc writemap[65536];
 
-#ifdef BUILD_BOSCONIAN
-    extern UBYTE *bank_ptr;
-    extern UWORD bosconian_bank;
-    inline UBYTE mem_fetch(UWORD addr)
-    {
-        return ((bosconian_bank & ((addr>>1) ^ (addr)))  ? bank_ptr[addr] : memory[addr]);
-    }
-    #define dGetByte(x)				(mem_fetch(x))
-#else // Normal Build
-    #define dGetByte(x)				(memory[x])
-#endif // Normal Build
+extern UBYTE *mem_map[16];
 
-#define dPutByte(x, y)			(memory[x] = y)
+inline UBYTE dGetByte(UWORD addr)
+{
+    return mem_map[addr >> 12][addr];
+}
+
+inline void dPutByte(UWORD addr, UBYTE data)
+{
+    memory[addr] = data;
+}
+
+inline UBYTE *AnticMainMemLookup(unsigned int addr)
+{
+    return (UBYTE *) mem_map[addr >> 12] + addr;
+}
 
 #define dGetWord(x)				(dGetByte(x) + (dGetByte((x) + 1) << 8))
-#define dPutWord(x, y)			(memory[x] = (UBYTE) (y), memory[(x) + 1] = (UBYTE) ((y) >> 8))
-
 #define dGetWordAligned(x)		dGetWord(x)
-#define dPutWordAligned(x, y)	dPutWord(x, y)
 
 #define dCopyFromMem(from, to, size)	memcpy(to, memory + (from), size)
 #define dCopyToMem(from, to, size)		memcpy(memory + (to), from, size)
@@ -40,7 +40,7 @@ void ROM_PutByte(UWORD addr, UBYTE byte);
 
 extern UBYTE normal_memory[16];
 #define GetByte(addr)		((normal_memory[(addr)>>12]) ? dGetByte(addr) : (readmap[(addr)] ? (*readmap[(addr)])(addr) : dGetByte(addr)))
-#define PutByte(addr,byte)	((addr & 0xC000) ? writemap[(addr)]((addr), byte) : (memory[addr] = byte))
+#define PutByte(addr,byte)	((addr & 0xC000) ? writemap[(addr)]((addr), byte) : (dPutByte(addr,byte)))
 
 #define SetRAM(addr1, addr2) do { \
 		int i; \
@@ -66,5 +66,5 @@ void MemStateRead(UBYTE SaveVerbose);
 
 inline void CopyFromMem(UWORD from, UBYTE *to, int size) {while (--size >= 0) {*to++ = memory[from];from++;}}
 inline void CopyToMem(const UBYTE *from, UWORD to, int size) {while (--size >= 0) {memory[to++] = *from++;}}
-
+extern void MEMORY_InitialiseMap(void);
 #endif /* _MEMORY_H_ */

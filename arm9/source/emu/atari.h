@@ -4,10 +4,7 @@
 #include <stdio.h>
 #include "config.h"
 
-
 /* Fundamental declarations ---------------------------------------------- */
-
-//#define BUILD_BOSCONIAN 1     // Enable this to produce a build that will run fast bankswitching at the expense of 15% slowdown in memory fetches. Renders games like Bosconian fully playable.
 
 #ifndef FALSE
 #define FALSE  0
@@ -20,8 +17,7 @@
 
 // Some global sound defines
 #define SOUND_FREQ (15720)        // 60 frames per second. 264 scanlines per frame. 1 samples per scanline. 60*264*1 = 15720
-#define SNDLENGTH  4096           // Must be power of 2... so we can quicly mask it
-
+#define SNDLENGTH  1024           // Must be power of 2... so we can quickly mask it
 
 /* SBYTE and UBYTE must be exactly 1 byte long. */
 /* SWORD and UWORD must be exactly 2 bytes long. */

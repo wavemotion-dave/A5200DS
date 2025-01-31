@@ -583,7 +583,7 @@ static void pmg_dma(void) {
         if (player_gra_enabled) {
             const UBYTE *base;
             if (singleline) {
-                base = memory + pmbase_s + ypos;
+                base = AnticMainMemLookup(pmbase_s + ypos);
                 if (ypos & 1) {
                     GRAFP0 = base[0x400];
                     GRAFP1 = base[0x500];
@@ -602,7 +602,7 @@ static void pmg_dma(void) {
                 }
             }
             else {
-                base = memory + pmbase_d + (ypos >> 1);
+                base = AnticMainMemLookup(pmbase_d + (ypos >> 1));
                 if (ypos & 1) {
                     GRAFP0 = base[0x200];
                     GRAFP1 = base[0x280];
@@ -748,7 +748,7 @@ void ANTIC_Reset(void) {
     }\
 }
 
-ITCM_CODE void do_border(void)
+void do_border(void)
 {
     int kk;
     UWORD *ptr = &scrn_ptr[LBORDER_START];
@@ -807,7 +807,7 @@ static void do_border_gtia11(void)
     COLOUR_TO_WORD(cl_lookup[C_BAK],COLBK)
 }
 
-ITCM_CODE static void draw_antic_0(void)
+static void draw_antic_0(void)
 {
     UWORD *ptr = scrn_ptr + LBORDER_START;
     if (pm_dirty) {
@@ -1015,7 +1015,7 @@ static void draw_an_gtia11(const ULONG *t_pm_scanline_ptr)
 #define ADD_FONT_CYCLES xpos += font_cycles[md]
 
 #define INIT_ANTIC_2    const UBYTE *chptr;\
-    chptr = memory + ((dctr ^ chbase_20) & 0xfc07);\
+    chptr = AnticMainMemLookup(((dctr ^ chbase_20) & 0xfc07));\
     ADD_FONT_CYCLES;\
     blank_lookup[0x60] = (anticmode == 2 || dctr & 0xe) ? 0xff : 0;\
     blank_lookup[0x00] = blank_lookup[0x20] = blank_lookup[0x40] = (dctr & 0xe) == 8 ? 0 : 0xff;
@@ -1085,11 +1085,11 @@ static void draw_antic_2_artif(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr
 }
 
 
-static void prepare_an_antic_2(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void prepare_an_antic_2(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
 {
     UBYTE *an_ptr = (UBYTE *) t_pm_scanline_ptr + (an_scanline - pm_scanline);
     const UBYTE *chptr;
-    chptr = memory + ((dctr ^ chbase_20) & 0xfc07);
+    chptr = AnticMainMemLookup(((dctr ^ chbase_20) & 0xfc07));
 
     CHAR_LOOP_BEGIN
         UBYTE screendata = *ANTIC_memptr++;
@@ -1241,7 +1241,7 @@ ITCM_CODE static void draw_antic_4(int nchars, const UBYTE *ANTIC_memptr, UWORD 
 {
     INIT_BACKGROUND_8
     const UBYTE *chptr;
-    chptr = memory + (((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07);
+    chptr = AnticMainMemLookup((((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07));
 
     ADD_FONT_CYCLES;
     lookup2[0x0f] = lookup2[0x00] = cl_lookup[C_BAK];
@@ -1289,11 +1289,11 @@ ITCM_CODE static void draw_antic_4(int nchars, const UBYTE *ANTIC_memptr, UWORD 
     do_border();
 }
 
-static void prepare_an_antic_4(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void prepare_an_antic_4(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
 {
     UBYTE *an_ptr = (UBYTE *) t_pm_scanline_ptr + (an_scanline - pm_scanline);
     const UBYTE *chptr;
-    chptr = memory + (((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07);
+    chptr = AnticMainMemLookup((((anticmode == 4 ? dctr : dctr >> 1) ^ chbase_20) & 0xfc07));
 
     ADD_FONT_CYCLES;
     CHAR_LOOP_BEGIN
@@ -1317,7 +1317,7 @@ DEFINE_DRAW_AN(4)
 ITCM_CODE static void draw_antic_6(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
     const UBYTE *chptr;
-    chptr = memory + ((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20);
+    chptr = AnticMainMemLookup(((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20));
 
     ADD_FONT_CYCLES;
     CHAR_LOOP_BEGIN
@@ -1382,11 +1382,11 @@ ITCM_CODE static void draw_antic_6(int nchars, const UBYTE *ANTIC_memptr, UWORD 
     do_border();
 }
 
-static void prepare_an_antic_6(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void prepare_an_antic_6(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
 {
     UBYTE *an_ptr = (UBYTE *) t_pm_scanline_ptr + (an_scanline - pm_scanline);
     const UBYTE *chptr;
-    chptr = memory + ((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20);
+    chptr = AnticMainMemLookup(((anticmode == 6 ? dctr & 7 : dctr >> 1) ^ chbase_20));
 
     ADD_FONT_CYCLES;
     CHAR_LOOP_BEGIN
@@ -1442,7 +1442,7 @@ ITCM_CODE static void draw_antic_8(int nchars, const UBYTE *ANTIC_memptr, UWORD 
     do_border();
 }
 
-static void prepare_an_antic_8(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void prepare_an_antic_8(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
 {
     UBYTE *an_ptr = (UBYTE *) t_pm_scanline_ptr + (an_scanline - pm_scanline);
     CHAR_LOOP_BEGIN
@@ -1461,7 +1461,7 @@ static void prepare_an_antic_8(int nchars, const UBYTE *ANTIC_memptr, const ULON
 
 DEFINE_DRAW_AN(8)
 
-static void draw_antic_9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_antic_9(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
     lookup2[0x00] = cl_lookup[C_BAK];
     lookup2[0x80] = lookup2[0x40] = cl_lookup[C_PF0];
@@ -1513,7 +1513,7 @@ static void draw_antic_9_gtia11(int nchars, const UBYTE *ANTIC_memptr, UWORD *pt
     draw_antic_0_gtia11();
 }
 
-static void draw_antic_a(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_antic_a(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
     lookup2[0x00] = cl_lookup[C_BAK];
     lookup2[0x40] = lookup2[0x10] = cl_lookup[C_PF0];
@@ -1548,7 +1548,7 @@ static void draw_antic_a(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, cons
     do_border();
 }
 
-static void prepare_an_antic_a(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void prepare_an_antic_a(int nchars, const UBYTE *ANTIC_memptr, const ULONG *t_pm_scanline_ptr)
 {
     UBYTE *an_ptr = (UBYTE *) t_pm_scanline_ptr + (an_scanline - pm_scanline);
     CHAR_LOOP_BEGIN
@@ -1602,7 +1602,7 @@ static void draw_antic_c(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, cons
     do_border();
 }
 
-static void draw_antic_e(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
+ITCM_CODE static void draw_antic_e(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
     INIT_BACKGROUND_8
     lookup2[0x00] = cl_lookup[C_BAK];
@@ -2405,8 +2405,7 @@ void set_prior(UBYTE byte)
         draw_antic_ptr = draw_antic_table[byte >> 6][anticmode];
 }
 
-
-void ANTIC_PutByte(UWORD addr, UBYTE byte)
+ITCM_CODE void ANTIC_PutByte(UWORD addr, UBYTE byte)
 {
     switch (addr & 0xf) {
     case _DLISTL:

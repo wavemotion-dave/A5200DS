@@ -39,6 +39,7 @@ extern void dsShowScreenEmu(void);
 extern void dsShowScreenMain(void);
 extern void dsFreeEmu(void);
 extern void VsoundHandler(void);
+extern void VsoundHandlerDSi(void);
 extern void dsLoadGame(char *filename);
 extern unsigned int dsReadPad(void);
 extern bool dsWaitOnQuit(void);

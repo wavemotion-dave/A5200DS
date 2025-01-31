@@ -42,14 +42,27 @@ UBYTE  memory[65536]    __attribute__ ((aligned (16)));
 
 UBYTE  normal_memory[16] __attribute__((section(".dtcm"))); 
 
+UBYTE *mem_map[16]       __attribute__((section(".dtcm")));             // This is the magic that allows us to index into banks of memory quickly. 16 banks of 4K plus an additional 4 banks to handle the "under 0x8, 0x9, 0xA and 0xB" areas
+
 void ROM_PutByte(UWORD addr, UBYTE value)
 {
     // ROM normally doesn't respond to a write...
 }
 
+void MEMORY_InitialiseMap(void) 
+{
+    // Set the memory map back to pointing to main memory
+    for (int i=0; i<16; i++)
+    {
+        mem_map[i] = memory + (0x1000 * i) - (0x1000 * i);  // Yes, pointless except to get across the point that we are offsetting the memory map to avoid having to mask the addr in memory.h
+    }
+}
+
 void MEMORY_InitialiseMachine(void) 
 {
     unsigned int i;
+
+    MEMORY_InitialiseMap();
     memcpy(memory + 0xf800, atari_os, 0x800);
     dFillMem(0x0000, 0x00, 0xf800);
     SetRAM(0x0000, 0x3fff);
@@ -138,5 +151,5 @@ void MEMORY_InitialiseMachine(void)
         readmap[i] = POKEY_GetByte;
         writemap[i] = POKEY_PutByte;
     }
-	Coldstart();
+    Coldstart();
 }
