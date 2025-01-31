@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <fat.h>
 #include <nds.h>
-
 #include <unistd.h>
+#include <time.h>
 
 #include "main.h"
 #include "intro.h"
@@ -12,13 +12,14 @@
 
 extern int bg0, bg1;
 
-extern int load_os(char *filename );
-
-char *bios_filename = "5200.rom";
+extern int load_os();
 
 // Program entry point
 int main(int argc, char **argv) 
 {
+  extern void MEMORY_InitialiseMap(void);
+  MEMORY_InitialiseMap();
+  
   // Init sound
   consoleDemoInit();
   soundEnable();
@@ -35,17 +36,14 @@ int main(int argc, char **argv)
   dsInstallSoundEmuFIFO();
   highscore_init();
   
-  if (keysCurrent() & KEY_R)
-  {
-       bios_filename = "XYZZY.~01"; // Won't be found... Altria bios instead...
-  }
   // Intro and main screen
   intro_logo();  
   dsInitScreenMain();
   etatEmu = A5200_MENUINIT;
+  
+  srand(time(NULL));
 
-  // 
-  if (!load_os(bios_filename)) 
+  if (!load_os())  // Should never fail as we have fallback Altira BIOS
   {
       //load rom file via args if a rom path is supplied
       if(argc > 1) 

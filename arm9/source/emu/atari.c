@@ -112,8 +112,8 @@ int Atari800_OpenFile(const char *filename, int reboot, int diskno, int readonly
 	return type;
 }
 
-int Atari800_Initialise(void) {
-
+int Atari800_Initialise(void) 
+{
 	INPUT_Initialise();
 
 	// Platform Specific Initialisation 

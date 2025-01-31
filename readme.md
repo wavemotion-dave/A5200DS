@@ -14,7 +14,7 @@ Do not ask me about such files - you will be ignored.
 
 Copyright :
 -----------------------
-a5200ds is Copyright (c) 2021-2024 Dave Bernazzani (wavemotion-dave)
+a5200ds is Copyright (c) 2021-2025 Dave Bernazzani (wavemotion-dave)
 
 This program is built upon alekmaul's magnificent efforts from circa 2011. He was 
 kind enough to grant me permission to update this emulator for the modern era.
@@ -46,6 +46,14 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 History :
 --------------------------------------------------------------------------------
+V3.7 : 30-Jan-2025 by wavemotion-dave
+  * New banking handling so we only move pointers - not blocks of memory. Renders all 5200 Super Banked games playable.
+  * New NTSC palette from Trebor's Pro Palette (NTSC_LUM1_HOT 5200).
+  * Added 5200 512K Super Cart banking.
+  * Improved Pokey emulation (around the random scanline start value - fixes one Acid800 test).
+  * Improved keypad debounce for Star Raiders.
+  * Improved sound handling to reduce pops/clicks. Increased the sample rate on the DSi for improved fidelity.
+
 V3.6 : 08-Jan-2024 by wavemotion-dave
   * Internal database updated to include known prototypes, hacks and other sundry 5200 games.
   * Codebase cleanup across the board.
