@@ -30,7 +30,7 @@ Features :
 ----------
 * Support for the original 69 commercial releases plus a couple hundred homebrews, hacks and prototypes.
 * All games run at full speed on a DSi or above. Most games will run at full speed on the older DS-Lite/Phat (some of the more complex conversions will lag).
-* Bankswitching carts up to 128K are supported. Bounty Bob Strikes Back is supported (though needs a DSi or better to run smoothly).
+* Bankswitching carts up to 128K are supported. Bounty Bob Strikes Back is supported.
 * Games like Frogger and Q-Bert auto-patch so the button does not need to be pressed to move/hop.
 * Games like Robotron will auto configure twin-sticks so you can use the ABXY buttons to shoot while the d-pad moves.
 * 10 high-scores per game is saved to the SD card.
@@ -39,8 +39,6 @@ Known Issues :
 ---------
 Most things are playing fine on a DSi. Most of the original commercial games (like Missile Command, Space Invaders, Centipede) will generally
 run fine on the older DS-LITE or DS-PHAT.  
-
-Sound is passable. I'm not super pleased with the fidelity but it's come a long way.
 
 Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
