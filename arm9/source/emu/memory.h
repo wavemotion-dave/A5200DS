@@ -2,7 +2,7 @@
 #define _MEMORY_H_
 
 #include "config.h"
-#include <string.h>	/* memcpy, memset */
+#include <string.h> /* memcpy, memset */
 
 #include "atari.h"
 
@@ -35,33 +35,33 @@ inline UBYTE *AnticMainMemLookup(unsigned int addr)
     return (UBYTE *) mem_map[addr >> 12] + addr;
 }
 
-#define dGetWord(x)				(dGetByte(x) + (dGetByte((x) + 1) << 8))
-#define dGetWordAligned(x)		dGetWord(x)
+#define dGetWord(x)             (dGetByte(x) + (dGetByte((x) + 1) << 8))
+#define dGetWordAligned(x)      dGetWord(x)
 
-#define dCopyFromMem(from, to, size)	memcpy(to, memory + (from), size)
-#define dCopyToMem(from, to, size)		memcpy(memory + (to), from, size)
-#define dFillMem(addr1, value, length)	memset(memory + (addr1), value, length)
+#define dCopyFromMem(from, to, size)    memcpy(to, memory + (from), size)
+#define dCopyToMem(from, to, size)      memcpy(memory + (to), from, size)
+#define dFillMem(addr1, value, length)  memset(memory + (addr1), value, length)
 
 void ROM_PutByte(UWORD addr, UBYTE byte);
 
 extern UBYTE normal_memory[16];
-#define GetByte(addr)		((normal_memory[(addr)>>12]) ? dGetByte(addr) : (readmap[(addr)] ? (*readmap[(addr)])(addr) : dGetByte(addr)))
-#define PutByte(addr,byte)	((addr & 0xC000) ? writemap[(addr)]((addr), byte) : (dPutByte(addr,byte)))
+#define GetByte(addr)       ((normal_memory[(addr)>>12]) ? dGetByte(addr) : (readmap[(addr)] ? (*readmap[(addr)])(addr) : dGetByte(addr)))
+#define PutByte(addr,byte)  ((addr & 0xC000) ? writemap[(addr)]((addr), byte) : (dPutByte(addr,byte)))
 
 #define SetRAM(addr1, addr2) do { \
-		int i; \
-		for (i = (addr1); i <= (addr2); i++) { \
-			readmap[i] = NULL; \
-			writemap[i] = NULL; \
-		} \
-	} while (0)
+        int i; \
+        for (i = (addr1); i <= (addr2); i++) { \
+            readmap[i] = NULL; \
+            writemap[i] = NULL; \
+        } \
+    } while (0)
 #define SetROM(addr1, addr2) do { \
-		int i; \
-		for (i = (addr1); i <= (addr2); i++) { \
-			readmap[i] = NULL; \
-			writemap[i] = ROM_PutByte; \
-		} \
-	} while (0)
+        int i; \
+        for (i = (addr1); i <= (addr2); i++) { \
+            readmap[i] = NULL; \
+            writemap[i] = ROM_PutByte; \
+        } \
+    } while (0)
 
 extern int have_basic;
 

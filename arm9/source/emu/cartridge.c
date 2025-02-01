@@ -146,6 +146,7 @@ static const struct cart_t cart_table[] =
     {"dc271e475b4766e80151f1da5b764e52",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    249,    32,22,  0,  X_FIRE},  // Gremlins (USA).a52
     {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,22,  0,  X_FIRE},  // Gyruss (USA).a52
     {"b7617ac90462ef13f8350e32b8198873",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,22,  0,  X_FIRE},  // Gyruss (Autofire Hack).a52
+    {"3790408417c1dc193dc2d68576755153",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,22,  0,  X_FIRE},  // Gyruss (Autofire Hack - Updated 2024).a52
     {"f8f0e0a6dc2ffee41b2a2dd736cba4cd",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,16,  0,  X_PANUP}, // H.E.R.O. (USA).a52
     {"3491fa368ae42766a83a43a627496c41",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    278,    256,    44,24,  0,  X_PANDN}, // Hangly Pollux.a52
     {"02b00d632f1f1ceaa39ee3df83edf08a",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    278,    256,    44,24,  0,  X_PANDN}, // Hangly Man.a52
@@ -163,6 +164,7 @@ static const struct cart_t cart_table[] =
     {"a0d407ab5f0c63e1e17604682894d1a9",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,18,  0,  X_FIRE},  // Jumpman Jr (Conv).a52
     {"27140302a715694401319568a83971a1",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,18,  0,  X_FIRE},  // Jumpman Jr (XL Conversion).a52
     {"1a6ccf1152d2bcebd16f0989b8257108",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,18,  0,  X_FIRE},  // Jumpman Jr (XL Conversion).a52
+    {"158f6f91b9635cec86bdf8c1e7c11f3a",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,18,  0,  X_FIRE},  // Jumpman Jr (XL Conversion - fixed 2024).a52    
     {"834067fdce5d09b86741e41e7e491d6c",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,23,  0,  X_FIRE},  // Jungle Hunt (USA).a52
     {"12c020a98e7f898726b9b649d123214f",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,23,  0,  X_FIRE},  // Jungle Hunt (Pirate Pete Hack v3).a52
     {"947a614b16ae56a18a05ef8f34340894",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    252,    32,23,  0,  X_FIRE},  // Jungle Hunt (32K Pirate Pete Hack v3).a52
@@ -188,11 +190,13 @@ static const struct cart_t cart_table[] =
     {"bc33c07415b42646cc813845b979d85a",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // Meebzork (1983) (Atari).a52
     {"24348dd9287f54574ccc40ee40d24a86",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1, YES_FS,    276,    256,    41,24,  1,  X_FIRE},  // Microgammon.a52
     {"84d88bcdeffee1ab880a5575c6aca45e",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    255,    32,24,  0,  X_FIRE},  // Millipede (USA) (Proto).a52
+    {"452fe30bd1443b2b586df3974356c43b",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    0, YES_FS,    256,    255,    32,24,  0,  X_FIRE},  // Millipede (USA) (Refined 2024).a52    
     {"d859bff796625e980db1840f15dec4b5",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE},  // Miner 2049er Starring Bounty Bob (USA).a52
     {"69d472a79f404e49ad2278df3c8a266e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0, YES_FS,    256,    240,    32,19,  1,  X_FIRE},  // Miniature Golf (1983) (Atari).a52
     {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,      ANA_SLOWER,  20, 185,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE},  // Missile Command (USA).a52
     {"3090673bd3f8c04a92e391bf5540b88b",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_SLOWER,   6, 220,    1, YES_FS,    256,    256,    32,24,  0,  X_FIRE},  // MC+final.a52
     {"694897cc0d98fcf2f59eef788881f67d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,24,  0,  X_FIRE},  // Montezuma's Revenge featuring Panama Joe (USA).a52
+    {"22a8721acbeb864b3efe5a4d787c31be",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,24,  0,  X_FIRE},  // Montezuma's Revenge (Rexux - final).a52    
     {"296e5a3a9efd4f89531e9cf0259c903d",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE},  // Moon Patrol (USA).a52
     {"2d8e6aa095bf2aee75406ade8b035a50",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE},  // Moon Patrol Sprite Hack (USA).a52
     {"627dbb2f84daef11229a165a69d84e09",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    254,    32,25,  0,  X_FIRE},  // Moon Patrol Redux.a52
