@@ -40,9 +40,8 @@ rdfunc readmap[65536]   __attribute__ ((aligned (16)));
 wrfunc writemap[65536]  __attribute__ ((aligned (16)));
 UBYTE  memory[65536]    __attribute__ ((aligned (16)));
 
-UBYTE  normal_memory[16] __attribute__((section(".dtcm"))); 
-
-UBYTE *mem_map[16]       __attribute__((section(".dtcm")));             // This is the magic that allows us to index into banks of memory quickly. 16 banks of 4K plus an additional 4 banks to handle the "under 0x8, 0x9, 0xA and 0xB" areas
+UBYTE  normal_memory[16] __attribute__((section(".dtcm")));         // A quick way to determine if we are in a region of memory that might have special handling (banked, or peripheral mapped)
+UBYTE *mem_map[16]       __attribute__((section(".dtcm")));         // This is the magic that allows us to index into banks of memory quickly. 16 banks of 4K plus an additional 4 banks to handle the "under 0x8, 0x9, 0xA and 0xB" areas
 
 void ROM_PutByte(UWORD addr, UBYTE value)
 {
@@ -68,85 +67,13 @@ void MEMORY_InitialiseMachine(void)
     SetRAM(0x0000, 0x3fff);
     SetROM(0x4000, 0xffff);
     
-    for (i=0xc000; i< 0xc0ff; i++) readmap[i] = GTIA_GetByte;
+    for (i=0xc000; i <= 0xc0ff; i++) readmap[i] = GTIA_GetByte;
+    for (i=0xd400; i <= 0xd4ff; i++) readmap[i] = ANTIC_GetByte;
+    for (i=0xe800; i <= 0xefff; i++) readmap[i] = POKEY_GetByte;
+       
+    for (i=0xc000; i <= 0xc0ff; i++) writemap[i] = GTIA_PutByte;
+    for (i=0xd400; i <= 0xd4ff; i++) writemap[i] = ANTIC_PutByte;
+    for (i=0xe800; i <= 0xefff; i++) writemap[i] = POKEY_PutByte;
     
-    for (i=0xd400; i< 0xd4ff; i++) readmap[i] = ANTIC_GetByte;
-
-    readmap[0xD40B] = ANTIC_Get_VCOUNT;
-    readmap[0xD41B] = ANTIC_Get_VCOUNT;
-    readmap[0xD42B] = ANTIC_Get_VCOUNT;
-    readmap[0xD43B] = ANTIC_Get_VCOUNT;
-    readmap[0xD44B] = ANTIC_Get_VCOUNT;
-    readmap[0xD45B] = ANTIC_Get_VCOUNT;
-    readmap[0xD46B] = ANTIC_Get_VCOUNT;
-    readmap[0xD47B] = ANTIC_Get_VCOUNT;
-    readmap[0xD48B] = ANTIC_Get_VCOUNT;
-    readmap[0xD49B] = ANTIC_Get_VCOUNT;
-    readmap[0xD4AB] = ANTIC_Get_VCOUNT;
-    readmap[0xD4BB] = ANTIC_Get_VCOUNT;
-    readmap[0xD4CB] = ANTIC_Get_VCOUNT;
-    readmap[0xD4DB] = ANTIC_Get_VCOUNT;
-    readmap[0xD4EB] = ANTIC_Get_VCOUNT;
-    readmap[0xD4FB] = ANTIC_Get_VCOUNT;    
-    
-    readmap[0xD40C] = ANTIC_Get_PENH;
-    readmap[0xD41C] = ANTIC_Get_PENH;
-    readmap[0xD42C] = ANTIC_Get_PENH;
-    readmap[0xD43C] = ANTIC_Get_PENH;
-    readmap[0xD44C] = ANTIC_Get_PENH;
-    readmap[0xD45C] = ANTIC_Get_PENH;
-    readmap[0xD46C] = ANTIC_Get_PENH;
-    readmap[0xD47C] = ANTIC_Get_PENH;
-    readmap[0xD48C] = ANTIC_Get_PENH;
-    readmap[0xD49C] = ANTIC_Get_PENH;
-    readmap[0xD4AC] = ANTIC_Get_PENH;
-    readmap[0xD4BC] = ANTIC_Get_PENH;
-    readmap[0xD4CC] = ANTIC_Get_PENH;
-    readmap[0xD4DC] = ANTIC_Get_PENH;
-    readmap[0xD4EC] = ANTIC_Get_PENH;
-    readmap[0xD4FC] = ANTIC_Get_PENH;
-    
-    readmap[0xD40D] = ANTIC_Get_PENV;
-    readmap[0xD41D] = ANTIC_Get_PENV;
-    readmap[0xD42D] = ANTIC_Get_PENV;
-    readmap[0xD43D] = ANTIC_Get_PENV;
-    readmap[0xD44D] = ANTIC_Get_PENV;
-    readmap[0xD45D] = ANTIC_Get_PENV;
-    readmap[0xD46D] = ANTIC_Get_PENV;
-    readmap[0xD47D] = ANTIC_Get_PENV;
-    readmap[0xD48D] = ANTIC_Get_PENV;
-    readmap[0xD49D] = ANTIC_Get_PENV;
-    readmap[0xD4AD] = ANTIC_Get_PENV;
-    readmap[0xD4BD] = ANTIC_Get_PENV;
-    readmap[0xD4CD] = ANTIC_Get_PENV;
-    readmap[0xD4DD] = ANTIC_Get_PENV;
-    readmap[0xD4ED] = ANTIC_Get_PENV;
-    readmap[0xD4FD] = ANTIC_Get_PENV;
-
-    readmap[0xD40F] = ANTIC_Get_NMIST;
-    readmap[0xD41F] = ANTIC_Get_NMIST;
-    readmap[0xD42F] = ANTIC_Get_NMIST;
-    readmap[0xD43F] = ANTIC_Get_NMIST;
-    readmap[0xD44F] = ANTIC_Get_NMIST;
-    readmap[0xD45F] = ANTIC_Get_NMIST;
-    readmap[0xD46F] = ANTIC_Get_NMIST;
-    readmap[0xD47F] = ANTIC_Get_NMIST;
-    readmap[0xD48F] = ANTIC_Get_NMIST;
-    readmap[0xD49F] = ANTIC_Get_NMIST;
-    readmap[0xD4AF] = ANTIC_Get_NMIST;
-    readmap[0xD4BF] = ANTIC_Get_NMIST;
-    readmap[0xD4CF] = ANTIC_Get_NMIST;
-    readmap[0xD4DF] = ANTIC_Get_NMIST;
-    readmap[0xD4EF] = ANTIC_Get_NMIST;
-    readmap[0xD4FF] = ANTIC_Get_NMIST;
-        
-    for (i=0xc000; i < 0xc0ff; i++) writemap[i] = GTIA_PutByte;
-    for (i=0xd400; i < 0xd4ff; i++) writemap[i] = ANTIC_PutByte;
-
-    for (i = 0xe800; i <= 0xefff; i++ ) 
-    {
-        readmap[i] = POKEY_GetByte;
-        writemap[i] = POKEY_PutByte;
-    }
     Coldstart();
 }

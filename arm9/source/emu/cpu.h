@@ -16,7 +16,7 @@
 #define Z_FLAG 0x02
 #define C_FLAG 0x01
 
-void CPU_Initialise(void);		/* used in the assembler version of cpu.c only */
+void CPU_Initialise(void);      /* used in the assembler version of cpu.c only */
 void CPU_GetStatus(void);
 void CPU_PutStatus(void);
 void CPU_Reset(void);
@@ -26,8 +26,8 @@ void GO(int limit);
 
 #ifdef FALCON_CPUASM
 extern void CPU_INIT(void);
-extern void CPUGET(void);		/* put from CCR, N & Z FLAG into regP */
-extern void CPUPUT(void);		/* put from regP into CCR, N & Z FLAG */
+extern void CPUGET(void);       /* put from CCR, N & Z FLAG into regP */
+extern void CPUPUT(void);       /* put from regP into CCR, N & Z FLAG */
 #endif
 
 extern unsigned int regPC;
@@ -53,8 +53,6 @@ extern UBYTE regX;
 #define ClrC regP &= (~C_FLAG)
 
 extern UBYTE IRQ;
-
-extern void (*rts_handler)(void);
 
 extern UBYTE cim_encountered;
 

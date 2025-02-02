@@ -14,6 +14,7 @@ extern wrfunc writemap[65536];
 
 extern UBYTE *mem_map[16];
 
+// This one has to use the mem_map[] table to handle banked carts
 inline UBYTE dGetByte(UWORD addr)
 {
     return mem_map[addr >> 12][addr];

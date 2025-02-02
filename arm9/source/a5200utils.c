@@ -216,7 +216,7 @@ void dsInitScreenMain(void)
     vramSetBankF(VRAM_F_LCD );                // Not using this for video but faster RAM always useful!   16K Mapped at 0x06890000
     vramSetBankG(VRAM_G_LCD );                // Not using this for video but faster RAM always useful!   16K Mapped at 0x06894000
     vramSetBankH(VRAM_H_LCD );                // Not using this for video but faster RAM always useful!   32K Mapped at 0x06898000
-    vramSetBankI(VRAM_I_LCD );                // Not using this for video but faster RAM always useful!   16K Mapped at 0x068A0000
+    vramSetBankI(VRAM_I_LCD );                // Not using this for video but faster RAM always useful!   16K Mapped at 0x068A0000 (using for grafp_lookup[] table)
 }
 
 void dsInitTimer(void) 
@@ -868,6 +868,7 @@ void dsMainLoop(void) {
             dsShowScreenEmu();
             VsoundClear();
             unMuteSoon = 5;
+            memset(debug, 0x00, sizeof(debug));
             etatEmu = A5200_PLAYGAME;
             atari_frames=0;
             TIMER0_CR=0;

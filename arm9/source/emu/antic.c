@@ -2275,28 +2275,7 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
 }
 
 /* ANTIC registers --------------------------------------------------------- */
-ITCM_CODE UBYTE ANTIC_Get_VCOUNT(UWORD addr)
-{
-    if (XPOS < LINE_C) return ypos >> 1;
-    return (ypos + 1) >> 1;
-}
 
-UBYTE ANTIC_Get_PENH(UWORD addr)
-{
-    return PENH;
-}
-
-UBYTE ANTIC_Get_PENV(UWORD addr)
-{
-    return PENV;
-}
-
-ITCM_CODE UBYTE ANTIC_Get_NMIST(UWORD addr)
-{
-    return NMIST;
-}
-
-// In theory not used anymore... as valid address combos should map into above functions for slight speed improvement...
 UBYTE ANTIC_GetByte(UWORD addr)
 {
     switch (addr & 0xf) 

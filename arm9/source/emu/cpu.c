@@ -27,19 +27,7 @@
     =====================
 
     Define CPU65C02 if you don't want 6502 JMP() bug emulation.
-    Define CYCLES_PER_OPCODE to update xpos in each opcode's emulation.
-    Define MONITOR_BREAK if you want code breakpoints and execution history.
-    Define MONITOR_BREAKPOINTS if you want user-defined breakpoints.
-    Define MONITOR_PROFILE if you want 6502 opcode profiling.
-    Define MONITOR_TRACE if you want the code to be disassembled while it is executed.
-    Define NO_GOTO if you compile with GCC, but want switch() rather than goto *.
     Define NO_V_FLAG_VARIABLE to don't use local (static) variable V for the V flag.
-    Define PC_PTR to emulate 6502 Program Counter using UBYTE *.
-    Define PREFETCH_CODE to always fetch 2 bytes after the opcode.
-    Define WRAP_64K to correctly emulate instructions that wrap at 64K.
-    Define WRAP_ZPAGE to prevent incorrect access to the address 0x0100 in zeropage
-    indirect mode.
-
 
     Limitations & Known bugs
     ========================
@@ -57,7 +45,7 @@
 #include "nds.h"
 #include "config.h"
 #include <stdio.h>
-#include <stdlib.h> /* exit() */
+#include <stdlib.h>
 
 #include "cpu.h"
 #include "antic.h"
@@ -67,7 +55,7 @@
 /* Windows headers define it */
 #undef ABSOLUTE
 
-#define NO_V_FLAG_VARIABLE      // Very slight speedup... we will check the processor status directly in the rare case of needing this...
+//#define NO_V_FLAG_VARIABLE      // Very slight speedup... we will check the processor status directly in the rare case of needing this...
 
 #define CPU65C02                // Do not emulate the original 6502 bug on JMP
 
@@ -137,12 +125,8 @@ inline void CPU_PutStatus(void)
     C = (regP & 0x01);
 }
 
-/* For Atari Basic loader */
-void (*rts_handler)(void) = NULL;
-
-
 /* Addressing modes */
-#define zGetWord(x) dGetWord(x)
+#define zGetWord(x) (zGetByte(x) + (zGetByte((x) + 1) << 8))
 
 #define OP_BYTE     PEEK_CODE_BYTE()
 #define OP_WORD     PEEK_CODE_WORD()
@@ -219,9 +203,6 @@ void NMI(void)
         SET_PC(dGetWordAligned(0xfffe)); \
         xpos += 7; \
     }
-
-/* Enter monitor */
-#define ENTER_MONITOR  if (!Atari800_Exit(TRUE)) exit(0)
 
 /*  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F */
 static UBYTE cycles[256] __attribute__((section(".dtcm"))) =
@@ -917,12 +898,12 @@ next:
 
     OPCODE(65)              /* ADC ab */
         ZPAGE;
-        data = dGetByte(addr);
+        data = zGetByte(addr);
         goto adc;
 
     OPCODE(66)              /* ROR ab */
         ZPAGE;
-        data = dGetByte(addr);
+        data = zGetByte(addr);
         Z = N = (C << 7) + (data >> 1);
         C = data & 1;
         dPutByte(addr, Z);
@@ -932,7 +913,7 @@ next:
         ZPAGE;
 
     rra_zpage:
-        data = dGetByte(addr);
+        data = zGetByte(addr);
         if (C) {
             C = data & 1;
             data = (data >> 1) + 0x80;
@@ -1167,9 +1148,9 @@ next:
     OPCODE(93)              /* SHA (ab),y [unofficial, UNSTABLE - Store A AND X AND (H+1) ?] (Fox) */
         /* It seems previous memory value is important - also in 9f */
         ZPAGE;
-        data = dGetByte((UBYTE) (addr + 1));    /* Get high byte from zpage */
+        data = zGetByte((UBYTE) (addr + 1));    /* Get high byte from zpage */
         data = A & X & (data + 1);
-        addr = dGetWord(addr) + Y;
+        addr = zGetWord(addr) + Y;
         PutByte(addr, data);
         DONE
 
@@ -1267,22 +1248,22 @@ next:
 
     OPCODE(a4)              /* LDY ab */
         ZPAGE;
-        LDY(dGetByte(addr));
+        LDY(zGetByte(addr));
         DONE
 
     OPCODE(a5)              /* LDA ab */
         ZPAGE;
-        LDA(dGetByte(addr));
+        LDA(zGetByte(addr));
         DONE
 
     OPCODE(a6)              /* LDX ab */
         ZPAGE;
-        LDX(dGetByte(addr));
+        LDX(zGetByte(addr));
         DONE
 
     OPCODE(a7)              /* LAX ab [unofficial] */
         ZPAGE;
-        Z = N = X = A = GetByte(addr);
+        Z = N = X = A = zGetByte(addr);
         DONE
 
     OPCODE(a8)              /* TAY */
@@ -1433,17 +1414,17 @@ next:
 
     OPCODE(c4)              /* CPY ab */
         ZPAGE;
-        CPY(dGetByte(addr));
+        CPY(zGetByte(addr));
         DONE
 
     OPCODE(c5)              /* CMP ab */
         ZPAGE;
-        CMP(dGetByte(addr));
+        CMP(zGetByte(addr));
         DONE
 
     OPCODE(c6)              /* DEC ab */
         ZPAGE;
-        Z = N = dGetByte(addr) - 1;
+        Z = N = zGetByte(addr) - 1;
         dPutByte(addr, Z);
         DONE
 
@@ -1451,7 +1432,7 @@ next:
         ZPAGE;
 
     dcm_zpage:
-        data = dGetByte(addr) - 1;
+        data = zGetByte(addr) - 1;
         dPutByte(addr, data);
         CMP(data);
         DONE
@@ -1578,17 +1559,17 @@ next:
 
     OPCODE(e4)              /* CPX ab */
         ZPAGE;
-        CPX(dGetByte(addr));
+        CPX(zGetByte(addr));
         DONE
 
     OPCODE(e5)              /* SBC ab */
         ZPAGE;
-        data = dGetByte(addr);
+        data = zGetByte(addr);
         goto sbc;
 
     OPCODE(e6)              /* INC ab */
         ZPAGE;
-        Z = N = dGetByte(addr) + 1;
+        Z = N = zGetByte(addr) + 1;
         dPutByte(addr, Z);
         DONE
 
@@ -1596,7 +1577,7 @@ next:
         ZPAGE;
 
     ins_zpage:
-        data = dGetByte(addr) + 1;
+        data = zGetByte(addr) + 1;
         dPutByte(addr, data);
         goto sbc;
 
@@ -1698,13 +1679,6 @@ next:
         ABSOLUTE_X;
         goto ins;
 
-#ifdef ASAP
-
-    OPCODE_ALIAS(d2)
-    OPCODE_ALIAS(f2)
-
-#else
-
     OPCODE(d2)              /* ESCRTS #ab (CIM) - on Atari is here instruction CIM [unofficial] !RS! */
         data = IMMEDIATE;
         UPDATE_GLOBAL_REGS;
@@ -1726,8 +1700,6 @@ next:
         UPDATE_LOCAL_REGS;
         DONE
 
-#endif /* ASAP */
-
     OPCODE_ALIAS(02)        /* CIM [unofficial - crash intermediate] */
     OPCODE_ALIAS(12)
     OPCODE_ALIAS(22)
@@ -1739,33 +1711,15 @@ next:
     OPCODE_ALIAS(92)
     OPCODE(b2)
 
-#ifdef ASAP
-
-        ASAP_CIM();
-        DONE
-
-#else
-
     /* OPCODE(d2) Used for ESCRTS #ab (CIM) */
     /* OPCODE(f2) Used for ESC #ab (CIM) */
         PC--;
         UPDATE_GLOBAL_REGS;
         CPU_GetStatus();
-
-#ifdef CRASH_MENU
-        crash_address = GET_PC();
-        crash_afterCIM = GET_PC() + 1;
-        crash_code = insn;
-        ui();
-#else
-        ENTER_MONITOR;
-#endif /* CRASH_MENU */
-
+        // Normally we enter the monitor here... but not for this emulation
         CPU_PutStatus();
         UPDATE_LOCAL_REGS;
         DONE
-
-#endif /* ASAP */
 
 /* ---------------------------------------------- */
 /* ADC and SBC routines */
@@ -3318,13 +3272,6 @@ next:
         ABSOLUTE_X;
         goto ins;
 
-#ifdef ASAP
-
-    OPCODE_ALIAS(d2)
-    OPCODE_ALIAS(f2)
-
-#else
-
     OPCODE(d2)              /* ESCRTS #ab (CIM) - on Atari is here instruction CIM [unofficial] !RS! */
         data = IMMEDIATE;
         UPDATE_GLOBAL_REGS;
@@ -3346,8 +3293,6 @@ next:
         UPDATE_LOCAL_REGS;
         DONE
 
-#endif /* ASAP */
-
     OPCODE_ALIAS(02)        /* CIM [unofficial - crash intermediate] */
     OPCODE_ALIAS(12)
     OPCODE_ALIAS(22)
@@ -3359,33 +3304,15 @@ next:
     OPCODE_ALIAS(92)
     OPCODE(b2)
 
-#ifdef ASAP
-
-        ASAP_CIM();
-        DONE
-
-#else
-
     /* OPCODE(d2) Used for ESCRTS #ab (CIM) */
     /* OPCODE(f2) Used for ESC #ab (CIM) */
         PC--;
         UPDATE_GLOBAL_REGS;
         CPU_GetStatus();
-
-#ifdef CRASH_MENU
-        crash_address = GET_PC();
-        crash_afterCIM = GET_PC() + 1;
-        crash_code = insn;
-        ui();
-#else
-        ENTER_MONITOR;
-#endif /* CRASH_MENU */
-
+        // Normally we enter monitor here... but not for this emulation.
         CPU_PutStatus();
         UPDATE_LOCAL_REGS;
         DONE
-
-#endif /* ASAP */
 
 /* ---------------------------------------------- */
 /* ADC and SBC routines */
@@ -3488,8 +3415,8 @@ void CPU_Reset(void)
 {
     IRQ = 0;
 
-    regP = 0x34;                /* The unused bit is always 1, I flag set! */
+    regP = 0x34;        /* The unused bit is always 1, I flag set! */
     CPU_PutStatus();    /* Make sure flags are all updated */
-    regS = 0xff;
+    regS = 0xff;        /* Stack at back end */
     regPC = dGetWordAligned(0xfffc);
 }

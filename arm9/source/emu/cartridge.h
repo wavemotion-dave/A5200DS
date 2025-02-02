@@ -48,7 +48,8 @@ extern struct cart_t myCart;
 #define ANALOG          1
 
 #define NO_FS           0
-#define YES_FS          1       // Only for non-DSi where we need the speed
+#define YES_FS          3       // Only for non-DSi where we need the speed. Displays 3 of 4 frames.
+#define YES_FSL         7       // A lighter version of frameskip. Displays 7 of 8 frames.
 
 #define X_FIRE          0
 #define X_PANUP         1

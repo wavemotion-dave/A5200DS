@@ -51,11 +51,6 @@ void ANTIC_Frame(int draw_display);
 UBYTE ANTIC_GetByte(UWORD addr);
 void ANTIC_PutByte(UWORD addr, UBYTE byte);
 
-extern UBYTE ANTIC_Get_VCOUNT(UWORD addr);
-extern UBYTE ANTIC_Get_PENH(UWORD addr);
-extern UBYTE ANTIC_Get_PENV(UWORD addr);
-extern UBYTE ANTIC_Get_NMIST(UWORD addr);
-
 UBYTE ANTIC_GetDLByte(UWORD *paddr);
 UWORD ANTIC_GetDLWord(UWORD *paddr);
 

@@ -139,7 +139,7 @@ void Atari800_Frame(void)
 {
 	INPUT_Frame();
 	GTIA_Frame();
-    ANTIC_Frame((myCart.frame_skip ? (gTotalAtariFrames&3) : TRUE));  // With frameskip, we skip every 8th frame (drawing 7 of 8). Skip is dangerous for the collision detection so we do it sparingly
+    ANTIC_Frame((myCart.frame_skip ? (gTotalAtariFrames & myCart.frame_skip) : TRUE));  // With frameskip, we skip every 8th frame (drawing 7 of 8). Skip is dangerous for the collision detection so we do it sparingly
     POKEY_Frame();
     
     gTotalAtariFrames++;
