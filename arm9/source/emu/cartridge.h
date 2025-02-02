@@ -12,9 +12,11 @@
 #define CART_5200_32	    5
 #define CART_5200_40	    6
 #define CART_5200_64	    7
-#define CART_5200_128       8
-#define CART_5200_512       9
-#define CART_LAST_SUPPORTED 9
+#define CART_5200_64_SWAP   8
+#define CART_5200_128       9
+#define CART_5200_256       10
+#define CART_5200_512       11
+#define CART_LAST_SUPPORTED 11
 
 struct cart_t
 {

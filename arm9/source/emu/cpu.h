@@ -24,13 +24,7 @@ void NMI(void);
 void GO(int limit);
 #define GenerateIRQ() (IRQ = 1)
 
-#ifdef FALCON_CPUASM
-extern void CPU_INIT(void);
-extern void CPUGET(void);       /* put from CCR, N & Z FLAG into regP */
-extern void CPUPUT(void);       /* put from regP into CCR, N & Z FLAG */
-#endif
-
-extern unsigned int regPC;
+extern ULONG regPC;
 extern UBYTE regA;
 extern UBYTE regP;
 extern UBYTE regS;

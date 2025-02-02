@@ -922,7 +922,7 @@ void dsMainLoop(void) {
 
             // Read keys
             keys_pressed=keysCurrent();
-            key_consol = CONSOL_NONE; //|= (CONSOL_OPTION | CONSOL_SELECT | CONSOL_START); /* OPTION/START/SELECT key OFF */
+            key_consol = CONSOL_NONE;
             shiftctrl = 0; key_shift = 0;
             trig0 = ((keys_pressed & KEY_A) || (keys_pressed & KEY_Y)) ? 0 : 1;
             stick0 = STICK_CENTRE;
@@ -970,7 +970,7 @@ void dsMainLoop(void) {
                           etatEmu=A5200_PLAYINIT; 
                           dsLoadGame(a5200romlist[ucFicAct].filename); 
                           if (full_speed) dsPrintValue(30,0,0,"FS"); else dsPrintValue(30,0,0,"  ");
-                      }
+                      } else bSoundMute = false;
                     }
                 }
                 else if (iTy < 130)
@@ -1019,10 +1019,15 @@ void dsMainLoop(void) {
                               last_key_code = key_code;
                               keys_dampen = 25; // Almost a half second for consistent debounce
                           }
-                          else
+                          if (keys_dampen)
                           {
                               key_code = last_key_code;
-                              if (keys_dampen) keys_dampen--; else last_key_code=0x00;
+                              if (--keys_dampen < 5) last_key_code=0x00;
+                          }
+                          else
+                          {
+                              last_key_code = 0x00;
+                              keys_touch = 0;
                           }
                         }
                     }
@@ -1030,34 +1035,41 @@ void dsMainLoop(void) {
                     {
                         if ((iTy>150) && (iTy<185))  // This is our 5200 Keypad 0-9,#,*
                         { 
-                          if (!keys_dampen) // First time pressed?
+                          if (!keys_dampen && (keys_touch==0)) // First time pressed?
                           {
+                              keys_touch = 1;
                               soundPlaySample(clickNoQuit_wav, SoundFormat_16Bit, clickNoQuit_wav_size, 22050, 127, 64, false, 0);
                               if (iTx > 0) iTx--;
                               key_code = padKey[iTx / 21] | key_code;
                               last_key_code = key_code;
-                              keys_dampen = 15; // One-fourth of a second for consistent debounce
+                              keys_dampen = 20; // One-third of a second for consistent debounce
+                          }
+                          
+                          if (keys_dampen)
+                          {
+                              key_code = last_key_code;
+                              if (--keys_dampen < 5) last_key_code=0x00;
                           }
                           else
                           {
-                              key_code = last_key_code;
-                              keys_dampen--;
-                          }
+                              last_key_code = 0x00;
+                              keys_touch = 0;
+                          }                          
                         }
                     }
                 }
             }
             else
             {
-                keys_touch = 0;
                 if (keys_dampen)
                 {
                     key_code = last_key_code;
-                    keys_dampen--;
+                    if (--keys_dampen < 5) last_key_code=0x00;
                 }
                 else
                 {
                     last_key_code = 0x00;
+                    keys_touch = 0;
                 }
             }
 
@@ -1164,6 +1176,5 @@ void dsMainLoop(void) {
         }
     }
 }
-
 
 void _putchar(char character) {};   // Not used but needed to link printf()
