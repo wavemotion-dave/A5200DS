@@ -60,7 +60,7 @@
 #define CPU65C02                // Do not emulate the original 6502 bug on JMP
 
 /* 6502 stack handling */
-#define PL                  dGetByte(0x0100 + ++S)
+#define PL                  zGetByte(0x0100 + ++S)
 #define PH(x)               dPutByte(0x0100 + S--, x)
 #define PHW(x)              PH((x) >> 8); PH((x) & 0xff)
 
@@ -76,18 +76,18 @@
 #define RMW_GetByte(x, addr) x = GetByte(addr);
 
 /* 6502 registers. */
-unsigned int regPC __attribute__((section(".dtcm"))); 
-UBYTE regA __attribute__((section(".dtcm")));
-UBYTE regX __attribute__((section(".dtcm")));
-UBYTE regY __attribute__((section(".dtcm")));
-UBYTE regP __attribute__((section(".dtcm")));                       /* Processor Status Byte (Partial) */
-UBYTE regS __attribute__((section(".dtcm")));
-UBYTE IRQ  __attribute__((section(".dtcm")));
+ULONG regPC __attribute__((section(".dtcm")));   // UNLONG here buys us a little speed as compiler doesn't have to mask it
+UBYTE regA  __attribute__((section(".dtcm")));
+UBYTE regX  __attribute__((section(".dtcm")));
+UBYTE regY  __attribute__((section(".dtcm")));
+UBYTE regP  __attribute__((section(".dtcm")));   // Processor Status Byte (Partial)
+UBYTE regS  __attribute__((section(".dtcm")));
+UBYTE IRQ   __attribute__((section(".dtcm")));
 
 /* Transfer 6502 registers between global variables and local variables inside GO() */
 //#define UPDATE_GLOBAL_REGS  regPC = GET_PC(); regS = S; regA = A; regX = X; regY = Y
 //#define UPDATE_LOCAL_REGS   SET_PC(regPC); S = regS; A = regA; X = regX; Y = regY
-#define UPDATE_GLOBAL_REGS  regS = S; 
+#define UPDATE_GLOBAL_REGS  regS = S;
 #define UPDATE_LOCAL_REGS   S = regS;
 
 // Since we have our global CPU registers in fast memory, no need to transfer them in/out
@@ -126,7 +126,12 @@ inline void CPU_PutStatus(void)
 }
 
 /* Addressing modes */
-#define zGetWord(x) (zGetByte(x) + (zGetByte((x) + 1) << 8))
+inline UWORD zGetWord(UWORD x)
+{
+    UWORD data = zGetByte(x);
+    data |= zGetByte(x+1) << 8;
+    return data;
+}
 
 #define OP_BYTE     PEEK_CODE_BYTE()
 #define OP_WORD     PEEK_CODE_WORD()
@@ -345,13 +350,13 @@ void GO_Banked(int limit)
 
 // A jump to the next instruction will land us here just before the test on xpos
 next:
-    
-    while (xpos < xpos_limit) 
+
+    while (xpos < xpos_limit)
     {
         insn = GET_CODE_BYTE();
         xpos += cycles[insn];
         goto *opcode[insn];
-        
+
     OPCODE(00)              /* BRK */
         PC++;
         PHPC;
@@ -1822,7 +1827,7 @@ ITCM_CODE void GO(int limit)
 {
     extern UBYTE bCartIsBanked;
     if (bCartIsBanked) return GO_Banked(limit); // Cart is bigger than 32K so call the CPU handler that can manage banked memory[]
-    
+
 #define OPCODE_ALIAS(code)  opcode_##code:
 #define DONE                goto next;
     static const void *opcode[256] __attribute__((section(".dtcm"))) =
@@ -1938,13 +1943,13 @@ ITCM_CODE void GO(int limit)
 
 // A jump to the next instruction will land us here just before the test on xpos
 next:
-    
-    while (xpos < xpos_limit) 
+
+    while (xpos < xpos_limit)
     {
         insn = GET_CODE_BYTE();
         xpos += cycles[insn];
         goto *opcode[insn];
-        
+
     OPCODE(00)              /* BRK */
         PC++;
         PHPC;

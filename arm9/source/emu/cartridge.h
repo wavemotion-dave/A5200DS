@@ -12,9 +12,11 @@
 #define CART_5200_32	    5
 #define CART_5200_40	    6
 #define CART_5200_64	    7
-#define CART_5200_128       8
-#define CART_5200_512       9
-#define CART_LAST_SUPPORTED 9
+#define CART_5200_64_SWAP   8
+#define CART_5200_128       9
+#define CART_5200_256       10
+#define CART_5200_512       11
+#define CART_LAST_SUPPORTED 11
 
 struct cart_t
 {
@@ -54,6 +56,7 @@ extern struct cart_t myCart;
 #define X_FIRE          0
 #define X_PANUP         1
 #define X_PANDN         2
+#define X_PAND2         3
 
 #define CART_MAX_SIZE	(512 * 1024)
 

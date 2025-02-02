@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "config.h"
+#include "printf.h"
 
 /* Fundamental declarations ---------------------------------------------- */
 

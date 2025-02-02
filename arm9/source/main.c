@@ -9,6 +9,7 @@
 #include "atari.h"
 #include "a5200utils.h"
 #include "highscore.h"
+#include "printf.h"
 
 extern int bg0, bg1;
 

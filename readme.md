@@ -44,6 +44,13 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 History :
 --------------------------------------------------------------------------------
+V3.8 : 02-Feb-2025 by wavemotion-dave
+  * Fixed banking so games like Dropzone properly render lower screen graphics (moonscape).
+  * Improved 64K banking for games that only sparingly swap banks - these can now use the faster CPU core driver (renders Dropzone and Laser Hawk full speed on older DS-Lite hardware)
+  * More CPU optimizations to improve speed slightly.
+  * More games are now running full speed on the DS-Lite - Vanguard is now playable!
+  * Latest hacks from the A5200 forums on Atariage have been added to the internal database.
+
 V3.7 : 30-Jan-2025 by wavemotion-dave
   * New banking handling so we only move pointers - not blocks of memory. Renders all 5200 Super Banked games playable.
   * New NTSC palette from Trebor's Pro Palette (NTSC_LUM1_HOT 5200).

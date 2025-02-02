@@ -36,12 +36,12 @@
 #include "pia.h"
 #include "pokeysnd.h"
 
-rdfunc readmap[65536]   __attribute__ ((aligned (16)));
-wrfunc writemap[65536]  __attribute__ ((aligned (16)));
-UBYTE  memory[65536]    __attribute__ ((aligned (16)));
+wrfunc *writemap = (wrfunc *)0x06860000;                    // Slight speedup to put the write function table in VRAM... uses 256K but we have nothing else to use if for!
+rdfunc readmap[65536]   __attribute__ ((aligned (16)));     // Some areas are hotspots for peripheral reads (Antic, GTIA, Pokey, etc).
+UBYTE  memory[65536]    __attribute__ ((aligned (16)));     // This is the full 64K of Atari5200 memory map. For normal cart games, this is all there is!
 
-UBYTE  normal_memory[16] __attribute__((section(".dtcm")));         // A quick way to determine if we are in a region of memory that might have special handling (banked, or peripheral mapped)
-UBYTE *mem_map[16]       __attribute__((section(".dtcm")));         // This is the magic that allows us to index into banks of memory quickly. 16 banks of 4K plus an additional 4 banks to handle the "under 0x8, 0x9, 0xA and 0xB" areas
+UBYTE  normal_memory[16] __attribute__((section(".dtcm"))); // A quick way to determine if we are in a region of memory that might have special handling (banked, or peripheral mapped)
+UBYTE *mem_map[16]       __attribute__((section(".dtcm"))); // This is the magic that allows us to index into banks of memory quickly. 16 banks of 4K cover the entire 5200 memory map.
 
 void ROM_PutByte(UWORD addr, UBYTE value)
 {
@@ -66,6 +66,9 @@ void MEMORY_InitialiseMachine(void)
     dFillMem(0x0000, 0x00, 0xf800);
     SetRAM(0x0000, 0x3fff);
     SetROM(0x4000, 0xffff);
+    
+    // Set entire upper 16K to write nothing... and then override with peripherals below
+    for (i=0xc000; i <= 0xffff; i++) writemap[i] = ROM_PutByte;
     
     for (i=0xc000; i <= 0xc0ff; i++) readmap[i] = GTIA_GetByte;
     for (i=0xd400; i <= 0xd4ff; i++) readmap[i] = ANTIC_GetByte;

@@ -8,11 +8,12 @@
 
 typedef UBYTE (*rdfunc)(UWORD addr);
 typedef void (*wrfunc)(UWORD addr, UBYTE value);
+
 extern UBYTE memory[65536];
 extern rdfunc readmap[65536];
-extern wrfunc writemap[65536];
-
+extern wrfunc *writemap;
 extern UBYTE *mem_map[16];
+extern UBYTE normal_memory[16];
 
 // This one has to use the mem_map[] table to handle banked carts
 inline UBYTE dGetByte(UWORD addr)
@@ -26,11 +27,13 @@ inline UBYTE zGetByte(UWORD addr)
     return memory[addr];
 }
 
+// Writing RAM - we can do this directly. If there is a special write, it would already be trapped by writemap[]
 inline void dPutByte(UWORD addr, UBYTE data)
 {
     memory[addr] = data;
 }
 
+// So that Antic can know about any banking of cart space that might be going on...
 inline UBYTE *AnticMainMemLookup(unsigned int addr)
 {
     return (UBYTE *) mem_map[addr >> 12] + addr;
@@ -39,15 +42,22 @@ inline UBYTE *AnticMainMemLookup(unsigned int addr)
 #define dGetWord(x)             (dGetByte(x) + (dGetByte((x) + 1) << 8))
 #define dGetWordAligned(x)      dGetWord(x)
 
-#define dCopyFromMem(from, to, size)    memcpy(to, memory + (from), size)
-#define dCopyToMem(from, to, size)      memcpy(memory + (to), from, size)
+inline void dCopyFromMem(unsigned int from, void* to, unsigned int size)
+{
+    memcpy((UBYTE*)to, AnticMainMemLookup((unsigned int)from), size);
+}
+
+inline void dCopyToMem(void*from, unsigned int to, unsigned int size)       
+{
+    memcpy(AnticMainMemLookup((unsigned int)to), (UBYTE*)from, size);
+}
+
 #define dFillMem(addr1, value, length)  memset(memory + (addr1), value, length)
 
 void ROM_PutByte(UWORD addr, UBYTE byte);
 
-extern UBYTE normal_memory[16];
 #define GetByte(addr)       ((normal_memory[(addr)>>12]) ? dGetByte(addr) : (readmap[(addr)] ? (*readmap[(addr)])(addr) : dGetByte(addr)))
-#define PutByte(addr,byte)  ((addr & 0xC000) ? writemap[(addr)]((addr), byte) : (dPutByte(addr,byte)))
+#define PutByte(addr,byte)  ((addr & 0xC000) ? ((wrfunc*)0x06860000)[(addr)]((addr), byte) : dPutByte(addr,byte))
 
 #define SetRAM(addr1, addr2) do { \
         int i; \
@@ -63,8 +73,6 @@ extern UBYTE normal_memory[16];
             writemap[i] = ROM_PutByte; \
         } \
     } while (0)
-
-extern int have_basic;
 
 void MEMORY_InitialiseMachine(void);
 void MemStateSave(UBYTE SaveVerbose);

@@ -2226,7 +2226,7 @@ ITCM_CODE void ANTIC_Frame(int draw_display)
             xpos += before_cycles[md];
 
         GO(SCR_C);
-        new_pm_scanline();
+        if (draw_display) new_pm_scanline();
 
         xpos += DMAR;
         
