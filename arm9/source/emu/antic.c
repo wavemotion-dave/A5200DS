@@ -1602,7 +1602,7 @@ static void draw_antic_c(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, cons
     do_border();
 }
 
-ITCM_CODE static void draw_antic_e(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
+static void draw_antic_e(int nchars, const UBYTE *ANTIC_memptr, UWORD *ptr, const ULONG *t_pm_scanline_ptr)
 {
     INIT_BACKGROUND_8
     lookup2[0x00] = cl_lookup[C_BAK];

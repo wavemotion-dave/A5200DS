@@ -209,8 +209,7 @@ void dsInitScreenMain(void)
     SetYtrigger(190); //trigger 2 lines before vsync
     irqSet(IRQ_VBLANK, vblankIntr);
     irqEnable(IRQ_VBLANK | IRQ_VCOUNT);
-    vramSetBankB(VRAM_B_MAIN_BG_0x06020000 ); // Not using this for video but could use it for faster access... 128K of faster VRAM!
-    
+    vramSetBankB(VRAM_B_LCD);                 // Not using this for video but faster RAM always useful!  128K Mapped at 0x06820000
     vramSetBankD(VRAM_D_LCD );                // Not using this for video but faster RAM always useful!  128K Mapped at 0x06860000
     vramSetBankE(VRAM_E_LCD );                // Not using this for video but faster RAM always useful!   64K Mapped at 0x06880000
     vramSetBankF(VRAM_F_LCD );                // Not using this for video but faster RAM always useful!   16K Mapped at 0x06890000

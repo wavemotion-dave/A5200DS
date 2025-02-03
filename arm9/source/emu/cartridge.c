@@ -40,6 +40,7 @@
 
 u8 bCartIsBanked __attribute__((section(".dtcm"))) = 0;
 u8 bryan_bank = 15;
+u8 *shadow_bank = (u8 *)0x06820000; // Slightly faster for memcpy() 
 
 extern void restore_bottom_screen(void);
 
@@ -399,7 +400,7 @@ ITCM_CODE UBYTE Bryan_GetByte64(UWORD addr)
 ITCM_CODE UBYTE Bryan_GetByte64_Swap(UWORD addr)
 {
     UBYTE b = (addr < 0xBFE0) ? ((addr & 0x04) ? 1:0) : 1;
-    memcpy(memory + 0x4000, cart_image + (b * 0x8000), 0x8000);
+    memcpy(memory + 0x4000, shadow_bank + (b * 0x8000), 0x8000);
     return dGetByte(addr);
 }
 
@@ -608,6 +609,7 @@ void CART_Start(void)
         break;
     case CART_5200_64_SWAP: // Same as normal 5200_64 except this one will actually swap memory!
         memcpy(memory+0x4000, cart_image+0x8000, 0x8000);
+        memcpy(shadow_bank, cart_image, 0x10000);  // Slightly faster to memcpy() from
         for (int i=0xbfd0; i<= 0xbfff; i++) readmap[i] = Bryan_GetByte64_Swap;
         normal_memory[0xB] = 0;
         bCartIsBanked = 0; // Use the faster CPU driver...

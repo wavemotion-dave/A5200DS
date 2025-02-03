@@ -70,12 +70,13 @@ void MEMORY_InitialiseMachine(void)
     // Set entire upper 16K to write nothing... and then override with peripherals below
     for (i=0xc000; i <= 0xffff; i++) writemap[i] = ROM_PutByte;
     
-    for (i=0xc000; i <= 0xc0ff; i++) readmap[i] = GTIA_GetByte;
-    for (i=0xd400; i <= 0xd4ff; i++) readmap[i] = ANTIC_GetByte;
-    for (i=0xe800; i <= 0xefff; i++) readmap[i] = POKEY_GetByte;
-       
-    for (i=0xc000; i <= 0xc0ff; i++) writemap[i] = GTIA_PutByte;
+    for (i=0xc000; i <= 0xcfff; i++) readmap[i]  = GTIA_GetByte;
+    for (i=0xc000; i <= 0xcfff; i++) writemap[i] = GTIA_PutByte;
+
+    for (i=0xd400; i <= 0xd4ff; i++) readmap[i]  = ANTIC_GetByte;
     for (i=0xd400; i <= 0xd4ff; i++) writemap[i] = ANTIC_PutByte;
+    
+    for (i=0xe800; i <= 0xefff; i++) readmap[i]  = POKEY_GetByte;       
     for (i=0xe800; i <= 0xefff; i++) writemap[i] = POKEY_PutByte;
     
     Coldstart();
