@@ -31,10 +31,10 @@
 #define ULONG unsigned int
 /* Note: in various parts of the emulator we assume that char is 1 byte and int is 4 bytes. */
 
-/* Public interface ------------------------------------------------------ */
+/* Global debug registers to aid with emulation debug */
+extern ULONG debug[];
 
-/* Machine type. */
-#define MACHINE_5200  3
+/* Public interface ------------------------------------------------------ */
 
 /* Video system. */
 #define TV_PAL  312

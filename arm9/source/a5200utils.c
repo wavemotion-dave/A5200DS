@@ -65,11 +65,10 @@ char bStarRaiders=0;
 char lcd_swap_counter = 0;
 
 u16 myPokeyBufIdx            __attribute__((section(".dtcm"))) = 0;
-u8  lastSample               __attribute__((section(".dtcm"))) = 0;
 u16 sampleExtender[256]      __attribute__((section(".dtcm"))) = {0};
 
 #define MAX_DEBUG 16
-u32 debug[MAX_DEBUG]={0};
+ULONG debug[MAX_DEBUG]={0};
 char DEBUG_DUMP = 0;
 
 static void DumpDebugData(void)

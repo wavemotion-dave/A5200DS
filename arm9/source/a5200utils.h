@@ -16,14 +16,12 @@ typedef enum {
 } FifoMesType;
 
 typedef struct FICtoLoad {
-  char filename[255];
-  bool directory;
+  char filename[254];
+  u8 directory;
   unsigned int uCrc;
 } FICA5200;
 
 #define ds_GetTicks() (TIMER0_DATA)
-
-extern u32 debug[];
 
 extern int bg0, bg1, bg0b,bg1b, bg2, bg3;
 extern unsigned int video_height;           // Actual video height

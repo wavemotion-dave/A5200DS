@@ -57,13 +57,26 @@ void MEMORY_InitialiseMap(void)
     }
 }
 
+UBYTE PIA_GetByte(UWORD addr)
+{
+    return addr & 0xff; // Floating bus. Not accurate but good enough for games like Star Raiders who read from a non-existent PIA on the 5200
+}
+
+void PIA_PutByte(UWORD addr, UBYTE data) // PIA doesn't exist on the 5200... but that doesn't stop Star Raiders from writing it
+{
+    (void)addr;
+    (void)data;
+}
+
 void MEMORY_InitialiseMachine(void) 
 {
     unsigned int i;
 
     MEMORY_InitialiseMap();
+    dFillMem(0x0000, 0x00, 0x4000);
+    dFillMem(0x4000, 0xff, 0x8000);
+    dFillMem(0xC000, 0x00, 0x4000);
     memcpy(memory + 0xf800, atari_os, 0x800);
-    dFillMem(0x0000, 0x00, 0xf800);
     SetRAM(0x0000, 0x3fff);
     SetROM(0x4000, 0xffff);
     
@@ -72,6 +85,9 @@ void MEMORY_InitialiseMachine(void)
     
     for (i=0xc000; i <= 0xcfff; i++) readmap[i]  = GTIA_GetByte;
     for (i=0xc000; i <= 0xcfff; i++) writemap[i] = GTIA_PutByte;
+
+    for (i=0xd300; i <= 0xd3ff; i++) readmap[i]  = PIA_GetByte;
+    for (i=0xd300; i <= 0xd3ff; i++) writemap[i] = PIA_PutByte;
 
     for (i=0xd400; i <= 0xd4ff; i++) readmap[i]  = ANTIC_GetByte;
     for (i=0xd400; i <= 0xd4ff; i++) writemap[i] = ANTIC_PutByte;
