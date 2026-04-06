@@ -35,6 +35,7 @@ struct cart_t
     short int       offset_y;
     unsigned char   artifacting;
     unsigned char   x_function;
+    unsigned char   border_boost;
 };
 
 extern struct cart_t myCart;

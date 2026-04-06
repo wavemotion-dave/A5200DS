@@ -134,12 +134,13 @@ int Atari800_Exit(int run_monitor) {
 	return Atari_Exit(run_monitor);
 }
 
-extern int gTotalAtariFrames;
 void Atari800_Frame(void)
 {
 	INPUT_Frame();
 	GTIA_Frame();
+    ypos = 0;
     ANTIC_Frame((myCart.frame_skip ? (gTotalAtariFrames & myCart.frame_skip) : TRUE));  // With frameskip, we draw fewer frames to help with emulation speed
+    ypos = 0;
     POKEY_Frame();
     
     gTotalAtariFrames++;
