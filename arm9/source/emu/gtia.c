@@ -80,6 +80,7 @@ UBYTE POTENA __attribute__((section(".dtcm")));
 UBYTE consol_index       __attribute__((section(".dtcm"))) = 0;
 UBYTE consol_table[3]   __attribute__((section(".dtcm")));
 UBYTE consol_mask       __attribute__((section(".dtcm")));
+UBYTE consol_port       __attribute__((section(".dtcm")));
 UBYTE TRIG[4]           __attribute__((section(".dtcm")));
 UBYTE TRIG_latch[4]     __attribute__((section(".dtcm")));
 
@@ -132,26 +133,26 @@ bit 7 - Missile 3
 UBYTE pm_scanline[ATARI_WIDTH / 2 + 8] __attribute__((section(".dtcm"))); /* there's a byte for every *pair* of pixels */
 UBYTE pm_dirty __attribute__((section(".dtcm"))) = TRUE;
 
-#define C_PM0   0x01
-#define C_PM1   0x02
-#define C_PM01  0x03
-#define C_PM2   0x04
-#define C_PM3   0x05
-#define C_PM23  0x06
-#define C_PM023 0x07
-#define C_PM123 0x08
-#define C_PM0123 0x09
-#define C_PM25  0x0a
-#define C_PM35  0x0b
-#define C_PM235 0x0c
-#define C_COLLS 0x0d
-#define C_BAK   0x00
-#define C_HI2   0x20
-#define C_HI3   0x30
-#define C_PF0   0x40
-#define C_PF1   0x50
-#define C_PF2   0x60
-#define C_PF3   0x70
+#define C_PM0       0x01
+#define C_PM1       0x02
+#define C_PM01      0x03
+#define C_PM2       0x04
+#define C_PM3       0x05
+#define C_PM23      0x06
+#define C_PM023     0x07
+#define C_PM123     0x08
+#define C_PM0123    0x09
+#define C_PM25      0x0a
+#define C_PM35      0x0b
+#define C_PM235     0x0c
+#define C_COLLS     0x0d
+#define C_BAK       0x00
+#define C_HI2       0x20
+#define C_HI3       0x30
+#define C_PF0       0x40
+#define C_PF1       0x50
+#define C_PF2       0x60
+#define C_PF3       0x70
 
 extern UWORD cl_lookup[128];
 
@@ -217,7 +218,8 @@ void GTIA_Initialise(void)
 ITCM_CODE void new_pm_scanline(void)
 {
 /* Clear if necessary */
-    if (pm_dirty) {
+    if (pm_dirty) 
+    {
         memset(pm_scanline, 0, ATARI_WIDTH / 2);
         pm_dirty = FALSE;
     }
@@ -231,7 +233,7 @@ ITCM_CODE void new_pm_scanline(void)
         pm_dirty = TRUE;                                    \
         do {                                                \
             if (grafp & 1)                                  \
-                P##n##PL_T |= *ptr |= 1 << n;                   \
+                P##n##PL_T |= *ptr |= 1 << n;               \
             ptr++;                                          \
             grafp >>= 1;                                    \
         } while (grafp);                                    \
@@ -418,6 +420,7 @@ void GTIA_PutByte(UWORD addr, UBYTE byte)
     case _CONSOL:
         consol_mask = (~byte) & 0x0f;
         POTENA = byte & 0x04;
+        consol_port = byte & 0x03; // Port 0-3 for controller reads (see input.c)
         break;
 
     case _COLBK:

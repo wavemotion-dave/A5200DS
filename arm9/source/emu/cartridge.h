@@ -49,9 +49,9 @@ extern struct cart_t myCart;
 #define DIGITAL         0
 #define ANALOG          1
 
-#define NO_FS           0
-#define YES_FS          3       // Only for non-DSi where we need the speed. Displays 3 of 4 frames.
-#define YES_FSL         7       // A lighter version of frameskip. Displays 7 of 8 frames.
+#define NO_FS           0x00       // Display all frames (DSi always uses this as it has faster CPU)
+#define YES_FSL         0x03       // A lighter version of frameskip. Displays 3 of 4 frames.
+#define YES_FSH         0x01       // A heavier version of frameskip. Displays every other frame.
 
 #define X_FIRE          0
 #define X_PANUP         1

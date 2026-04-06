@@ -343,6 +343,7 @@ void GO_Banked(int limit)
         wsync_halt = 0;
     }
     xpos_limit = limit;         /* needed for WSYNC store inside ANTIC */
+    int xpos_limit_local = limit;
 
     UPDATE_LOCAL_REGS;
 
@@ -351,7 +352,7 @@ void GO_Banked(int limit)
 // A jump to the next instruction will land us here just before the test on xpos
 next:
 
-    while (xpos < xpos_limit)
+    while (xpos < xpos_limit_local)
     {
         insn = GET_CODE_BYTE();
         xpos += cycles[insn];
@@ -1936,6 +1937,7 @@ ITCM_CODE void GO(int limit)
         wsync_halt = 0;
     }
     xpos_limit = limit;         /* needed for WSYNC store inside ANTIC */
+    int xpos_limit_local = limit;
 
     UPDATE_LOCAL_REGS;
 
@@ -1944,7 +1946,7 @@ ITCM_CODE void GO(int limit)
 // A jump to the next instruction will land us here just before the test on xpos
 next:
 
-    while (xpos < xpos_limit)
+    while (xpos < xpos_limit_local)
     {
         insn = GET_CODE_BYTE();
         xpos += cycles[insn];

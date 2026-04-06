@@ -19,6 +19,7 @@ extern int load_os();
 int main(int argc, char **argv) 
 {
   extern void MEMORY_InitialiseMap(void);
+  extern void LoadFavorites(void);
   MEMORY_InitialiseMap();
   
   // Init sound
@@ -39,6 +40,8 @@ int main(int argc, char **argv)
   
   // Intro and main screen
   intro_logo();  
+  srand(time(NULL));
+  LoadFavorites();
   dsInitScreenMain();
   etatEmu = A5200_MENUINIT;
   

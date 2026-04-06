@@ -86,82 +86,92 @@ void INPUT_Frame(void)
     
     input_frame++;
     
-	/* In Atari 5200 joystick there's a second fire button, which acts
-	   like the Shift key in 800/XL/XE (bit 3 in SKSTAT) and generates IRQ
-	   like the Break key (bit 7 in IRQST and IRQEN).
-	   Note that in 5200 the joystick position and first fire button are
-	   separate for each port, but the keypad and 2nd button are common.
-	   That is, if you press a key in the emulator, it's like you really pressed
-	   it in all the controllers simultaneously. Normally the port to read
-	   keypad & 2nd button is selected with the CONSOL register in GTIA
-	   (this is simply not emulated).
-	   key_code is used for keypad keys and key_shift is used for 2nd button.
-	*/
-    i = key_shift;
-	if (i && !last_key_break) {
-		if (IRQEN & 0x80) {
-			IRQST &= ~0x80;
-			GenerateIRQ();
-		}
-	}
-	last_key_break = i;
-
-    SKSTAT |= 0xc;
-	if (key_shift)
-		SKSTAT &= ~8;
-
-	if (key_code <= 0) 
-    {
-        last_key_code = AKEY_NONE;
-	}
-    
-    if ((key_code > 0) || key_shift)
-    {
-        /* The 5200 has only 4 of the 6 keyboard scan lines connected */
-        /* Pressing one 5200 key is like pressing 4 Atari 800 keys. */
-        /* The LSB (bit 0) and bit 5 are the two missing lines. */
-        /* When debounce is enabled, multiple keys pressed generate
-         * no results. */
-        /* When debounce is disabled, multiple keys pressed generate
-         * results only when in numerical sequence. */
-        /* Thus the LSB being one of the missing lines is important
-         * because that causes events to be generated. */
-        /* Two events are generated every 64 scan lines
-         * but this code only does one every frame. */
-        /* Bit 5 is different for each keypress because it is one
-         * of the missing lines. */
-        static char bit5_5200 = 0;
-        if (bit5_5200) 
+    // Make sure we are reading the port we are emulating
+    if (consol_port == (myCart.control == CTRL_SWAP ? 1:0))
+    {    
+        /* In Atari 5200 joystick there's a second fire button, which acts
+           like the Shift key in 800/XL/XE (bit 3 in SKSTAT) and generates IRQ
+           like the Break key (bit 7 in IRQST and IRQEN).
+           Note that in 5200 the joystick position and first fire button are
+           separate for each port, but the keypad and 2nd button are common.
+           That is, if you press a key in the emulator, it's like you really pressed
+           it in all the controllers simultaneously. Normally the port to read
+           keypad & 2nd button is selected with the CONSOL register in GTIA
+           (this is simply not emulated).
+           key_code is used for keypad keys and key_shift is used for 2nd button.
+        */
+        i = key_shift;
+        if (i && !last_key_break)
         {
-            key_code &= ~0x20;
+            if (IRQEN & 0x80)
+            {
+                IRQST &= ~0x80;
+                GenerateIRQ();
+            }
         }
+        last_key_break = i;
 
-        if (myCart.keys_debounced)
-            bit5_5200 = !bit5_5200;
-        else 
-            bit5_5200 = 0;
+        SKSTAT |= 0xc;
+        if (key_shift)
+            SKSTAT &= ~8;
 
-        /* 5200 2nd fire button generates CTRL as well */
-        if (key_shift) 
+        if (key_code <= 0) 
         {
-            key_code |= AKEY_SHFTCTRL;
+            last_key_code = AKEY_NONE;
         }
-
-        if (key_code >= 0) 
+        
+        if ((key_code > 0) || key_shift)
         {
-            SKSTAT &= ~4;
-            if ((key_code ^ last_key_code) & ~AKEY_SHFTCTRL) {
-            /* ignore if only shift or control has changed its state */
-                last_key_code = key_code;
-                KBCODE = (UBYTE) key_code;
-                if (IRQEN & 0x40) {
-                    if (IRQST & 0x40) {
-                        IRQST &= ~0x40;
-                        GenerateIRQ();
-                    }
-                    else {
-                        /* keyboard over-run */
-                        SKSTAT &= ~0x40;
+            /* The 5200 has only 4 of the 6 keyboard scan lines connected */
+            /* Pressing one 5200 key is like pressing 4 Atari 800 keys. */
+            /* The LSB (bit 0) and bit 5 are the two missing lines. */
+            /* When debounce is enabled, multiple keys pressed generate
+             * no results. */
+            /* When debounce is disabled, multiple keys pressed generate
+             * results only when in numerical sequence. */
+            /* Thus the LSB being one of the missing lines is important
+             * because that causes events to be generated. */
+            /* Two events are generated every 64 scan lines
+             * but this code only does one every frame. */
+            /* Bit 5 is different for each keypress because it is one
+             * of the missing lines. */
+            static char bit5_5200 = 0;
+            if (bit5_5200) 
+            {
+                key_code &= ~0x20;
+            }
+
+            if (myCart.keys_debounced)
+                bit5_5200 = !bit5_5200;
+            else 
+                bit5_5200 = 0;
+
+            /* 5200 2nd fire button generates CTRL as well */
+            if (key_shift) 
+            {
+                key_code |= AKEY_SHFTCTRL;
+            }
+
+            if (key_code >= 0) 
+            {
+                SKSTAT &= ~4;
+                if ((key_code ^ last_key_code) & ~AKEY_SHFTCTRL) 
+                {
+                    /* ignore if only shift or control has changed its state */
+                    last_key_code = key_code;
+                    KBCODE = (UBYTE) key_code;
+                    if (IRQEN & 0x40) 
+                    {
+                        if (IRQST & 0x40) 
+                        {
+                            IRQST &= ~0x40;
+                            GenerateIRQ();
+                        }
+                        else 
+                        {
+                            /* keyboard over-run */
+                            SKSTAT &= ~0x40;
+                        }
                     }
                 }
             }
@@ -174,10 +184,9 @@ void INPUT_Frame(void)
 	STICK[0] = i & 0x0f;
 	STICK[1] = (i >> 4) & 0x0f;
 
-    // We don't support the other two sticks, so this will result in both being in the CENTER position...
-	i = (STICK_CENTRE << 4) | STICK_CENTRE;
-	STICK[2] = i & 0x0f;
-	STICK[3] = (i >> 4) & 0x0f;
+    // We don't support the other two sticks, leave both in the "CENTER" position...
+	STICK[2] = STICK_CENTRE;
+	STICK[3] = STICK_CENTRE;
 
     for (i = 0; i < 2; i++) 
     {
@@ -261,8 +270,8 @@ void INPUT_Frame(void)
 
 	TRIG[0] = TRIG_input[0];
 	TRIG[1] = TRIG_input[1];
-	TRIG[2] = TRIG_input[2];
-	TRIG[3] = TRIG_input[3];
+	TRIG[2] = TRIG_input[2]; // Not used port, will always be unpressed
+	TRIG[3] = TRIG_input[3]; // Not used port, will always be unpressed
 	PORT_input[0] = (STICK[1] << 4) | STICK[0];
 	PORT_input[1] = (STICK[3] << 4) | STICK[2];
 }

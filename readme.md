@@ -14,7 +14,7 @@ Do not ask me about such files - you will be ignored.
 
 Copyright :
 -----------------------
-a5200ds is Copyright (c) 2021-2025 Dave Bernazzani (wavemotion-dave)
+a5200ds is Copyright (c) 2021-2026 Dave Bernazzani (wavemotion-dave)
 
 This program is built upon alekmaul's magnificent efforts from circa 2011. He was 
 kind enough to grant me permission to update this emulator for the modern era.
@@ -40,10 +40,19 @@ Known Issues :
 Most things are playing fine on a DSi. Most of the original commercial games (like Missile Command, Space Invaders, Centipede) will generally
 run fine on the older DS-LITE or DS-PHAT.  
 
+Quest for Quinta Roo will not start - known key debounce issue with the emulation.
+
 Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 
 History :
 --------------------------------------------------------------------------------
+V3.9 : ??-Apr-2026 by wavemotion-dave
+  * Favorites
+  * True Sync 60Hz
+  * New frameskip - no missing collisions
+  * Fix Worm War I
+  * Improved controller port handling
+
 V3.8 : 02-Feb-2025 by wavemotion-dave
   * Fixed banking so games like Dropzone properly render lower screen graphics (moonscape).
   * Improved 64K banking for games that only sparingly swap banks - these can now use the faster CPU core driver (renders Dropzone and Laser Hawk full speed on older DS-Lite hardware)

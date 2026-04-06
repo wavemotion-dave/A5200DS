@@ -59,7 +59,7 @@ void MEMORY_InitialiseMap(void)
 
 UBYTE PIA_GetByte(UWORD addr)
 {
-    return addr & 0xff; // Floating bus. Not accurate but good enough for games like Star Raiders who read from a non-existent PIA on the 5200
+    return (addr>>8) & 0xff; // Floating bus. Not accurate but good enough for games like Star Raiders who read from a non-existent PIA on the 5200
 }
 
 void PIA_PutByte(UWORD addr, UBYTE data) // PIA doesn't exist on the 5200... but that doesn't stop Star Raiders from writing it

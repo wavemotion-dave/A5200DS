@@ -110,6 +110,7 @@ extern UBYTE TRIG_latch[4];
 
 extern UBYTE consol_index;
 extern UBYTE consol_table[3];
+extern UBYTE consol_port;
 
 void GTIA_Initialise(void);
 void GTIA_Frame(void);
