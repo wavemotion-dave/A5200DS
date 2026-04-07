@@ -54,6 +54,7 @@ static const struct cart_t cart_table[] =
     {"4b1aecab0e2f9c90e514cb0a506e3a5f",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    252,    32,22,  0,  X_FIRE,    0},  // Adventure II-a.a52
     {"e2f6085028eb8cf24ad7b50ca4ef640f",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    252,    32,22,  0,  X_FIRE,    0},  // Adventure II-b.a52
     {"9a46d46a97b4993891ae1a34477e9c5f",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    252,    32,22,  0,  X_FIRE,    0},  // Adventure II.a52
+    {"f0dca1c668589f9b221b84d28a3e5279",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Alien Ambush(XL Conversion).a52
     {"b48dd725b5d024ef0a5a797fb5acefc6",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,22,  0,  X_FIRE,    0},  // Alien Swarm (XL Conversion).a52
     {"a47fcb4eedab9418ea098bb431a407aa",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  2,  X_FIRE,    0},  // A.E. (Anti-Enviormental Encounter).a52
     {"9e6d04dc20cbd6d3cdb722e420dea203",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    250,    32,17,  0,  X_FIRE,    0},  // ANALOG Multicart (XL Conversion).a52
@@ -63,6 +64,7 @@ static const struct cart_t cart_table[] =
     {"10cdf2bbb058bb4cc518fd25031f427d",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    248,    32,18,  0,  X_FIRE,    0},  // Astro Grover (XL Conversion).a52
     {"d31a3bbb4c99f539f0d2c4e02bec516e",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,19,  0,  X_FIRE,    0},  // Atlantis (XL Conversion).a52
     {"ec65389cc604b279d69a889725c723e7",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,20,  0,  X_FIRE,    0},  // Attack of the Mutant Camels (XL Conversion).a52
+    {"eadcaf6e7b09a2350a10ac2c5b6c776a",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Bacterion (XL Conversion).a52
     {"f5cd178cbea0ae7d8cf65b30cfd04225",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,  30, 185,    1,YES_FSL,    256,    256,    32,16,  0,  X_FIRE,    0},  // Ballblazer (USA).a52
     {"96b424d0bb0339f4edfe8095fe275d62",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    246,    32,25,  0,  X_PANDN,   0},  // Batty Builders (XL Conversion).a52
     {"8576867c2cfc965cf152be0468f684a7",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    252,    32,24,  0,  X_FIRE,    0},  // Battlezone.a52
@@ -91,6 +93,7 @@ static const struct cart_t cart_table[] =
     {"8f4c07a9e0ef2ded720b403810220aaf",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_FASTEST,  6, 220,    1,YES_FSL,    256,    240,    32,16,  0,  X_FIRE,    0},  // Castle Crisis (USA) (Unl).a52
     {"d64a175672b6dba0c0b244c949799e64",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSH,    256,    256,    32,15,  0,  X_PANUP,   1},  // Caverns of Mars (Conv).a52
     {"1db260d6769bed6bf4731744213097b8",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Caverns Of Mars 2 (Conv).a52
+    {"4505c5224f5b6a089552aff7e21f560a",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Caverns Of Mars 2 (Conv).a52
     {"c4a14a88a4257970223b1ef9bf95da5b",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0,YES_FSL,    256,    250,    32,25,  0,  X_FIRE,    0},  // Caverns Of Mars 3 (Phobos).a52
     {"261702e8d9acbf45d44bb61fd8fa3e17",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,  45, 165,    1,  NO_FS,    256,    251,    32,16,  0,  X_FIRE,    0},  // Centipede (USA).a52
     {"df283efab9d36a15603283ee2a7bdb71",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Chess (XL Conversion).a52
@@ -145,6 +148,7 @@ static const struct cart_t cart_table[] =
     {"85fe2492e2945015000272a9fefc06e3",    CART_5200_8,        CTRL_JOY,   ANALOG,      ANA_SLOWEST,  6, 220,    1,  NO_FS,    256,    251,    32,23,  0,  X_FIRE,    0},  // Gorf (1982) (CBS).a52
     {"a21c545a52d488bfdaf078d786bf4916",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    251,    32,23,  0,  X_FIRE,    0},  // Gorf Converted (1982) (CBS).a52
     {"dc271e475b4766e80151f1da5b764e52",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    249,    32,22,  0,  X_FIRE,    0},  // Gremlins (USA).a52
+    {"af6a7429a39039d04acf69f0cd6321a2",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,31,  0,  X_PANUP,   0},  // GunPowderCharlie (XL Conversion).a52
     {"dacc0a82e8ee0c086971f9d9bac14127",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,22,  0,  X_FIRE,    0},  // Gyruss (USA).a52
     {"b7617ac90462ef13f8350e32b8198873",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,22,  0,  X_FIRE,    0},  // Gyruss (Autofire Hack).a52
     {"3790408417c1dc193dc2d68576755153",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,22,  0,  X_FIRE,    0},  // Gyruss (Autofire Hack - Updated 2024).a52
@@ -155,6 +159,7 @@ static const struct cart_t cart_table[] =
     {"194759bb6fc4a1b115b4dd9aa0549034",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    278,    256,    44,24,  0,  X_PANDN,   0},  // Hangly Man Plus (Ghost Eyes).a52
     {"0f6407d83115a78a182f323e5ef76384",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Heavy Metal.a52
     {"0c25803c9175487afce0c9d636133dc1",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    224,    32,13,  0,  X_FIRE,    0},  // Hyperblast! (XL Conversion).a52
+    {"1a8acfa3d2378dcbcd86ed0c6bcad420",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    224,    32,13,  0,  X_FIRE,    0},  // Hyperblast! (XL Conversion).a52
     {"612c3ca4c2938bb36f2e45fc91c6e779",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Intellidiscs Final Version.a52
     {"d824f6ee24f8bc412468268395a76159",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Ixion (XL Conversion).a52
     {"936db7c08e6b4b902c585a529cb15fc5",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    246,    32,22,  0,  X_FIRE,    0},  // James Bond 007 (USA).a52
@@ -170,6 +175,7 @@ static const struct cart_t cart_table[] =
     {"12c020a98e7f898726b9b649d123214f",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    252,    32,23,  0,  X_FIRE,    0},  // Jungle Hunt (Pirate Pete Hack v3).a52
     {"947a614b16ae56a18a05ef8f34340894",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    252,    32,23,  0,  X_FIRE,    0},  // Jungle Hunt (32K Pirate Pete Hack v3).a52
     {"9584d143be1871241e4a0d038e8e1468",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    248,    32,24,  0,  X_FIRE,    0},  // Juno First (XL Conversion).a52
+    {"67b8ad32e74f2f9e1cd3c4141053941e",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    248,    32,24,  0,  X_FIRE,    0},  // Juno First (XL Conversion).a52
     {"92fd2f43bc0adf2f704666b5244fadf1",    CART_5200_4,        CTRL_JOY,   ANALOG,      ANA_FASTEST,  6, 220,    1,YES_FSL,    256,    250,    32,22,  0,  X_FIRE,    0},  // Kaboom! (USA).a52
     {"61c7fc252400eb5a1470e383c4e9faa1",    CART_5200_NS_16,    CTRL_JOY,   ANALOG,      ANA_FASTEST,  6, 220,    1,YES_FSL,    256,    250,    32,22,  0,  X_FIRE,    0},  // Kaboom! (No 1812).a52
     {"796d2c22f8205fb0ce8f1ee67c8eb2ca",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Kangaroo (USA).a52
@@ -196,6 +202,7 @@ static const struct cart_t cart_table[] =
     {"69d472a79f404e49ad2278df3c8a266e",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0,YES_FSL,    256,    240,    32,19,  1,  X_FIRE,    0},  // Miniature Golf (1983) (Atari).a52
     {"972b6c0dbf5501cacfdc6665e86a796c",    CART_5200_8,        CTRL_JOY,   ANALOG,      ANA_SLOWER,  20, 185,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE,    0},  // Missile Command (USA).a52
     {"3090673bd3f8c04a92e391bf5540b88b",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_SLOWER,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // MC+final.a52
+    {"9799284f4f67062fb6922061f0ab13c3",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_SLOWER,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // MissileCommandPlus.a52
     {"694897cc0d98fcf2f59eef788881f67d",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,24,  0,  X_FIRE,    0},  // Montezuma's Revenge featuring Panama Joe (USA).a52
     {"22a8721acbeb864b3efe5a4d787c31be",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    244,    32,24,  0,  X_FIRE,    0},  // Montezuma's Revenge (Rexux - final).a52
     {"296e5a3a9efd4f89531e9cf0259c903d",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,24,  0,  X_FIRE,    0},  // Moon Patrol (USA).a52
@@ -210,6 +217,7 @@ static const struct cart_t cart_table[] =
     {"7b690b188d79d3c44d687dd767a796e9",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    254,    32,25,  0,  X_FIRE,    0},  // Ms. Pac-Man Encore.a52
     {"a45cfbfe35f41a6237ead7b4a5301d94",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,17,  0,  X_PANUP,   0},  // Munchy (XL Conversion).a52
     {"8341c9a660280292664bcaccd1bc5279",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    240,    32,19,  0,  X_FIRE,    0},  // Necromancer.a52
+    {"6863aedba751ec5c11b54a9bc4179fa9",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    240,    32,19,  2,  X_FIRE,    0},  // Night Mission(XL Conversion).a52    
     {"6c661ed6f14d635482f1d35c5249c788",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,22,  0,  X_FIRE,    0},  // Oils Well (XL Conversion).a52
     {"5781071d4e3760dd7cd46e1061a32046",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    240,    32,19,  0,  X_FIRE,    0},  // O'Riley's Mine (XL Conversion).a52
     {"f1a4d62d9ba965335fa13354a6264623",    CART_5200_EE_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,25,  0,  X_FIRE,    0},  // Pac-Man (USA).a52
@@ -231,6 +239,7 @@ static const struct cart_t cart_table[] =
     {"294d34269953cfef99891c75b418710b",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,25,  0,  X_FIRE,    0},  // Popeye Encore - Mono Punch.a52
     {"894959d9c5a88c8e1744f7fcbb930065",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,21,  0,  X_FIRE,    0},  // Preppie (XL Conversion).a52
     {"e43ca121a9ca4087dad0e1b33fb15071",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,21,  0,  X_FIRE,    0},  // Preppie (XL Conversion).a52
+    {"03ce205f9f1796183005301be5ae87fc",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,21,  0,  X_FIRE,    0},  // Preppie II (XL Conversion).a52    
     {"ccd35e9ea3b3c5824214d88a6d8d8f7e",    CART_5200_8,        CTRL_JOY,   ANALOG,      ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,22,  0,  X_FIRE,    0},  // Pete's Diagnostics (1982) (Atari).a52
     {"7830f985faa701bdec47a023b5953cfe",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Pool (XL Conversion).a52
     {"ce44d14341fcc5e7e4fb7a04f77ffec9",    CART_5200_8,        CTRL_QBERT, DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    37,34,  0,  X_PANDN,   0},  // Q-bert (USA).a52
@@ -301,6 +310,7 @@ static const struct cart_t cart_table[] =
     {"ae76668cf509a13872ccd874ac47206b",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Tutankahman.a52
     {"3649bfd2008161b9825f386dbaff88da",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0,YES_FSL,    256,    240,    32,19,  0,  X_FIRE,    0},  // Up'n Down (XL Conversion).a52
     {"556a66d6737f0f793821e702547bc051",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Vanguard (USA).a52
+    {"644a9acd79677fb5273e4467d5299027",    CART_5200_64,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    252,    32,23,  0,  X_FIRE,    0},  // Wee Ninja RC5.a52
     {"560b68b7f83077444a57ebe9f932905a",    CART_5200_NS_16,    CTRL_SWAP,  DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,18,  0,  X_FIRE,    0},  // Wizard of Wor (USA).a52
     {"8e2ac7b944c30af9fae5f10c3a40f7a4",    CART_5200_32,       CTRL_JOY,   ANALOG,      ANA_FASTER,   6, 220,    1,YES_FSL,    256,    256,    32,20,  0,  X_FIRE,    0},  // Worm War I (XL Conversion).a52
     {"677e4fd5bba70f5983d2c2bbfba36b7e",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    0,YES_FSL,    256,    256,    32,24,  0,  X_FIRE,    0},  // Xagon (XL Conversion).a52
@@ -310,9 +320,6 @@ static const struct cart_t cart_table[] =
     {"433d3a2fc9896aa8294271a0204dc7e3",    CART_5200_32,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    256,    32,19,  0,  X_FIRE,    0},  // Zaxxon 32k_final.a52
     {"77beee345b4647563e20fd896231bd47",    CART_5200_8,        CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    250,    32,23,  0,  X_FIRE,    0},  // Zenji (USA).a52
     {"dc45af8b0996cb6a94188b0be3be2e17",    CART_5200_NS_16,    CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,  NO_FS,    256,    256,    32,22,  0,  X_FIRE,    0},  // Zone Ranger (USA).a52
-    
-    {"644a9acd79677fb5273e4467d5299027",    CART_5200_64,       CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    252,    32,23,  0,  X_FIRE,    0},  // Wee!
-
     {"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",    CART_NONE,          CTRL_JOY,   DIGITAL,     ANA_NORMAL,   6, 220,    1,YES_FSL,    256,    240,    32,30,  0,  X_FIRE,    0},  // End of List
 };
 
@@ -529,11 +536,19 @@ int CART_Insert(const char *filename)
             if (strncasecmp(cart_table[idx].md5, md5,32) == 0)
             {
                 memcpy(&myCart, &cart_table[idx], sizeof(myCart));
-                // For the DSi, we always turn off Frame Skipping...
-                if (isDSiMode()) myCart.frame_skip = NO_FS;
                 break;
             }
             idx++;
+        }
+
+        // --------------------------------------------------------------------
+        // For the DSi, we always turn off Frame Skipping and no Border Boost
+        // as the faster DSi can handle anything we throw at it!
+        // --------------------------------------------------------------------
+        if (isDSiMode()) 
+        {
+            myCart.frame_skip = NO_FS;
+            myCart.border_boost = 0;
         }
 
         ANTIC_UpdateArtifacting();
