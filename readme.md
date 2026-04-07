@@ -47,11 +47,11 @@ Check updates on my web site : https://github.com/wavemotion-dave/A5200DS
 History :
 --------------------------------------------------------------------------------
 V3.9 : ??-Apr-2026 by wavemotion-dave
-  * Favorites
-  * True Sync 60Hz
-  * New frameskip - no missing collisions
-  * Fix Worm War I
-  * Improved controller port handling
+  * 60Hz True-Sync. The emulation is now synchronized with the LCD display to avoid tearing (mostly improves scrolling games like River Raid or Vanguard).
+  * New Favorites added... in the menu where you select what game you want to play, press SELECT to toggle between like (yellow heart) and love (red heart). These persist so you can always come back in and see your favorite games.
+  * Improved fameskip handling that always handles player-missile graphics/collisions. This allows the older DS-Lite (and when running from an R4 card or similar) to run most games at full speed without sacrificing core emulation accuracy (no more glitches where shots miss enemies).  The DSi and above running something like TWL++ never needs frameskip.
+  * More games run more correctly - fixed games like Star Raiders so the keypad is less glitchy, improved default controller settings for some games, etc.
+  * Numerous tweaks, optimizations and a few specialized hacks that now allow heavy-hitting games to play at or near full speed on the older hand held units.
 
 V3.8 : 02-Feb-2025 by wavemotion-dave
   * Fixed banking so games like Dropzone properly render lower screen graphics (moonscape).
