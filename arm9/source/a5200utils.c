@@ -624,8 +624,8 @@ void dsDisplayFiles(unsigned int NoDebGame,u32 ucSel)
   dsPrintValue(2,1,0,szName);
   dsPrintValue(31,5,0,(char *) (NoDebGame>0 ? "<" : " "));
   dsPrintValue(31,22,0,(char *) (NoDebGame+14<counta5200 ? ">" : " "));
-  sprintf(szName,"%s","A TO SELECT A GAME, B TO GO BACK");
-  dsPrintValue(16-strlen(szName)/2,23,0,szName);
+  sprintf(szName,"%s","A=PLAY GAME, SELECT=FAVS, B=BACK");
+  dsPrintValue(0,23,0,szName);
   for (ucBcl=0;ucBcl<17; ucBcl++) {
     ucGame= ucBcl+NoDebGame;
     if (ucGame < counta5200) 
@@ -1099,7 +1099,17 @@ void dsMainLoop(void) {
                 TIMER1_CR=TIMER_ENABLE | TIMER_DIV_1024;
 
                 if (!full_speed && (gTotalAtariFrames > 60)) gTotalAtariFrames--;   // We tend to overshoot... 
-                if (showFps) { sprintf(fpsbuf,"%03d",gTotalAtariFrames); dsPrintValue(0,0,0, fpsbuf); } // Show FPS
+                if (showFps) // Show FPS
+                {
+                    if (gTotalAtariFrames == 59) gTotalAtariFrames = 60;
+                    
+                    if (gTotalAtariFrames/100) fpsbuf[0] = '0' + gTotalAtariFrames/100;
+                    else fpsbuf[0] = ' ';
+                    fpsbuf[1] = '0' + (gTotalAtariFrames%100) / 10;
+                    fpsbuf[2] = '0' + (gTotalAtariFrames%100) % 10;
+                    fpsbuf[3] = 0;
+                    dsPrintValue(0,0,0, fpsbuf); 
+                }
                 DumpDebugData();
                 gTotalAtariFrames = 0;
             }
@@ -1259,6 +1269,10 @@ void dsMainLoop(void) {
 
             if ((myCart.control == CTRL_JOY) || (myCart.control == CTRL_SR))
             {
+              if (keys_pressed & KEY_X)
+              {
+                if (myCart.x_function == X_JUMP) stick0 = STICK_FORWARD;
+              }
               if (keys_pressed & KEY_UP) stick0 = STICK_FORWARD;
               if (keys_pressed & KEY_LEFT) stick0 = STICK_LEFT;
               if (keys_pressed & KEY_RIGHT) stick0 = STICK_RIGHT;

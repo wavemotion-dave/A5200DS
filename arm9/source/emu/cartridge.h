@@ -55,9 +55,10 @@ extern struct cart_t myCart;
 #define YES_FSH         0x01       // A heavier version of frameskip. Displays every other frame.
 
 #define X_FIRE          0
-#define X_PANUP         1
-#define X_PANDN         2
-#define X_PAND2         3
+#define X_JUMP          1
+#define X_PANUP         2
+#define X_PANDN         3
+#define X_PAND2         4
 
 #define CART_MAX_SIZE	(512 * 1024)
 

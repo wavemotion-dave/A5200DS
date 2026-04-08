@@ -84,18 +84,9 @@ UBYTE regP  __attribute__((section(".dtcm")));   // Processor Status Byte (Parti
 UBYTE regS  __attribute__((section(".dtcm")));
 UBYTE IRQ   __attribute__((section(".dtcm")));
 
-/* Transfer 6502 registers between global variables and local variables inside GO() */
-//#define UPDATE_GLOBAL_REGS  regPC = GET_PC(); regS = S; regA = A; regX = X; regY = Y
-//#define UPDATE_LOCAL_REGS   SET_PC(regPC); S = regS; A = regA; X = regX; Y = regY
-#define UPDATE_GLOBAL_REGS  regS = S;
-#define UPDATE_LOCAL_REGS   S = regS;
-
-// Since we have our global CPU registers in fast memory, no need to transfer them in/out
-#define PC regPC
-#define A  regA
-#define Y  regY
-#define X  regX
-
+/* Transfer 6502 registers between global variables and local variables inside GO() - provides tiny speedup */
+#define UPDATE_GLOBAL_REGS  regS = S; regPC = PC; regA = A; regX = X; regY = Y
+#define UPDATE_LOCAL_REGS   S = regS; PC = regPC; A = regA; X = regX; Y = regY
 
 /* 6502 flags local to this module */
 static UBYTE N __attribute__((section(".dtcm")));                   /* bit7 set => N flag set */
@@ -324,6 +315,8 @@ void GO_Banked(int limit)
     UWORD addr;
     UBYTE data;
     UBYTE S;
+    UBYTE A,X,Y;
+    ULONG PC;
 #define insn data
 
 /*
@@ -1918,6 +1911,8 @@ ITCM_CODE void GO(int limit)
     UWORD addr;
     UBYTE data;
     UBYTE S;
+    UBYTE A,X,Y;
+    ULONG PC;
 #define insn data
 
 /*

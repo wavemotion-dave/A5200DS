@@ -1008,7 +1008,7 @@ static void draw_an_gtia11(const ULONG *t_pm_scanline_ptr)
 #define DO_PMG_LORES PF_COLLS(colreg) |= pm_pixel = *c_pm_scanline_ptr++;\
      {WRITE_VIDEO(ptr++, COLOUR(pm_lookup_ptr[pm_pixel] | colreg));}
 
-#define DO_PMG_LORES_NOVID PF_COLLS(colreg) |= pm_pixel = *c_pm_scanline_ptr++;\
+#define DO_PMG_LORES_NOVID PF_COLLS(colreg) |= pm_pixel = *c_pm_scanline_ptr++;
 
 #define FOUR_LOOP_BEGIN(data) int k = 4; do {
 #define FOUR_LOOP_END(data) } while (--k);
