@@ -12,6 +12,12 @@ will help you about that. Do not ask me about such files - you will be ignored.
 
 ![Atari5200](https://github.com/wavemotion-dave/A5200DS/blob/main/arm9/gfx/bgTop.png)
 
+# Donations Welcome (but never required!)
+
+These hobby emulators have been a labor of love. An embarassing amount of development time has gone into it as I've strived to provide an enjoyable retro experience on the DS handheld. It's free to use and always will be, however if you feel inclined to buy me a virtual coffee for the effort, that would be beyond amazing!
+
+[<img src="https://github.com/user-attachments/assets/ab67686c-2168-46a3-b39f-77b5f5fef5d0">](https://ko-fi.com/wavemotiondave)
+
 Copyright :
 -----------------------
 a5200ds is Copyright (c) 2021-2026 Dave Bernazzani (wavemotion-dave)
